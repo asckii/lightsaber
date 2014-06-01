@@ -1,0 +1,7 @@
+web-export/*
+GUI_BUILDER_DATA/*
+application.macosx/*
+application.windows32/*
+application.windows64/*
+*.jpg
+
