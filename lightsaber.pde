@@ -194,10 +194,7 @@ case 71: // g  grab drag and drop
  
         break;
       
-         case 18: // alt h visible true false
-         selectedBrush.setBrushColor( get( mouseX, mouseY ));
-         
-        break;
+        
       
       case 76: // l load image
         
@@ -226,7 +223,10 @@ case 71: // g  grab drag and drop
         
       break; 
 
-
+        case 67: 
+        println("color = "+pg.get( mouseX, mouseY));
+         selectedBrush.setBrushColor( abs(pg.get( mouseX, mouseY)));
+        break;
 
 
 

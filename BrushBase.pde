@@ -115,6 +115,12 @@ class BrushBase
     if(idle)
 { return;   }
 
+
+     noFill();
+     stroke(#000000, 50);
+      ellipse(mouseX, mouseY, rayon, rayon);
+
+
      showRadiusGizmo();
      pg.beginDraw();
      pg.stroke(brushcolor);
@@ -123,7 +129,9 @@ class BrushBase
     {
        ShowDrawingGizmo();
     }
- 
+   
+     
+   
    
   }
 
@@ -132,6 +140,7 @@ class BrushBase
   fill(#ff0000, 20);
   stroke(#ff0000, 50);
   ellipse(mouseX, mouseY, rayon, rayon);
+  
 }
 
 
