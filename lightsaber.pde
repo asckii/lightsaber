@@ -224,8 +224,8 @@ case 71: // g  grab drag and drop
       break; 
 
         case 67: 
-        println("color = "+pg.get( mouseX, mouseY));
-         selectedBrush.setBrushColor( abs(pg.get( mouseX, mouseY)));
+        println("color = "+ (get( mouseX, mouseY)+ " "+selectedBrush.getBrushColor() ));
+         selectedBrush.setBrushColor(get( mouseX, mouseY) );
         break;
 
 

@@ -174,6 +174,10 @@ return idle;
     return name;
   }
   
+  color getBrushColor()
+  {
+   return brushColor;
+  }
   
   void setBrushColor(color c)
   {
