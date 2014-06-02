@@ -11,7 +11,7 @@ import controlP5.*;
 import g4p_controls.*;
 import codeanticode.tablet.*;
 
-
+// branch brush_cursor
 Point2dArray pointsArray;
 String SAVE_FOLDER="C:\\Users\\bruno\\Desktop\\";
 String SAVE_NAME="sketche";
@@ -165,17 +165,7 @@ break;
 
 
 case 82:// r
-
-if (!raduisGizmo.getVisible()){
-  raduisGizmo.setVisible(true);
-  raduisGizmo.setLoc(mouseX,mouseY);
-  selectedBrush.setIdle(true);
-
-}
-else
-{
-  selectedBrush.setIdle(false);
-}
+changeRaduis();
 
 break;
 
@@ -207,30 +197,9 @@ case 71: // g  grab drag and drop
       
         
       
-      case 76: // l load image
+      case 76: //
         
-       String f="";
-        jFileChooser1.setDialogTitle(" Charger fichier ");
-
-        //jFileChooser1.setFileFilter(new SimpleFileFilter("jpg"));
-        jFileChooser1.setCurrentDirectory(new File("C:\\Users\\bruno\\Desktop\\temp_web"));
-        // try catch ici
-        if (jFileChooser1.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            f=(jFileChooser1.getSelectedFile().getAbsolutePath()); //si un fichier est selectionné, récupérer le fichier puis sont path et l'afficher dans le champs de texte
-        }
-        
-        if (f.length()>2)
-        {
-        dragimage.initImage(f);
-        //dragimage.setActivateDragImage(true);
-        dragimage.setVisible(true);
-        selectedBrush.setIdle(true);
-        }
-        else
-        {
-          println("opération annulée");
-        }
-        println(" fichier "+f);
+       loadImage();
         
       break; 
 
@@ -246,6 +215,32 @@ case 71: // g  grab drag and drop
 }
 
 
+
+
+void loadImage(){
+String f="";
+        jFileChooser1.setDialogTitle(" Charger fichier ");
+
+        //jFileChooser1.setFileFilter(new SimpleFileFilter("jpg"));
+        jFileChooser1.setCurrentDirectory(new File("C:\\Users\\bruno\\Desktop\\temp_web"));
+        // try catch ici
+        if (jFileChooser1.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            f=(jFileChooser1.getSelectedFile().getAbsolutePath()); //si un fichier est selectionné, récupérer le fichier puis sont path et l'afficher dans le champs de texte
+        }
+        
+        if (f.length()>2)
+        {
+        dragimage.initImage(f);
+        dragimage.setVisible(true);
+        selectedBrush.setIdle(true);
+        }
+        else
+        {
+          println("opération annulée");
+        }
+        println(" fichier "+f);
+}
+
 void clearPg()
 {
   pg.beginDraw();
@@ -257,11 +252,23 @@ void clearPg()
   image(pg, 0, 0);
 }
 
+void changeRaduis()
+{
+  if (!raduisGizmo.getVisible()){
+  raduisGizmo.setVisible(true);
+  raduisGizmo.setLoc(mouseX,mouseY);
+  selectedBrush.setIdle(true);
 
+}
+else
+{
+  selectedBrush.setIdle(false);
+}
+
+}
 
 void chooseColor()
 {
-println( (int)red(brushcolor)+" "+(int)green(brushcolor)+" "+(int) blue(brushcolor));
 Color selectedBrushColor=new Color( (int)red(brushcolor),(int)green(brushcolor),(int) blue(brushcolor));
 Color c = jColorChooser.showDialog(this, "Choose a Color", selectedBrushColor);
 try {
@@ -275,19 +282,12 @@ catch( NullPointerException e)
 
 }
 
+
+
 void  saveByJDialog(boolean transparent)
-{
+{ 
 
-
-
-  int d = day();   
-  int m = month();  
-  int y = year();  
-  int s = second();  
-  int mn = minute();  
-  int h = hour();    
-
-  String savename=SAVE_FOLDER+SAVE_NAME+"-"+d+m+y+"_"+h+mn+s+".png";
+  String savename=SAVE_FOLDER+SAVE_NAME+"-"+UtilsFunctions.getDate()+"_"+UtilsFunctions.getHour()+".png";
   JFileChooser chooser = new JFileChooser();
   File f = new File(savename);
   chooser.setSelectedFile(f);
@@ -311,8 +311,6 @@ void  saveByJDialog(boolean transparent)
    
     tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
   
- 
-   
     println(" sauvegarde de "+chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName() );
   }
  
@@ -320,14 +318,8 @@ void  saveByJDialog(boolean transparent)
 }
 
 void saveJavascript()
-{
-  int d = day();   
-  int m = month();  
-  int y = year();  
-  int s = second();  
-  int mn = minute();  
-  int h = hour();    
-  String savename="sketche-"+d+m+y+"_"+h+mn+s+".jpg";
+{    
+  String savename="sketche-"+UtilsFunctions.getDate()+"_"+UtilsFunctions.getHour()+".jpg";
   save(savename);// js builds
 }
 
@@ -345,6 +337,22 @@ void debugInfo()
   }
 }
 
+
+
+
+
+void mousePressed() {
+   dragimage.clicked();
+   if ((mousePressed && mouseButton == RIGHT)  )
+   {
+       selectedBrush.setIdle(false);
+   }
+}
+
+void mouseReleased() {
+ dragimage.stopDragging();
+ 
+}
 
 
 void draw() {
@@ -367,21 +375,6 @@ void draw() {
   selectedBrush.draw();
 
 }
-
-void mousePressed() {
-   dragimage.clicked();
-   if ((mousePressed && mouseButton == RIGHT)  )
-   {
-       selectedBrush.setIdle(false);
-   }
-}
-
-void mouseReleased() {
- dragimage.stopDragging();
- 
-}
-
-
 
 
 
