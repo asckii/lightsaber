@@ -13,7 +13,9 @@ import codeanticode.tablet.*;
 
 
 Point2dArray pointsArray;
-
+String SAVE_FOLDER="C:\\Users\\bruno\\Desktop\\";
+String SAVE_NAME="sketche";
+int BACKGROUND_FILL=204;
 PGraphics pg, pg2;
 ControlP5 cp5;
 
@@ -36,7 +38,7 @@ color brushcolor;
  JColorChooser jColorChooser;
 
 static int WIDTH=1000, HEIGHT=600;
-
+boolean saveOpacity=false;
 boolean showPointFlag;
 boolean showDebugInfo;
 boolean showRaduisGizmo;
@@ -108,8 +110,8 @@ selectedBrush.keyPressed();
     break;
 
   case 83:
-   showDebugInfo=false;
-    saveByJDialog();
+  
+    saveByJDialog(false);
     
   break;
 
@@ -238,7 +240,7 @@ case 71: // g  grab drag and drop
 void clearPg()
 {
   pg.beginDraw();
-  pg.fill(204);
+  pg.fill(BACKGROUND_FILL);
 
   pg.background(0, 0);
   pointsArray=new Point2dArray();
@@ -264,17 +266,10 @@ catch( NullPointerException e)
 
 }
 
-void  saveByJDialog()
+void  saveByJDialog(boolean opacity)
 {
+  saveOpacity=opacity;
 
-  if ( showDebugInfo==true)
-  {
-    //print("---");
-    //showDebugInfo=false;
-   
-    //redraw();
-   
-  }
 
   int d = day();   
   int m = month();  
@@ -283,7 +278,7 @@ void  saveByJDialog()
   int mn = minute();  
   int h = hour();    
 
-  String savename="sketche-"+d+m+y+"_"+h+mn+s+".jpg";
+  String savename=SAVE_FOLDER+SAVE_NAME+"-"+d+m+y+"_"+h+mn+s+".png";
   JFileChooser chooser = new JFileChooser();
   File f = new File(savename);
   chooser.setSelectedFile(f);
@@ -291,8 +286,23 @@ void  saveByJDialog()
   int returnVal = chooser.showSaveDialog(null);
   if (returnVal == JFileChooser.APPROVE_OPTION) 
   {
-    save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
 
+    PGraphics tmppg = createGraphics(WIDTH, HEIGHT);
+    tmppg.beginDraw();
+    tmppg.fill(BACKGROUND_FILL);
+    
+    if (!saveOpacity)
+    {
+    tmppg.rect(0, 0,WIDTH, HEIGHT);
+    }
+    
+    tmppg.image(pg, 0, 0);
+    tmppg.endDraw();
+   
+    tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
+  
+ 
+   
     println(" sauvegarde de "+chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName() );
   }
  
@@ -328,7 +338,7 @@ void debugInfo()
 
 
 void draw() {
-  background(204);
+  background(BACKGROUND_FILL);
   dragimage.display();
   debugInfo();
   
