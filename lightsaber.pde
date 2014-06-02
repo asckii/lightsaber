@@ -27,15 +27,16 @@ BrushRandom brushrandom;
 BrushJpen brushjpen;
 BrushBase selectedBrush;
 BrushMotif brushMotif;
-
 RaduisGizmo raduisGizmo;
 
 JFileChooser jFileChooser1;
+JColorChooser jColorChooser;
+
 DragImage dragimage;
 PImage img;
 
 color brushcolor;
- JColorChooser jColorChooser;
+
 
 static int WIDTH=1000, HEIGHT=600;
 boolean saveTransparency=false;
@@ -96,8 +97,100 @@ selectedBrush.keyPressed();
   switch(keyCode)
   {
   
-  case 68:
-    if (showDebugInfo)
+    case 68:
+     debugBar();
+    break;
+  
+    case 83:
+    activateTransparency();
+    break;
+  
+    case 79:// backspace
+     switchTransparency();
+    break;
+
+    case 8:// backspace
+     clearPg();
+    break;
+ 
+    case 49:// 1
+    changeBrush(brushsimple);
+    break;
+    
+    case 50:// 2
+      changeBrush(brushlink);
+    break;
+    
+    case 51:// 3
+     changeBrush(brushrandom);
+    break;
+    
+    case 52:// 4
+    changeBrush(brushhelper);
+    break;
+    
+    case 53:// 5
+     changeBrush(brushjpen);
+    break;
+    
+    case 54:// 6
+    changeBrush(brusherase);
+    break;  
+    
+    case 55:// 7
+    changeBrush(brushMotif);
+    break;  
+  
+    case 65:// a
+      chooseColor();
+    break;
+
+    case 82:// r
+    changeRaduis();
+    break;
+    
+    case 71: // g  grab drag and drop
+    grabImage();
+    break;
+    
+    case 72: // h visible true false
+     hideImage();
+     break;
+     
+    case 76: // l
+     loadImage();
+    break; 
+    
+    case 67: // c
+    pickColor();
+    break;
+
+  }
+}
+void changeBrush(BrushBase brush)
+{
+    selectedBrush=brush;
+    selectedBrush.setBrushColor(brushcolor);
+}
+
+void switchTransparency()
+{
+  saveTransparency=!saveTransparency;
+}
+
+void activateTransparency()
+{
+  if(saveTransparency)
+  {
+    saveByJDialog(true);
+  } else
+  {
+    saveByJDialog(false);
+  }
+}
+
+void debugBar(){
+ if (showDebugInfo)
     {
       showDebugInfo=false;
       redraw();
@@ -107,72 +200,14 @@ selectedBrush.keyPressed();
       showDebugInfo=true;
       redraw();
     }
-    break;
+}
 
-  case 83:
-  if(saveTransparency)
-  {
-    saveByJDialog(true);
-  } else
-  {
-    saveByJDialog(false);
-  }
-  break;
-case 79:// backspace
- saveTransparency=!saveTransparency;
-break;
+void hideImage(){
+ dragimage.setVisible(!dragimage.getVisible()); 
+}
 
-
-
-case 8:// backspace
- clearPg();
-break;
- 
-case 49:// 1
- selectedBrush=brushsimple;
-  selectedBrush.setBrushColor(brushcolor);
-break;
-case 50:// 1
- selectedBrush=brushlink;
-  selectedBrush.setBrushColor(brushcolor);
-break;
-case 51:// 1
-  selectedBrush=brushrandom;
-   selectedBrush.setBrushColor(brushcolor);
-break;
-case 52:// 1
-  selectedBrush=brushhelper;
-   selectedBrush.setBrushColor(brushcolor);
-break;
-case 53:// 1
- selectedBrush=brushjpen;
-  selectedBrush.setBrushColor(brushcolor);
-break;
-case 54:// 1
- selectedBrush=brusherase;
-  selectedBrush.setBrushColor(brushcolor);
-break;  
-  case 55:// 1
- selectedBrush=brushMotif;
-  selectedBrush.setBrushColor(brushcolor);
-break;  
-  
-case 65:// 1
-
-  chooseColor();
-break;
-
-
-
-case 82:// r
-changeRaduis();
-
-break;
-
-
-case 71: // g  grab drag and drop
-
-      if (dragimage.getActivateDragImage())
+void grabImage(){
+    if (dragimage.getActivateDragImage())
       {
         dragimage.setActivateDragImage(false);
         selectedBrush.setIdle(false);
@@ -182,39 +217,12 @@ case 71: // g  grab drag and drop
         dragimage.setActivateDragImage(true);
         selectedBrush.setIdle(true);
       }
-      
-      
-      
-      break;
-      
-      case 72: // h visible true false
-    
-        dragimage.setVisible(!dragimage.getVisible());
-      
-
- 
-        break;
-      
-        
-      
-      case 76: //
-        
-       loadImage();
-        
-      break; 
-
-        case 67: 
-        println("color = "+ (get( mouseX, mouseY)+ " "+selectedBrush.getBrushColor() ));
-         selectedBrush.setBrushColor(get( mouseX, mouseY) );
-        break;
-
-
-
-
-  }
 }
 
-
+void pickColor(){
+   println("color = "+ (get( mouseX, mouseY)+ " "+selectedBrush.getBrushColor() ));
+         selectedBrush.setBrushColor(get( mouseX, mouseY) );
+}
 
 
 void loadImage(){
@@ -271,14 +279,14 @@ void chooseColor()
 {
 Color selectedBrushColor=new Color( (int)red(brushcolor),(int)green(brushcolor),(int) blue(brushcolor));
 Color c = jColorChooser.showDialog(this, "Choose a Color", selectedBrushColor);
-try {
-brushcolor=color(c.getRed(),c.getGreen(),c.getBlue(),255);
-selectedBrush.setBrushColor(brushcolor);
-}
-catch( NullPointerException e)
-{
-  println("nullpointer exeption");
-}
+  try {
+    brushcolor=color(c.getRed(),c.getGreen(),c.getBlue(),255);
+    selectedBrush.setBrushColor(brushcolor);
+  }
+  catch( NullPointerException e)
+  {
+    println("nullpointer exeption");
+  }
 
 }
 
@@ -300,11 +308,11 @@ void  saveByJDialog(boolean transparent)
     tmppg.beginDraw();
     tmppg.fill(BACKGROUND_FILL);
     
-    if (!transparent)
-    {
-    
-    tmppg.rect(0, 0,WIDTH, HEIGHT);
-    }
+      if (!transparent)
+      {
+      
+      tmppg.rect(0, 0,WIDTH, HEIGHT);
+      }
     
     tmppg.image(pg, 0, 0);
     tmppg.endDraw();
@@ -327,7 +335,6 @@ void debugInfo()
 {
   if (showDebugInfo)
   {
-   
     fill(0, 102, 153);
     text(" x= "+mouseX+" y= "+mouseY+" name "+selectedBrush.getName()+" Rayon "+selectedBrush.getRayon()+" save transparent = "+saveTransparency+" (press d to hide)", 50, 50);
   }
@@ -336,10 +343,6 @@ void debugInfo()
      println(" showdebug "+showDebugInfo);
   }
 }
-
-
-
-
 
 void mousePressed() {
    dragimage.clicked();
@@ -366,9 +369,7 @@ void draw() {
   raduisGizmo.draw();
   selectedBrush.setRayon(raduisGizmo.getRaduis());
   }
- 
- 
- 
+
   pg.beginDraw();
   pg.endDraw();
   image(pg, 0, 0);
