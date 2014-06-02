@@ -13,12 +13,24 @@ import codeanticode.tablet.*;
 
 // branch brush_cursor
 Point2dArray pointsArray;
-String SAVE_FOLDER="C:\\Users\\bruno\\Desktop\\";
-String SAVE_NAME="sketche";
-int BACKGROUND_FILL=204;
-PGraphics pg, pg2;
+static int WIDTH=1000, HEIGHT=600;
+static String DEFAULT_LOADING_DIRECTORY="C:\\Users\\bruno\\Desktop\\temp_web";
+static String SAVE_FOLDER="C:\\Users\\bruno\\Desktop\\";
+static String SAVE_NAME="sketche";
+static String LOAD_FILE_TEXT=" load a file";
+static int BACKGROUND_FILL=204;
+static String COLOR_CHOOSER_TEXT=" choose a color ";
+static String NULL_POINTER_EXCEPTION_TEXT=" null pointer execption occured ";
+static String DEBUG_X_TEXT="  X= ";
+static String DEBUG_Y_TEXT="  Y= ";
+static String DEBUG_TYPE_TEXT="  |  brush type ";
+static String DEBUG_RADUIS_TEXT="  | raduis ";
+static String DEBUG_SAVETRANSPARENCY_TEXT="| save transparent = ";
+static String DEBUG_PRESSEDKEY_TEXT="  | pressedKey ";
+static String DEBUG_INFO_TEXT="(press d to hide)";
+PGraphics pg, pg2; 
 ControlP5 cp5;
-
+String pressedKey;
 BrushLink brushlink;
 BrushSimple brushsimple;
 BrushErase brusherase;
@@ -38,7 +50,7 @@ PImage img;
 color brushcolor;
 
 
-static int WIDTH=1000, HEIGHT=600;
+
 boolean saveTransparency=false;
 boolean showPointFlag;
 boolean showDebugInfo;
@@ -50,7 +62,6 @@ int knobValue = 100;
 Tablet t;
 
 void setup() {
-  println(this);
   size(WIDTH, HEIGHT);
   colorMode(RGB, 255);
   pg = createGraphics(WIDTH, HEIGHT);
@@ -73,7 +84,8 @@ void setup() {
   useCurveToDraw=false;
 
 
-  dragimage = new DragImage("test.jpg",0,0);
+ dragimage = new DragImage("test.jpg",0,0);
+
   jFileChooser1 = new JFileChooser();
 
  //
@@ -91,8 +103,8 @@ void setup() {
 }
 
 void keyPressed() {
-  println(" key " + keyCode); 
-selectedBrush.keyPressed();
+  pressedKey=str(keyCode); 
+ selectedBrush.keyPressed();
 
   switch(keyCode)
   {
@@ -167,6 +179,7 @@ selectedBrush.keyPressed();
 
   }
 }
+
 void changeBrush(BrushBase brush)
 {
     selectedBrush=brush;
@@ -227,10 +240,10 @@ void pickColor(){
 
 void loadImage(){
 String f="";
-        jFileChooser1.setDialogTitle(" Charger fichier ");
+        jFileChooser1.setDialogTitle(LOAD_FILE_TEXT);
 
         //jFileChooser1.setFileFilter(new SimpleFileFilter("jpg"));
-        jFileChooser1.setCurrentDirectory(new File("C:\\Users\\bruno\\Desktop\\temp_web"));
+        jFileChooser1.setCurrentDirectory(new File(DEFAULT_LOADING_DIRECTORY));
         // try catch ici
         if (jFileChooser1.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             f=(jFileChooser1.getSelectedFile().getAbsolutePath()); //si un fichier est selectionné, récupérer le fichier puis sont path et l'afficher dans le champs de texte
@@ -278,14 +291,14 @@ else
 void chooseColor()
 {
 Color selectedBrushColor=new Color( (int)red(brushcolor),(int)green(brushcolor),(int) blue(brushcolor));
-Color c = jColorChooser.showDialog(this, "Choose a Color", selectedBrushColor);
+Color c = jColorChooser.showDialog(this, COLOR_CHOOSER_TEXT, selectedBrushColor);
   try {
     brushcolor=color(c.getRed(),c.getGreen(),c.getBlue(),255);
     selectedBrush.setBrushColor(brushcolor);
   }
   catch( NullPointerException e)
   {
-    println("nullpointer exeption");
+    println(NULL_POINTER_EXCEPTION_TEXT);
   }
 
 }
@@ -294,7 +307,6 @@ Color c = jColorChooser.showDialog(this, "Choose a Color", selectedBrushColor);
 
 void  saveByJDialog(boolean transparent)
 { 
-
   String savename=SAVE_FOLDER+SAVE_NAME+"-"+UtilsFunctions.getDate()+"_"+UtilsFunctions.getHour()+".png";
   JFileChooser chooser = new JFileChooser();
   File f = new File(savename);
@@ -319,7 +331,6 @@ void  saveByJDialog(boolean transparent)
    
     tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
   
-    println(" sauvegarde de "+chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName() );
   }
  
   //
@@ -327,20 +338,22 @@ void  saveByJDialog(boolean transparent)
 
 void saveJavascript()
 {    
-  String savename="sketche-"+UtilsFunctions.getDate()+"_"+UtilsFunctions.getHour()+".jpg";
+  String savename=SAVE_NAME+"-"+UtilsFunctions.getDate()+"_"+UtilsFunctions.getHour()+".jpg";
   save(savename);// js builds
 }
+
+
 
 void debugInfo()
 {
   if (showDebugInfo)
   {
     fill(0, 102, 153);
-    text(" x= "+mouseX+" y= "+mouseY+" name "+selectedBrush.getName()+" Rayon "+selectedBrush.getRayon()+" save transparent = "+saveTransparency+" (press d to hide)", 50, 50);
+    text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +DEBUG_INFO_TEXT, 50, 50);
   }
   else
   {
-     println(" showdebug "+showDebugInfo);
+     
   }
 }
 
@@ -360,7 +373,9 @@ void mouseReleased() {
 
 void draw() {
   background(BACKGROUND_FILL);
+ 
   dragimage.display();
+  
   debugInfo();
   
 
