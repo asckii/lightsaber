@@ -27,7 +27,8 @@ static String DEBUG_TYPE_TEXT="  |  brush type ";
 static String DEBUG_RADUIS_TEXT="  | raduis ";
 static String DEBUG_SAVETRANSPARENCY_TEXT="| save transparent = ";
 static String DEBUG_PRESSEDKEY_TEXT="  | pressedKey ";
-static String DEBUG_INFO_TEXT="(press d to hide)";
+static String DEBUG_INFO_TEXT="  (press d to hide)";
+static String DEBUG_FRAMECOUNT="  framecount = ";
 PGraphics pg, pg2; 
 ControlP5 cp5;
 String pressedKey;
@@ -101,6 +102,8 @@ void setup() {
   
   
 }
+
+
 
 void keyPressed() {
   pressedKey=str(keyCode); 
@@ -176,10 +179,30 @@ void keyPressed() {
     case 67: // c
     pickColor();
     break;
+    
+     case 88: // x
+   flipHorizontal();
+    break;
+    
+      case 44: // ?
+   replayBrush();
+    break;
 
   }
 }
 
+void replayBrush(){
+ selectedBrush.executeStroke();
+}
+
+void flipHorizontal()
+{
+ 
+  pg.beginDraw();
+  pg.scale(-0.5,0.5);
+  pg.endDraw();
+  image(pg, 0, 0);
+}
 void changeBrush(BrushBase brush)
 {
     selectedBrush=brush;
@@ -350,6 +373,7 @@ void debugInfo()
   {
     fill(0, 102, 153);
     text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +DEBUG_INFO_TEXT, 50, 50);
+    text(DEBUG_FRAMECOUNT+frameCount,50,63);
   }
   else
   {
@@ -366,6 +390,7 @@ void mousePressed() {
 }
 
 void mouseReleased() {
+  selectedBrush.mouseReleased();
  dragimage.stopDragging();
  
 }

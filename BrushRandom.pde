@@ -54,6 +54,7 @@ class BrushRandom extends BrushBase
     }
    super.draw();
   drawBrushStroke();
+  recordStroke();
   }
 
 

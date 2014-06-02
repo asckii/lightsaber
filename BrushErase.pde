@@ -13,8 +13,9 @@ class BrushErase extends BrushBase
     
     noFill(); stroke(0,255,0);
     ellipse(mouseX,mouseY,rayon,rayon);
-    eraseFunction();
-    
+   eraseFunction();
+   
+     
   }
  
  
@@ -26,6 +27,7 @@ class BrushErase extends BrushBase
     {
       return;
     }
+    recordStroke();
     drawBrushStroke();
    super.draw();
   

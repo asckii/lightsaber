@@ -10,11 +10,13 @@ class BrushBase
   boolean makeCircleFlag;
   boolean circleConstructionFlag;
   float previousX, previousY, storedCenterX, storedCenterY;
-  int b,brushSize;
+  int brushSize;
   color brushColor;
-  
-  
-  
+  int pFramecount;
+  int deltaFramecount;
+  int pressure;
+  Stroke stroke;
+  boolean isNewStroke=true;
   BrushBase(PGraphics p, Point2dArray p2, String n)
   {
     previousX=0;
@@ -24,7 +26,8 @@ class BrushBase
     setBrushColor(c);
     update(p, p2, n);
     idle=false;
-    redraw();
+     stroke=new Stroke();
+    //redraw();
   }
 
   void update(PGraphics p, Point2dArray p2, String n)
@@ -48,13 +51,12 @@ class BrushBase
   
   void drawBrushStroke()
   {
-    
+     
     
     if (mousePressed && (mouseButton ==LEFT)) {
-
-
-      //println("dans le draw "+key);
-      //  - section draw lines
+         
+          
+      
       if (previousX==0 && previousY==0)
       {
         previousX=mouseX;
@@ -80,8 +82,36 @@ class BrushBase
       previousY=0;
     }
   } 
+  
+  
+  
+void recordStroke()
+{
+    if (mousePressed && (mouseButton ==LEFT)) {
+        println("pressed!!!! ");
+        
+        if(isNewStroke){
+        stroke=new Stroke();
+        isNewStroke=false;
+        }
+        else
+        {
+        stroke.record(frameCount,mouseX,mouseY);
+        } 
+    }
+  
 
+} 
 
+void mouseReleased()
+{
+ isNewStroke=true;
+}
+
+void executeStroke(){
+stroke.execute();
+stroke=new Stroke();
+}
 
 
   void keyPressed() {
@@ -183,4 +213,25 @@ return idle;
   {
    brushColor=c;
   }
+  
+  
+  String toString()
+  {
+    String result =
+    "{'name':"+name+","+
+    "'rayon':"+rayon+","+
+     "'makeLinkFlag':"+makeLinkFlag+","+
+     "'idle':"+idle+","+
+     "'pg':"+pg+","+
+     "'previousX':"+previousX+","+
+       "'previousY':"+previousY+","+
+  "'storedCenterX':"+storedCenterX+","+
+"'storedCenterY':"+storedCenterY+","+
+"'brushSize':"+brushSize+","+
+"'brushColor':"+brushColor+","+
+"'pressure':"+pressure+",";
+  return result;
+  }
+  
+  
 }

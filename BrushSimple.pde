@@ -52,7 +52,8 @@ class BrushSimple extends BrushBase
     }
    super.draw();
   drawBrushStroke();
-//showRadiusGizmo();
+  recordStroke();
+
   }
 
 

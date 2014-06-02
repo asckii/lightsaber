@@ -66,6 +66,7 @@ class BrushMotif extends BrushBase
     }
    super.draw();
   drawBrushStroke();
+  recordStroke();
 //showRadiusGizmo();
   }
 

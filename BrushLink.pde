@@ -95,7 +95,7 @@ void draw()
   super.draw();
   makeLink();
   drawBrushStroke();
-  
+  recordStroke();
 }
 
 }

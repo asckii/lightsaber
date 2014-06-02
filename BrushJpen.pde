@@ -36,7 +36,7 @@ class BrushJpen extends BrushBase
     pg.line(pmouseX, pmouseY, mouseX, mouseY);
         
     pg.endDraw();
-
+    recordStroke();
    
     }
     showRadiusGizmo();
