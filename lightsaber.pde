@@ -38,7 +38,7 @@ color brushcolor;
  JColorChooser jColorChooser;
 
 static int WIDTH=1000, HEIGHT=600;
-boolean saveOpacity=false;
+boolean saveTransparency=false;
 boolean showPointFlag;
 boolean showDebugInfo;
 boolean showRaduisGizmo;
@@ -110,10 +110,19 @@ selectedBrush.keyPressed();
     break;
 
   case 83:
-  
+  if(saveTransparency)
+  {
+    saveByJDialog(true);
+  } else
+  {
     saveByJDialog(false);
-    
+  }
   break;
+case 79:// backspace
+ saveTransparency=!saveTransparency;
+break;
+
+
 
 case 8:// backspace
  clearPg();
@@ -266,9 +275,9 @@ catch( NullPointerException e)
 
 }
 
-void  saveByJDialog(boolean opacity)
+void  saveByJDialog(boolean transparent)
 {
-  saveOpacity=opacity;
+
 
 
   int d = day();   
@@ -291,8 +300,9 @@ void  saveByJDialog(boolean opacity)
     tmppg.beginDraw();
     tmppg.fill(BACKGROUND_FILL);
     
-    if (!saveOpacity)
+    if (!transparent)
     {
+    
     tmppg.rect(0, 0,WIDTH, HEIGHT);
     }
     
@@ -327,7 +337,7 @@ void debugInfo()
   {
    
     fill(0, 102, 153);
-    text(" x= "+mouseX+" y= "+mouseY+" name "+selectedBrush.getName()+" Rayon "+selectedBrush.getRayon()+" (press d to hide)", 50, 50);
+    text(" x= "+mouseX+" y= "+mouseY+" name "+selectedBrush.getName()+" Rayon "+selectedBrush.getRayon()+" save transparent = "+saveTransparency+" (press d to hide)", 50, 50);
   }
   else
   {
