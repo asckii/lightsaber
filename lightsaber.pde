@@ -13,6 +13,7 @@ import codeanticode.tablet.*;
 
 // branch brush_cursor
 Point2dArray pointsArray;
+static String VERSION="beta 01";
 static int WIDTH=1000, HEIGHT=600;
 static String DEFAULT_LOADING_DIRECTORY="C:\\Users\\bruno\\Desktop\\temp_web";
 static String SAVE_FOLDER="C:\\Users\\bruno\\Desktop\\";
@@ -35,7 +36,7 @@ String pressedKey;
 BrushLink brushlink;
 BrushSimple brushsimple;
 BrushErase brusherase;
-BrushHelper brushhelper;
+
 BrushRandom brushrandom;
 BrushJpen brushjpen;
 BrushBase selectedBrush;
@@ -72,7 +73,7 @@ void setup() {
   brushlink=new BrushLink(pg,pointsArray," brush link ");
   brushsimple=new BrushSimple(pg,pointsArray, " brush simple ");
   brusherase=new BrushErase(pg,pointsArray," brush erase ");
-  brushhelper=new BrushHelper(pg,pointsArray," brush  helper ");
+
   brushrandom=new BrushRandom(pg,pointsArray," brush random ");
   brushjpen=new BrushJpen(pg,pointsArray," brush Jpen ",t);
   brushMotif=new BrushMotif(pg,pointsArray," brush dd ",t);
@@ -99,6 +100,10 @@ void setup() {
   println("backspace :  effacer ");
   println("s :  sauvegarder l'image ");
   println("d : debug info");
+  println("Working Directory = " + System.getProperty("user.dir"));
+  println("os = " + System.getProperty("os.name"));
+  println("user.home = " + System.getProperty("user.home"));
+  println("sketchpath = " + sketchPath(""));
   
   
 }
@@ -141,7 +146,7 @@ void keyPressed() {
     break;
     
     case 52:// 4
-    changeBrush(brushhelper);
+    //changeBrush(brushhelper);
     break;
     
     case 53:// 5
@@ -180,8 +185,12 @@ void keyPressed() {
     pickColor();
     break;
     
+    case 87: //w
+   changeFlip(false);
+    break;
+    
      case 88: // x
-   flipHorizontal();
+   changeFlip(true);
     break;
     
       case 44: // ?
@@ -195,13 +204,16 @@ void replayBrush(){
  selectedBrush.executeStroke();
 }
 
-void flipHorizontal()
+void changeFlip(boolean b)
 {
- 
-  pg.beginDraw();
-  pg.scale(-0.5,0.5);
-  pg.endDraw();
-  image(pg, 0, 0);
+  if(b)
+  {
+  flipHorizontal=!flipHorizontal;
+  }
+  else
+  {
+    flipVertical=!flipVertical;
+  }
 }
 void changeBrush(BrushBase brush)
 {
@@ -288,9 +300,7 @@ String f="";
 void clearPg()
 {
   pg.beginDraw();
-  pg.fill(BACKGROUND_FILL);
-
-  pg.background(0, 0);
+  pg.clear();
   pointsArray=new Point2dArray();
   pg.endDraw();
   image(pg, 0, 0);
@@ -345,11 +355,16 @@ void  saveByJDialog(boolean transparent)
     
       if (!transparent)
       {
-      
       tmppg.rect(0, 0,WIDTH, HEIGHT);
       }
     
+    
+     
     tmppg.image(pg, 0, 0);
+    tmppg.noSmooth();
+    tmppg.fill(0, 102, 153);
+    tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+VERSION,WIDTH-200,HEIGHT-20);
+    tmppg.smooth();
     tmppg.endDraw();
    
     tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
@@ -374,6 +389,9 @@ void debugInfo()
     fill(0, 102, 153);
     text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +DEBUG_INFO_TEXT, 50, 50);
     text(DEBUG_FRAMECOUNT+frameCount,50,63);
+    pg.fill(0, 102, 153);
+    text(UtilsFunctions.getDate()+" - Lightsaber_"+VERSION,WIDTH-200,HEIGHT-20);
+
   }
   else
   {
@@ -392,8 +410,29 @@ void mousePressed() {
 void mouseReleased() {
   selectedBrush.mouseReleased();
  dragimage.stopDragging();
- 
 }
+boolean flipVertical=false;
+boolean flipHorizontal=false;
+
+void changeScale()
+{
+   if (flipVertical)
+  {
+
+  imageFlip(pg,300,600,"v");
+ flipVertical=false;
+  
+  }
+  
+  if (flipHorizontal)
+  {
+
+  imageFlip(pg,300,600,"h");
+ flipHorizontal=false;
+  
+  }
+}
+
 
 
 void draw() {
@@ -411,7 +450,11 @@ void draw() {
   }
 
   pg.beginDraw();
+   
+
   pg.endDraw();
+  
+  changeScale();
   image(pg, 0, 0);
   selectedBrush.draw();
 
@@ -422,7 +465,69 @@ void draw() {
 
 
 
-
+//imageFlip function by nick lally
+//paste function at the bottom of your sketch, and use like this: imageFlip(imageName,x,y,"mode")
+//modes are "v", "v2", "h", "h2"
+//"v" mirrors vertically, "v2" mirrors top half vertically
+//"h" mirrors horizontally, "h2" mirrors left half horizontally
+void imageFlip(PImage imageName, int xPos, int yPos, String mode){
+  //"v2" flips the top half of the image across the x-axis
+  if(mode == "v2"){
+    imageName.loadPixels();
+    for(int i = 0; i < imageName.height; i++){
+      for(int j = 1; j < imageName.width; j++){
+        imageName.pixels[(imageName.height - 1 - i)*(imageName.width) + j] = imageName.pixels[i*(imageName.width) + j];
+      }
+    }
+    imageName.updatePixels();
+    image(imageName,xPos,yPos);
+ 
+  //"v" flips the entire image across the x-axis
+  }else if(mode == "v"){
+    imageName.loadPixels();
+    int tempImage[] = new int[imageName.width*imageName.height];
+    for(int i = 0; i < imageName.width*imageName.height; i++){
+     tempImage[i] = imageName.pixels[i];
+    }
+ 
+    for(int i = 0; i < imageName.height; i++){
+      for(int j = 1; j < imageName.width; j++){
+        imageName.pixels[(imageName.height - 1 - i)*(imageName.width) + j] = tempImage[i*(imageName.width) + j];
+      }
+    }
+    imageName.updatePixels();
+    image(imageName,xPos,yPos);
+ 
+  //"h2" flips the left half of the image across the y-axis
+  }else if(mode == "h2"){
+    imageName.loadPixels();
+    for(int i = 0; i < imageName.height; i++){
+      for(int j = 1; j < imageName.width; j++){
+        imageName.pixels[i*imageName.width + j] = imageName.pixels[(i+1)*(imageName.width) - j];
+      }
+    }
+    imageName.updatePixels();
+    image(imageName,xPos,yPos); 
+ 
+  //"h" flips the entire image across the y-axis
+  }else if(mode == "h"){
+    imageName.loadPixels();
+    int tempImage[] = new int[imageName.width*imageName.height];
+    for(int i = 0; i < imageName.width*imageName.height; i++){
+     tempImage[i] = imageName.pixels[i];
+    }
+    for(int i = 0; i < imageName.height; i++){
+      for(int j = 1; j < imageName.width; j++){
+        imageName.pixels[(i+1)*(imageName.width) - j] = tempImage[i*imageName.width + j];
+      }
+    }
+    imageName.updatePixels();
+    image(imageName,xPos,yPos);
+  } else {
+    println("No mirror direction specified!");
+    println("Use v, v2, h, or h2 for the 4th argument");
+  }
+} 
 
 
 
@@ -599,6 +704,11 @@ controlP5.Controller : void remove()
 controlP5.Controller : void setView(ControllerView, int) 
 java.lang.Object : String toString() 
 java.lang.Object : boolean equals(Object) 
+
+
+  translate(WIDTH,0);
+scale(-1,1);
+ 
 
 */
 

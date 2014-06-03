@@ -88,8 +88,7 @@ class BrushBase
 void recordStroke()
 {
     if (mousePressed && (mouseButton ==LEFT)) {
-        println("pressed!!!! ");
-        
+                
         if(isNewStroke){
         stroke=new Stroke();
         isNewStroke=false;
