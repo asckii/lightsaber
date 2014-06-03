@@ -31,7 +31,7 @@ class BrushJpen extends BrushBase
      
     
     pg.beginDraw();
-    pg.stroke(brushColor);
+    pg.stroke(brushColor,transparency);
     pg.strokeWeight(int(rayon * tablet.getPressure()));
     pg.line(pmouseX, pmouseY, mouseX, mouseY);
         

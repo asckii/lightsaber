@@ -14,7 +14,11 @@ class BrushBase
   color brushColor;
   int pFramecount;
   int deltaFramecount;
-  int pressure;
+  float pressure;
+  float pressureModifier;
+  boolean rotateBrush;
+  int randomBrush;
+  int transparency;
   Stroke stroke;
   boolean isNewStroke=true;
   BrushBase(PGraphics p, Point2dArray p2, String n)
@@ -188,6 +192,18 @@ stroke=new Stroke();
       ellipse(mouseX, mouseY, rayon, rayon);
     }
   }
+
+void setTransparency(int i)
+{
+  transparency=i;
+}
+
+int getTransparency()
+{
+return transparency;
+}
+
+
 
 void setIdle(boolean b)
 {

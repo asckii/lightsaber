@@ -36,7 +36,7 @@ class BrushLink extends BrushBase
           if (pt.distance(tmpPt)<rayon)
           {
             pg.beginDraw();
-            pg.stroke(brushColor);
+            pg.stroke(brushColor,transparency);
             pg.strokeWeight(0.25);
             pg.line((float)pt.getX(), (float)pt.getY(), (float)tmpPt.getX(), (float)tmpPt.getY());
             pg.endDraw();

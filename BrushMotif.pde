@@ -8,8 +8,9 @@ class BrushMotif extends BrushBase
      BrushMotif(PGraphics p, Point2dArray p2,String n,Tablet t)
   {
     super(p,p2,n);
-    initImage("motif.png");
+    initImage("motif4.png");
     tablet=t;
+    transparency=12;
   }
   
    void initImage(String s)
@@ -17,6 +18,7 @@ class BrushMotif extends BrushBase
     img= loadImage(s);
     w = img.width;
     h = img.height;
+    
   }
   
    void drawBrushStroke()
@@ -35,8 +37,7 @@ class BrushMotif extends BrushBase
   float x = lerp(pmouseX,mouseX, i/10.0);
   float y = lerp(pmouseY, mouseY, i/10.0);
   int tmpRayon=int(rayon * tablet.getPressure());
- pg.tint(255,0,0,50);
- 
+  pg.tint(brushColor,transparency);
   pg.image(img,x-tmpRayon/2,y-tmpRayon/2,tmpRayon,tmpRayon);
   }
  

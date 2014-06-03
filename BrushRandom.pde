@@ -21,7 +21,7 @@ class BrushRandom extends BrushBase
       previousY=mouseY;
     }
     pg.beginDraw();
-     pg.stroke(brushColor);
+     pg.stroke(brushColor,transparency);
     pg.strokeWeight(0.5);
     float mrx=mouseX+random(-rayon/5,rayon/5);
     float mry=mouseY+random(-rayon/5,rayon/5);
