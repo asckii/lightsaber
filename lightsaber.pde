@@ -10,6 +10,9 @@ import javax.swing.JFileChooser;
 import controlP5.*;
 import g4p_controls.*;
 import codeanticode.tablet.*;
+import java.awt.Frame;
+import java.awt.BorderLayout;
+import java.util.*;
 
 // branch brush_cursor
 Point2dArray pointsArray;
@@ -30,8 +33,13 @@ static String DEBUG_SAVETRANSPARENCY_TEXT="| save transparent = ";
 static String DEBUG_PRESSEDKEY_TEXT="  | pressedKey ";
 static String DEBUG_INFO_TEXT="  (press d to hide)";
 static String DEBUG_FRAMECOUNT="  framecount = ";
+
+
 PGraphics pg, pg2; 
 ControlP5 cp5;
+ControlFrame cf;
+int def;
+
 String pressedKey;
 BrushLink brushlink;
 BrushSimple brushsimple;
@@ -58,13 +66,16 @@ boolean showPointFlag;
 boolean showDebugInfo;
 boolean showRaduisGizmo;
 boolean useCurveToDraw;
-
+List<BrushBase> brushList;
 int myColorBackground = color(0,0,0);
 int knobValue = 100;
 Tablet t;
 
 void setup() {
   size(WIDTH, HEIGHT);
+
+  
+  
   colorMode(RGB, 255);
   pg = createGraphics(WIDTH, HEIGHT);
    t= new Tablet(this); 
@@ -77,6 +88,19 @@ void setup() {
   brushrandom=new BrushRandom(pg,pointsArray," brush random ");
   brushjpen=new BrushJpen(pg,pointsArray," brush Jpen ",t);
   brushMotif=new BrushMotif(pg,pointsArray," brush dd ",t);
+  
+  brushList=new ArrayList<BrushBase>();
+  brushList.add(brushsimple);
+  brushList.add(brushlink);
+  brushList.add(brushrandom);
+  brushList.add(brushMotif);
+  brushList.add(brushjpen);
+  brushList.add(brusherase);
+  
+
+    cp5 = new ControlP5(this);
+    cf = addControlFrame("Toolbox", 200,200);
+  
 
   raduisGizmo=new RaduisGizmo();
   selectedBrush=brushjpen;
@@ -108,7 +132,15 @@ void setup() {
   
 }
 
-
+void menuAction(ControlEvent theEvent)
+{  
+  println("theEvent = "+theEvent);
+  println("theEvent = "+ theEvent.getController().getId());
+ int id=theEvent.getController().getId();
+ if(id>0)
+  changeBrush(brushList.get(id));
+ 
+}
 
 void keyPressed() {
   pressedKey=str(keyCode); 
@@ -146,7 +178,7 @@ void keyPressed() {
     break;
     
     case 52:// 4
-    //changeBrush(brushhelper);
+    changeBrush(brushMotif);
     break;
     
     case 53:// 5
@@ -158,7 +190,7 @@ void keyPressed() {
     break;  
     
     case 55:// 7
-    changeBrush(brushMotif);
+    
     break;  
   
     case 65:// a
@@ -200,11 +232,11 @@ void keyPressed() {
   }
 }
 
-void replayBrush(){
+public void replayBrush(){
  selectedBrush.executeStroke();
 }
 
-void changeFlip(boolean b)
+public void changeFlip(boolean b)
 {
   if(b)
   {
@@ -215,18 +247,19 @@ void changeFlip(boolean b)
     flipVertical=!flipVertical;
   }
 }
-void changeBrush(BrushBase brush)
+
+public void changeBrush(BrushBase brush)
 {
     selectedBrush=brush;
     selectedBrush.setBrushColor(brushcolor);
 }
 
-void switchTransparency()
+public void switchTransparency()
 {
   saveTransparency=!saveTransparency;
 }
 
-void activateTransparency()
+public void activateTransparency()
 {
   if(saveTransparency)
   {
@@ -237,7 +270,7 @@ void activateTransparency()
   }
 }
 
-void debugBar(){
+public void debugBar(){
  if (showDebugInfo)
     {
       showDebugInfo=false;
@@ -250,7 +283,7 @@ void debugBar(){
     }
 }
 
-void hideImage(){
+public void hideImage(){
  dragimage.setVisible(!dragimage.getVisible()); 
 }
 
@@ -465,6 +498,28 @@ void draw() {
 
 
 
+
+ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
+  Frame f = new Frame(theName);
+      print("? "+brushList.isEmpty());
+  ControlFrame p = new ControlFrame(this,brushList, theWidth, theHeight);
+  f.add(p);
+  p.init();
+  f.setTitle(theName);
+  f.setSize(200,500);
+  f.setLocation(100, 100);
+  f.setResizable(false);
+  f.setVisible(true);
+  return p;
+}
+
+public void controlEvent(ControlEvent theEvent) {
+  println("lightsaber theEvent = "+theEvent);
+
+}
+
+
+
 //imageFlip function by nick lally
 //paste function at the bottom of your sketch, and use like this: imageFlip(imageName,x,y,"mode")
 //modes are "v", "v2", "h", "h2"
@@ -528,29 +583,6 @@ void imageFlip(PImage imageName, int xPos, int yPos, String mode){
     println("Use v, v2, h, or h2 for the 4th argument");
   }
 } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
