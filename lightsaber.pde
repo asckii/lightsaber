@@ -90,11 +90,11 @@ void setup() {
   brushMotif=new BrushMotif(pg,pointsArray," brush dd ",t);
   
   brushList=new ArrayList<BrushBase>();
-  brushList.add(brushsimple);
-  brushList.add(brushlink);
-  brushList.add(brushrandom);
-  brushList.add(brushMotif);
   brushList.add(brushjpen);
+  brushList.add(brushMotif);
+  brushList.add(brushlink);
+  brushList.add(brushsimple);
+  brushList.add(brushrandom);
   brushList.add(brusherase);
   
 
