@@ -1,8 +1,8 @@
 class BrushSimple extends BrushBase
 {
-     BrushSimple(PGraphics p, Point2dArray p2,String n)
+     BrushSimple(Object parent,PGraphics p, Point2dArray p2,String n)
   {
-    super(p,p2,n);
+    super(parent,p,p2,n);
    
   }
   

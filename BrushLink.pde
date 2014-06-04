@@ -1,9 +1,9 @@
 class BrushLink extends BrushBase
 {
 
-   BrushLink(PGraphics p, Point2dArray p2,String n)
+   BrushLink(Object parent,PGraphics p, Point2dArray p2,String n)
   {
-    super(p,p2,n);
+    super(parent,p,p2,n);
     makeLinkFlag=true;
   }
   
@@ -46,43 +46,39 @@ class BrushLink extends BrushBase
     }
   }
 
-
-
-
-  /*void keyPressed() {
-   
-    switch(keyCode)
-    {
-    case 32:
-      if (makeLinkFlag)
-      {
-        makeLinkFlag=false;
-      }
-      else
-      {
-        makeLinkFlag=true;
-      }
-      break;
-  
-    
-     case 38://haut
-    if (rayon<200)
-    {
+  void drawBrushStroke()
+  {
      
-      rayon =rayon+1;
-    }
-    break;
-
-  case 40://haut
-    if (rayon<200)
-    {
-   
-      rayon =rayon-1;
-    }
-    break;
     
+    if (mousePressed && (mouseButton ==LEFT)) {
+         
+          
+      
+      if (previousX==0 && previousY==0)
+      {
+        previousX=mouseX;
+        previousY=mouseY;
       }
-  }*/
+      pg.fill(153);
+   
+      pg.stroke(brushColor);
+     
+      Point2d pt=new Point2d(mouseX, mouseY);
+      pg.strokeWeight(0.5);
+      pg.line( mouseX, mouseY, previousX, previousY);
+      pg.endDraw();
+
+      pointsArray.add(pt);  
+
+      previousX=mouseX;
+      previousY=mouseY;
+    }
+    else
+    {
+      previousX=0;
+      previousY=0;
+    }
+  } 
 
 
 

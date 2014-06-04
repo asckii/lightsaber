@@ -2,15 +2,15 @@ import codeanticode.tablet.*;
 
 class BrushMotif extends BrushBase
 {
-  Tablet tablet;
+  
   int angle=0;
   int w,h;
-     BrushMotif(PGraphics p, Point2dArray p2,String n,Tablet t)
+     BrushMotif(Object parent,PGraphics p, Point2dArray p2,String n)
   {
-    super(p,p2,n);
+    super(parent,p,p2,n);
     initImage("motif4.png");
-    tablet=t;
-    transparency=12;
+    
+    
   }
   
    void initImage(String s)
@@ -26,24 +26,26 @@ class BrushMotif extends BrushBase
   if (mousePressed && (mouseButton ==LEFT)) {
 
 
-    //println("dans le draw "+key);
-    //  - section draw lines
+   
  
     
     pg.beginDraw();
-    //pg.image(img,mouseX-rayon/2,mouseY-rayon/2,rayon,rayon);
    
-  for (int i = 0; i <= 10; i++) {
-  float x = lerp(pmouseX,mouseX, i/10.0);
-  float y = lerp(pmouseY, mouseY, i/10.0);
-  int tmpRayon=int(rayon * tablet.getPressure());
-  pg.tint(brushColor,transparency);
+   float distance=map(dist(mouseX, mouseY, pmouseX, pmouseY),0,50,9,15);
+  for (int i = 0; i <= (int)distance; i++) {
+  float x = lerp(pmouseX,mouseX, i/ distance);
+  float y = lerp(pmouseY, mouseY, i/distance);
+println(tablet.getPressure());
+  
+  int tmpRayon=int(lerp(prayon,rayon,i/distance) * tablet.getPressure());
+  pg.tint(brushColor,transparency);//);//map( tablet.getPressure()*100,0,255,0,255)
   pg.image(img,x-tmpRayon/2,y-tmpRayon/2,tmpRayon,tmpRayon);
   }
  
     
     pg.endDraw();
-
+prayon=rayon;
+ppressure=tablet.getPressure();
     //pointsArray.add(pt);  
   }
  

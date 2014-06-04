@@ -5,14 +5,14 @@ class RaduisGizmo
   int storedCenterX,storedCenterY;
   int raduis=0;
   boolean visible=false;
-  RaduisGizmo()
+  
+  RaduisGizmo(Object parent)
   {
   storedCenterX=500;storedCenterY=300;
       stroke(#000000, 20);
       fill(#00ff00, 20);
       stroke(#000000, 20);
-     
-      
+  
   }
   
   void keyPressed() {

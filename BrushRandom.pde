@@ -1,8 +1,8 @@
 class BrushRandom extends BrushBase
 {
-     BrushRandom(PGraphics p, Point2dArray p2,String n)
+     BrushRandom(Object parent,PGraphics p, Point2dArray p2,String n)
   {
-    super(p,p2,n);
+    super(parent,p,p2,n);
    
   }
   

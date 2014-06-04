@@ -4,11 +4,10 @@ import codeanticode.tablet.*;
 class BrushJpen extends BrushBase
 
 {
-  Tablet tablet;
-     BrushJpen(PGraphics p, Point2dArray p2,String n,Tablet t)
+   BrushJpen(Object parent,PGraphics p, Point2dArray p2,String n)
   {
-    super(p,p2,n);
-   tablet=t;
+    super(parent,p,p2,n);
+  
   }
   
   
@@ -20,7 +19,7 @@ class BrushJpen extends BrushBase
   
   void draw()
   {
-      showRadiusGizmo();
+     
     if(idle)
     {
       return;

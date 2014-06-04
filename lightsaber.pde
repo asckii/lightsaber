@@ -39,12 +39,13 @@ static String BRUSH_NAME_SIMPLE="simple";
 static String BRUSH_NAME_ERASE="erase";
 static String BRUSH_NAME_RANDOM="random";
 static String BRUSH_NAME_JPEN="Jpen";
-static String BRUSH_NAME_DD="dd";
+static String BRUSH_NAME_MOTIF="motif";
 
 
 PGraphics pg, pg2; 
 ControlP5 cp5;
 ControlFrame cf;
+Frame cfFrame;
 int def;
 int brushTransparency=255;
 String pressedKey;
@@ -80,22 +81,22 @@ Tablet t;
 
 void setup() {
   size(WIDTH, HEIGHT);
-
+frame.setLocation(200, 100);
   ;
   
   colorMode(RGB, 255);
   pg = createGraphics(WIDTH, HEIGHT);
-  t= new Tablet(this); 
+  
   pointsArray=new Point2dArray();
 
   
-  brushlink=new BrushLink(pg,pointsArray,BRUSH_NAME_LINK);
-  brushsimple=new BrushSimple(pg,pointsArray, BRUSH_NAME_SIMPLE);
-  brusherase=new BrushErase(pg,pointsArray,BRUSH_NAME_ERASE);
+  brushlink=new BrushLink(this,pg,pointsArray,BRUSH_NAME_LINK);
+  brushsimple=new BrushSimple(this,pg,pointsArray, BRUSH_NAME_SIMPLE);
+  brusherase=new BrushErase(this,pg,pointsArray,BRUSH_NAME_ERASE);
 
-  brushrandom=new BrushRandom(pg,pointsArray,BRUSH_NAME_RANDOM);
-  brushjpen=new BrushJpen(pg,pointsArray,BRUSH_NAME_JPEN,t);
-  brushMotif=new BrushMotif(pg,pointsArray,BRUSH_NAME_DD,t);
+  brushrandom=new BrushRandom(this,pg,pointsArray,BRUSH_NAME_RANDOM);
+  brushjpen=new BrushJpen(this,pg,pointsArray,BRUSH_NAME_JPEN);
+  brushMotif=new BrushMotif(this,pg,pointsArray,BRUSH_NAME_MOTIF);
   
   brushList=new ArrayList<BrushBase>();
   brushList.add(brushjpen);
@@ -104,13 +105,12 @@ void setup() {
   brushList.add(brushsimple);
   brushList.add(brushrandom);
   brushList.add(brusherase);
-  
-
+ 
     cp5 = new ControlP5(this);
     cf = addControlFrame("Toolbox", 200,200);
   
 
-  raduisGizmo=new RaduisGizmo();
+  raduisGizmo=new RaduisGizmo(this);
   selectedBrush=brushjpen;
   selectedBrush.setRayon(8);
   showPointFlag=false;
@@ -125,6 +125,9 @@ void setup() {
  //
  
   jColorChooser=new JColorChooser();
+  
+   cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
+   cfFrame.setVisible(true);
   println("Lightsaber Bruno Bertogal janvier 2013   ");
   println("touche brosse 1 : simple 2 : link  3 :  4 5 6 : erase  ");
   println("touche haut : augmenter le rayon des liaisons ");
@@ -245,6 +248,7 @@ public void replayBrush(){
 
 public void changeFlip(boolean b)
 {
+  
   if(b)
   {
   flipHorizontal=!flipHorizontal;
@@ -259,6 +263,7 @@ public void changeBrush(BrushBase brush)
 {
     selectedBrush=brush;
     selectedBrush.setBrushColor(brushcolor);
+     cf.setSliderTransparency(selectedBrush.getTransparency());
 }
 
 public void switchTransparency()
@@ -310,6 +315,7 @@ void grabImage(){
 void pickColor(){
    println("color = "+ (get( mouseX, mouseY)+ " "+selectedBrush.getBrushColor() ));
          selectedBrush.setBrushColor(get( mouseX, mouseY) );
+          ;
 }
 
 
@@ -424,6 +430,7 @@ void saveJavascript()
 
 void debugInfo()
 {
+
   if (showDebugInfo)
   {
     fill(0, 102, 153);
@@ -446,6 +453,8 @@ void mousePressed() {
        selectedBrush.setIdle(false);
    }
 }
+
+
 
 void mouseReleased() {
   selectedBrush.mouseReleased();
@@ -498,25 +507,25 @@ void draw() {
   image(pg, 0, 0);
   selectedBrush.draw();
 
+  cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
+
 }
 
 
-
-
-
-
-
 ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
-  Frame f = new Frame(theName);
-      print("? "+brushList.isEmpty());
+  cfFrame = new Frame(theName);
   ControlFrame p = new ControlFrame(this,brushList, theWidth, theHeight);
-  f.add(p);
+  cfFrame.add(p);
   p.init();
-  f.setTitle(theName);
-  f.setSize(200,500);
-  f.setLocation(100, 100);
-  f.setResizable(false);
-  f.setVisible(true);
+  cfFrame.setTitle(theName);
+  cfFrame.setSize(200,300);
+ 
+  cfFrame.setResizable(false);
+   // comment this out to turn OS chrome back on
+  cfFrame.setUndecorated(true); 
+  // comment this out to not have the window "float"
+  cfFrame.setAlwaysOnTop(true);
+  
   return p;
 }
 

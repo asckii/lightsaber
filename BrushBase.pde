@@ -1,8 +1,9 @@
-
+import codeanticode.tablet.*;
 class BrushBase
 {
   String name;
   int rayon=20;
+  int prayon;
   boolean makeLinkFlag;
   boolean idle;
   
@@ -15,14 +16,17 @@ class BrushBase
   int pFramecount;
   int deltaFramecount;
   float pressure;
+  float ppressure;
   float pressureModifier;
   boolean rotateBrush;
   int randomBrush;
-  int transparency;
+  int transparency=255;
   Stroke stroke;
+  Tablet tablet;
   boolean isNewStroke=true;
-  BrushBase(PGraphics p, Point2dArray p2, String n)
+  BrushBase(Object parent,PGraphics p, Point2dArray p2, String n)
   {
+    tablet= new Tablet((lightsaber)parent); 
     previousX=0;
     previousY=0;
     brushSize=1;
@@ -53,39 +57,9 @@ class BrushBase
   }
   
   
-  void drawBrushStroke()
-  {
-     
-    
-    if (mousePressed && (mouseButton ==LEFT)) {
-         
-          
-      
-      if (previousX==0 && previousY==0)
-      {
-        previousX=mouseX;
-        previousY=mouseY;
-      }
-      pg.fill(153);
-   
-      pg.stroke(brushColor);
-     
-      Point2d pt=new Point2d(mouseX, mouseY);
-      pg.strokeWeight(0.5);
-      pg.line( mouseX, mouseY, previousX, previousY);
-      pg.endDraw();
-
-      pointsArray.add(pt);  
-
-      previousX=mouseX;
-      previousY=mouseY;
-    }
-    else
-    {
-      previousX=0;
-      previousY=0;
-    }
-  } 
+void drawBrushStroke()
+{
+}
   
   
   
