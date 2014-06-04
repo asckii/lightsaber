@@ -7,35 +7,21 @@ class BrushErase extends BrushBase
   }
    
   
- void drawBrushStroke()
+ void drawBrushStroke(int mX,int mY,int pX, int pY)
 {
-  if (mousePressed && (mouseButton ==LEFT)) {
+
     
     noFill(); stroke(0,255,0);
-    ellipse(mouseX,mouseY,rayon,rayon);
-   eraseFunction();
-   
-     
-  }
+    ellipse(mX,mY,rayon,rayon);
+   eraseFunction(mX,mY);
+
+  
  
  
 } 
+
   
-  void draw()
-  {
-      if(idle)
-    {
-      return;
-    }
-    recordStroke();
-    drawBrushStroke();
-   super.draw();
-  
-showRadiusGizmo();
-  }
-  
-  
-     void eraseFunction() {
+ void eraseFunction(int mX,int mY) {
       PGraphics canvas=pg;
       
       color c = color(0,0);
@@ -43,20 +29,20 @@ showRadiusGizmo();
       canvas.loadPixels();
       for (int x=0; x<canvas.width; x++) {
         for (int y=0; y<canvas.height; y++ ) {
-          float distance = dist(x,y,mouseX,mouseY);
+          float distance = dist(x,y,mX,mY);
           if (distance <= rayon/2) {
             int loc = x + y*canvas.width;
             canvas.pixels[loc] = c;
           }
         }
       }
-      eraseInArray();
+      eraseInArray(mX,mY);
       canvas.updatePixels();
       canvas.endDraw();
     }
   
   
-  void eraseInArray(){
+  void eraseInArray(int mX,int mY){
       int step;
     if (rayon<50)
         {
@@ -66,7 +52,7 @@ showRadiusGizmo();
         {
           step=6;
         }
-  Point2d ptm=new Point2d(mouseX,mouseY);
+  Point2d ptm=new Point2d(mX,mY);
   Point2d tmpPt;
     for (int i=0;i<pointsArray.size();i=i+step)
         {
@@ -80,12 +66,19 @@ showRadiusGizmo();
         }  
   }
   
+    void draw()
+  {
+      if(idle)
+    {
+      return;
+    }
+    recordStroke();
+      if (mousePressed && (mouseButton ==LEFT)) {
+    drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY);
+      }
+   super.draw();
+  
+  }
 
 }
 
-/*
-// transition vers alpha
-float amt = 0.5;
-int colorWithZeroAlpha = initialColor - color(0,0,0,255);
-int newColor = lerpColor( initialColor, colorWithZeroAlpha, amt );
-*/

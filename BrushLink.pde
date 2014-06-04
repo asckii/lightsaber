@@ -7,18 +7,14 @@ class BrushLink extends BrushBase
     makeLinkFlag=true;
   }
   
-  void makeLink()
+  void makeLink(int mX,int mY,int pX, int pY)
   {
     if (makeLinkFlag)
     {
-      if (pointsArray.size()>0 && (mousePressed && mouseButton == LEFT) )
+      if (pointsArray.size()>0  )
       {
-       /* fill(#ff0000, 20);
-        stroke(#ff0000, 50);
-        ellipse(mouseX, mouseY, rayon, rayon);*/
-        // affichage des  points
         Point2d   tmpPt;
-        Point2d pt=new Point2d(mouseX, mouseY);
+        Point2d pt=new Point2d(mX, mY);
         int step;
         if (rayon<50)
         {
@@ -46,38 +42,29 @@ class BrushLink extends BrushBase
     }
   }
 
-  void drawBrushStroke()
+  void drawBrushStroke(int mX,int mY,int pX, int pY)
   {
-     
-    
-    if (mousePressed && (mouseButton ==LEFT)) {
-         
-          
-      
+   makeLink(mX, mY, pX, pY);;
       if (previousX==0 && previousY==0)
       {
-        previousX=mouseX;
-        previousY=mouseY;
+        previousX=mX;
+        previousY=mY;
       }
       pg.fill(153);
    
       pg.stroke(brushColor);
      
-      Point2d pt=new Point2d(mouseX, mouseY);
+      Point2d pt=new Point2d(mX, mY);
       pg.strokeWeight(0.5);
-      pg.line( mouseX, mouseY, previousX, previousY);
+      pg.line( mX, mY, previousX, previousY);
       pg.endDraw();
 
       pointsArray.add(pt);  
 
-      previousX=mouseX;
-      previousY=mouseY;
-    }
-    else
-    {
-      previousX=0;
-      previousY=0;
-    }
+      previousX=mX;
+      previousY=mY;
+    
+    
   } 
 
 
@@ -89,8 +76,16 @@ void draw()
       return;
     }
   super.draw();
-  makeLink();
-  drawBrushStroke();
+   if (mousePressed && (mouseButton ==LEFT)) {
+ 
+  drawBrushStroke(mouseX, mouseY, pmouseX, pmouseY);
+   }
+   else
+    {
+      previousX=0;
+      previousY=0;
+    }
+  
   recordStroke();
 }
 

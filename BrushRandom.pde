@@ -8,23 +8,20 @@ class BrushRandom extends BrushBase
   
   
   
-   void drawBrushStroke()
+   void drawBrushStroke(int mX,int mY,int pX, int pY)
 {
-  if (mousePressed && (mouseButton ==LEFT)) {
-
-
-    //println("dans le draw "+key);
-    //  - section draw lines
+  
+    
     if (previousX==0 && previousY==0)
     {
-      previousX=mouseX;
-      previousY=mouseY;
+      previousX=mX;
+      previousY=mY;
     }
     pg.beginDraw();
      pg.stroke(brushColor,transparency);
     pg.strokeWeight(0.5);
-    float mrx=mouseX+random(-rayon/5,rayon/5);
-    float mry=mouseY+random(-rayon/5,rayon/5);
+    float mrx=mX+random(-rayon/5,rayon/5);
+    float mry=mY+random(-rayon/5,rayon/5);
     
     Point2d pt=new Point2d((int)mrx,(int) mry);
     pg.line( mrx, mry, previousX, previousY);
@@ -34,12 +31,8 @@ class BrushRandom extends BrushBase
 
     previousX=mrx;
     previousY=mry;
-  }
-  else
-  {
-    previousX=0;
-    previousY=0;
-  }
+  
+  
 } 
   
   
@@ -53,7 +46,16 @@ class BrushRandom extends BrushBase
       return;
     }
    super.draw();
-  drawBrushStroke();
+   
+    if (mousePressed && (mouseButton ==LEFT)) {
+  drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY);
+    }
+    else
+  {
+    previousX=0;
+    previousY=0;
+  }
+  
   recordStroke();
   }
 

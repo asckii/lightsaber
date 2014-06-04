@@ -21,33 +21,25 @@ class BrushMotif extends BrushBase
     
   }
   
-   void drawBrushStroke()
+  void drawBrushStroke(int mX,int mY,int pX, int pY)
 {
-  if (mousePressed && (mouseButton ==LEFT)) {
-
-
-   
  
-    
-    pg.beginDraw();
-   
-   float distance=map(dist(mouseX, mouseY, pmouseX, pmouseY),0,50,9,15);
+    pg.beginDraw(); 
+   float distance=map(dist(mX, mY, pX, pY),0,50,9,15);
   for (int i = 0; i <= (int)distance; i++) {
-  float x = lerp(pmouseX,mouseX, i/ distance);
-  float y = lerp(pmouseY, mouseY, i/distance);
-println(tablet.getPressure());
+  float x = lerp(pX,mX, i/ distance);
+  float y = lerp(pY,mY, i/distance);
+//println(tablet.getPressure());
   
   int tmpRayon=int(lerp(prayon,rayon,i/distance) * tablet.getPressure());
   pg.tint(brushColor,transparency);//);//map( tablet.getPressure()*100,0,255,0,255)
   pg.image(img,x-tmpRayon/2,y-tmpRayon/2,tmpRayon,tmpRayon);
   }
  
-    
-    pg.endDraw();
+pg.endDraw();
 prayon=rayon;
 ppressure=tablet.getPressure();
-    //pointsArray.add(pt);  
-  }
+    
  
 } 
   
@@ -68,9 +60,13 @@ ppressure=tablet.getPressure();
       return;
     }
    super.draw();
-  drawBrushStroke();
+   
+    if (mousePressed && (mouseButton ==LEFT)) {
+      drawBrushStroke(mouseX, mouseY, pmouseX, pmouseY);
+    }
+    
   recordStroke();
-//showRadiusGizmo();
+
   }
 
 

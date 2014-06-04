@@ -7,4 +7,5 @@
 - bigger button in the menu on 2 columns
 - more option on the menu (colors, brush parameters)
 - menu on top
+- ajouter la pression, la transparence dans le stroke
 */

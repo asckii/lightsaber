@@ -11,11 +11,22 @@ class BrushJpen extends BrushBase
   }
   
   
-  
-
-  
-  
-  
+ void drawBrushStroke(int mX,int mY,int pX, int pY)
+  {
+     
+   
+     
+    
+    pg.beginDraw();
+    pg.stroke(brushColor,transparency);
+    pg.strokeWeight(int(rayon * tablet.getPressure()));
+    pg.line(pX, pY, mX, mY);
+        
+    pg.endDraw();
+   
+   
+    
+  }
   
   void draw()
   {
@@ -24,24 +35,15 @@ class BrushJpen extends BrushBase
     {
       return;
     }
-     super.draw();
-    if (mousePressed && (mouseButton ==LEFT)) {
-   
-     
     
-    pg.beginDraw();
-    pg.stroke(brushColor,transparency);
-    pg.strokeWeight(int(rayon * tablet.getPressure()));
-    pg.line(pmouseX, pmouseY, mouseX, mouseY);
-        
-    pg.endDraw();
-    recordStroke();
-   
-    }
-    showRadiusGizmo();
+     super.draw();
+     
+     if (mousePressed && (mouseButton ==LEFT)) {
+    drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY);
+     }
+     recordStroke();
    
   }
-
 
 }
 

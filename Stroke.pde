@@ -2,16 +2,16 @@ class Stroke
 {
 
 ArrayList<StrokeStep> strokeList;
-  
-Stroke()
+  BrushBase brush;
+Stroke(BrushBase b)
 {
   strokeList=new ArrayList<StrokeStep>();
+  brush=b;
 }
 
-void record(int f,int x,int y)
+void record(int f,int x,int y,int px, int py)
 {
-  
-  StrokeStep strokeStep=new StrokeStep(f, x, y);
+  StrokeStep strokeStep=new StrokeStep(f, x, y,px,py);
   strokeList.add(strokeStep);
 }
 
@@ -21,7 +21,7 @@ void execute(){
   {
     for(StrokeStep strokeStep: strokeList){
     
-     drawBrushStroke(strokeStep.getX(),strokeStep.getY());
+     drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY());
     }
   } 
 }
@@ -31,33 +31,11 @@ int previousY;
 int mX;
 int mY;
 
- void drawBrushStroke(int x,int y)
+ void drawBrushStroke(int x,int y,int px, int py)
 {
-
-    mX=x;
-    mY=y;
-   
-    if (previousX==0 && previousY==0)
-    {
-      previousX=mX;
-      previousY=mY;
-    }
-    
-    pg.beginDraw();
-    Point2d pt=new Point2d(mX, mY);
-    pg.stroke(color(255,0,0));
-    pg.strokeWeight(10);
-    pg.line( mX, mY, previousX, previousY);
-    pg.endDraw();
-
-    pointsArray.add(pt);  
-
-    previousX=mX;
-    previousY=mY;
+  brush.drawBrushStroke(x,y,px,py);
 
 } 
-
-
 
 
 String toString()

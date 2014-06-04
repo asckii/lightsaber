@@ -81,9 +81,8 @@ Tablet t;
 
 void setup() {
   size(WIDTH, HEIGHT);
-frame.setLocation(200, 100);
-  ;
-  
+  frame.setLocation(200, 100);
+
   colorMode(RGB, 255);
   pg = createGraphics(WIDTH, HEIGHT);
   
@@ -139,18 +138,15 @@ frame.setLocation(200, 100);
   println("os = " + System.getProperty("os.name"));
   println("user.home = " + System.getProperty("user.home"));
   println("sketchpath = " + sketchPath(""));
-  
-  
+    
 }
 
-void menuAction(ControlEvent theEvent)
-{  
-  println("theEvent = "+theEvent.getController().getName());
- // println("theEvent = "+ theEvent.getController().getId());
- int id=theEvent.getController().getId();
- if(id>=0 && id<brushList.size())
-  changeBrush(brushList.get(id));
-}
+/*
+menu actions
+**/
+
+
+
 
 void keyPressed() {
   pressedKey=str(keyCode); 
@@ -512,6 +508,15 @@ void draw() {
 }
 
 
+void menuAction(ControlEvent theEvent)
+{  
+ // println("theEvent = "+theEvent.getController().getName());
+ // println("theEvent = "+ theEvent.getController().getId());
+ int id=theEvent.getController().getId();
+ if(id>=0 && id<brushList.size())
+  changeBrush(brushList.get(id));
+}
+
 ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   cfFrame = new Frame(theName);
   ControlFrame p = new ControlFrame(this,brushList, theWidth, theHeight);
@@ -530,7 +535,7 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
 }
 
 public void controlEvent(ControlEvent theEvent) {
-  println("lightsaber theEvent = "+theEvent);
+  //println("lightsaber theEvent = "+theEvent);
 
 }
 
@@ -599,7 +604,3 @@ void imageFlip(PImage imageName, int xPos, int yPos, String mode){
     println("Use v, v2, h, or h2 for the 4th argument");
   }
 } 
-
-
-
-

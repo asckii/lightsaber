@@ -23,6 +23,7 @@ class BrushBase
   int transparency=255;
   Stroke stroke;
   Tablet tablet;
+  
   boolean isNewStroke=true;
   BrushBase(Object parent,PGraphics p, Point2dArray p2, String n)
   {
@@ -34,7 +35,7 @@ class BrushBase
     setBrushColor(c);
     update(p, p2, n);
     idle=false;
-     stroke=new Stroke();
+     stroke=new Stroke(this);
     //redraw();
   }
 
@@ -57,7 +58,7 @@ class BrushBase
   }
   
   
-void drawBrushStroke()
+void drawBrushStroke(int mX,int mY,int pX, int pY)
 {
 }
   
@@ -68,12 +69,12 @@ void recordStroke()
     if (mousePressed && (mouseButton ==LEFT)) {
                 
         if(isNewStroke){
-        stroke=new Stroke();
+        stroke=new Stroke(this);
         isNewStroke=false;
         }
         else
         {
-        stroke.record(frameCount,mouseX,mouseY);
+        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY);
         } 
     }
   
@@ -87,7 +88,7 @@ void mouseReleased()
 
 void executeStroke(){
 stroke.execute();
-stroke=new Stroke();
+//stroke=new Stroke(this);
 }
 
 
@@ -120,9 +121,8 @@ stroke=new Stroke();
   void draw()
   {
     if(idle)
-{ return;   }
-
-
+    { return;   }
+  
      noFill();
      stroke(#000000, 50);
       ellipse(mouseX, mouseY, rayon, rayon);
@@ -137,7 +137,7 @@ stroke=new Stroke();
        ShowDrawingGizmo();
     }
    
-     
+  
    
    
   }

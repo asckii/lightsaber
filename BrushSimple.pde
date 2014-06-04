@@ -3,41 +3,36 @@ class BrushSimple extends BrushBase
      BrushSimple(Object parent,PGraphics p, Point2dArray p2,String n)
   {
     super(parent,p,p2,n);
-   
+   rayon=1;
   }
   
   
   
-   void drawBrushStroke()
+   void drawBrushStroke(int mX,int mY,int pX, int pY)
 {
-  if (mouseButton ==LEFT) {
+  
 
 
     println("dans le draw "+key);
     //  - section draw lines
     if (previousX==0 && previousY==0)
     {
-      previousX=mouseX;
-      previousY=mouseY;
+      previousX=mX;
+      previousY=mY;
     }
     
     pg.beginDraw();
-    Point2d pt=new Point2d(mouseX, mouseY);
+    Point2d pt=new Point2d(mX, mY);
       pg.stroke(brushColor);
     pg.strokeWeight(rayon);
-    pg.line( mouseX, mouseY, previousX, previousY);
+    pg.line( mX, mY, previousX, previousY);
     pg.endDraw();
 
     pointsArray.add(pt);  
 
-    previousX=mouseX;
-    previousY=mouseY;
-  }
-  else
-  {
-    previousX=0;
-    previousY=0;
-  }
+    previousX=mX;
+    previousY=mY;
+ 
 } 
   
   
@@ -51,7 +46,16 @@ class BrushSimple extends BrushBase
       return;
     }
    super.draw();
-  drawBrushStroke();
+   
+   if (mouseButton ==LEFT) {
+     drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY);
+    }
+  else
+  {
+    previousX=0;
+    previousY=0;
+  }
+   
   recordStroke();
 
   }

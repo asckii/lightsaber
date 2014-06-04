@@ -18,9 +18,8 @@ public class ControlFrame extends PApplet {
     parent = theParent;
     w = theWidth;
     h = theHeight;
-
     brushList=bList;
-   println(" création "+this.getLayout());
+   
   }
 
   public void setup() {
@@ -28,8 +27,7 @@ public class ControlFrame extends PApplet {
     frameRate(25);
     cp5 = new ControlP5(this);
     cp5.addSlider("transparency").plugTo(parent,"brushTransparency").setRange(0, 255).setPosition(10,10).setValue(255);
-   // cp5.addSlider("def").plugTo(parent,"def").setRange(0, 255).setPosition(10,30);
-    // create a new button with name 'buttonA'
+  
    
    Iterator<BrushBase> it = brushList.iterator();
    int i=0;
