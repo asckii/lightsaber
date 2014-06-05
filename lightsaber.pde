@@ -386,6 +386,7 @@ void clearPg()
   pointsArray=new Point2dArray();
   pg.endDraw();
   image(pg, 0, 0);
+  
 }
 
 void changeRaduis()

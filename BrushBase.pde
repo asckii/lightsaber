@@ -99,7 +99,7 @@ void recordStroke(){
 } 
 
 void playStrokeSession(){
-  strokeList.add(stroke);
+  
    if (!strokeList.isEmpty())
   {
     println("taille de la strokeList : "+strokeList.size());
