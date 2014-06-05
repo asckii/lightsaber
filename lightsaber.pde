@@ -260,7 +260,6 @@ public void playStrokeSession(){
   //ointsArray=new Point2dArray();
    clearPg();
     println("play stroke session");
-  redraw();
  selectedBrush.playStrokeSession();
 }
 
@@ -545,7 +544,7 @@ void draw() {
   selectedBrush.draw();
 
   cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
-
+  
 }
 
 

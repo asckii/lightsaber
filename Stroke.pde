@@ -8,7 +8,7 @@ int previousY;
 int mX;
 int mY;
 
-Stroke(BrushBase b)
+Stroke(BrushBase b,PGraphics pg)
 {
   strokeStepList=new ArrayList<StrokeStep>();
   brush=b;
@@ -25,10 +25,17 @@ void execute(){
   {
     //println("strokestepList : "+strokeStepList.size());
     for(StrokeStep strokeStep: strokeStepList){
+      
      drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure());
-    }
+     
+   }
    
   }
+}
+
+List<StrokeStep> getList()
+{
+   return strokeStepList;
 }
 
 int getSize()
@@ -36,21 +43,22 @@ int getSize()
   return strokeStepList.size();
 }
 
-
  void drawBrushStroke(int x,int y,int px, int py, float p)
 {
   
   brush.drawBrushStroke(x,y,px,py,p);
-   
+ 
+  
 } 
 
 
 void draw()
   {
-    pg.beginDraw();
-  
-    pg.endDraw();
-    
+     pg.beginDraw();
+       
+      pg.rect (50,80,50,50);
+      pg.endDraw();
+      
   }
 
 String toString()

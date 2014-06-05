@@ -24,10 +24,11 @@ class BrushBase
   List<Stroke> strokeList;
   Stroke stroke;
   Tablet tablet;
-  
+  Object parent;
   boolean isNewStroke=true;
-  BrushBase(Object parent,PGraphics p, Point2dArray p2, String n)
+  BrushBase(Object pa,PGraphics p, Point2dArray p2, String n)
   {
+    parent=pa;
     tablet= new Tablet((lightsaber)parent); 
     previousX=0;
     previousY=0;
@@ -36,7 +37,7 @@ class BrushBase
     setBrushColor(c);
     update(p, p2, n);
     idle=false;
-     stroke=new Stroke(this);
+     stroke=new Stroke(this,pg);
      strokeList=new ArrayList<Stroke>();
     //redraw();
   }
@@ -67,24 +68,16 @@ void drawBrushStroke(int mX,int mY,int pX, int pY,float p)
   
   int recordCounter=0;
 void recordStroke(){
-  
-                
-       
-        println("recordCounter = "+recordCounter);
+          
         recordCounter=0;
-        
-      
         recordCounter++;
-        
-        
+
       if(isNewStroke){
       strokeList.add(stroke);
-      stroke=new Stroke(this);
+      stroke=new Stroke(this,pg);
       isNewStroke=false;
-        
-      println("recordCounter = "+recordCounter);
       recordCounter=0;
-      println("recordCounter =0 "+recordCounter);
+     
       }
       else
       {
@@ -98,25 +91,52 @@ void recordStroke(){
     
 } 
 
-void playStrokeSession(){
+boolean playSession=false;
+
+void playStrokeSession()
+{
+  playSession=true;
+}
+
+int incrementStroke=0;
+void playStrokeSessionFrame(int increment){
   
    if (!strokeList.isEmpty())
   {
     println("taille de la strokeList : "+strokeList.size());
-    int i=0;
-    for(Stroke item: strokeList){
-      print(i+".");
-     stroke=item;
-     item.execute();
-     image(pg, 0, 0);
-     i++;
     
-    previousX=0;
-    previousY=0;
+    //for(Stroke item: strokeList){
+    // print(i+".");
+    // stroke=item;
+     //item.execute();
+     
+     // for(StrokeStep strokeStep: stroke.getList()){ 
+    // drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure());
+   //  }
+
+    // i++;
+   // previousX=0;
+   // previousY=0;
+    if (incrementStroke<strokeList.size()){
+      //récuprérer le stroke
+     Stroke item=strokeList.get(incrementStroke);
+     
+     for(StrokeStep strokeStep: item.getList()){ 
+     drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure());
+     }
+     
+     
+    }else
+    {
+      // fin des strokes
+      println("fin des strokes");
+      playSession=false;
+      incrementStroke=0;
+    }
     
     }
   } 
-}
+
 
 void startStrokeSession(){
   strokeList=new ArrayList<Stroke>();
@@ -188,7 +208,11 @@ void executeStroke(){
    previousX=0;
    previousY=0;
   
-     
+     if(playSession)
+     {
+     playStrokeSessionFrame(incrementStroke);
+     incrementStroke++;
+     }
    
   }
 
