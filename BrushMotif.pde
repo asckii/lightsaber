@@ -31,11 +31,12 @@ class BrushMotif extends BrushBase
       }
   
     pg.beginDraw(); 
+    pg.smooth();
    float distance=map(dist(mX, mY, previousX, previousY),0,50,9,15);
   for (int i = 0; i <= (int)distance; i++) {
   float x = lerp(previousX,mX, i/ distance);
   float y = lerp(previousY,mY, i/distance);
-  println("pressure "+ vPressure+ " ");
+
   
   int tmpRayon=int(lerp(prayon,rayon,i/distance) *vPressure);
   pg.tint(brushColor,transparency);//);//map( tablet.getPressure()*100,0,255,0,255)

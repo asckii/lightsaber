@@ -22,6 +22,7 @@ class BrushJpen extends BrushBase
     
     
     pg.beginDraw();
+    pg.smooth();
     pg.stroke(brushColor,transparency);
     pg.strokeWeight(int(rayon *vpressure));
     pg.line(mX, mY,previousX, previousY );  

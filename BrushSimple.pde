@@ -11,7 +11,6 @@ class BrushSimple extends BrushBase
    void drawBrushStroke(int mX,int mY,int pX, int pY, float p)
 {
 
-    println("dans le draw "+key);
     //  - section draw lines
       if (previousX==0 && previousY==0)
     {
@@ -34,12 +33,10 @@ class BrushSimple extends BrushBase
  
 } 
   
-  
-  
-  
-  
+
   void draw()
   {
+    
     if(idle)
     {
       return;

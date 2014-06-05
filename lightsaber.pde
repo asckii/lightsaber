@@ -244,11 +244,34 @@ void keyPressed() {
       case 44: // ?
    replayBrush();
     break;
+  
+   case 59: // .
+     playStrokeSession();
+    break;
+
+case 513: // /
+   startStrokeSession();
+    break;
 
   }
 }
 
+public void playStrokeSession(){
+  //ointsArray=new Point2dArray();
+   clearPg();
+    println("play stroke session");
+  redraw();
+ selectedBrush.playStrokeSession();
+}
+
+public void startStrokeSession(){
+  clearPg();
+  println("new stroke session");
+ selectedBrush.startStrokeSession();
+}
+
 public void replayBrush(){
+  pointsArray=new Point2dArray();
  selectedBrush.executeStroke();
 }
 
@@ -333,8 +356,15 @@ String f="";
         jFileChooser1.setCurrentDirectory(new File(DEFAULT_LOADING_DIRECTORY));
         // try catch ici
         if (jFileChooser1.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            f=(jFileChooser1.getSelectedFile().getAbsolutePath()); //si un fichier est selectionné, récupérer le fichier puis sont path et l'afficher dans le champs de texte
-        }
+           try{
+         f=(jFileChooser1.getSelectedFile().getAbsolutePath()); //si un fichier est selectionné, récupérer le fichier puis sont path et l'afficher dans le champs de texte
+           }
+           catch (Exception e)
+         {
+          e.printStackTrace();
+           println("EXCEPTION --->");
+         }
+      }
         
         if (f.length()>2)
         {

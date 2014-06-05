@@ -1,7 +1,7 @@
 class Stroke
 {
 
-ArrayList<StrokeStep> strokeList;
+ArrayList<StrokeStep> strokeStepList;
   BrushBase brush;
   int previousX;
 int previousY;
@@ -10,44 +10,55 @@ int mY;
 
 Stroke(BrushBase b)
 {
-  strokeList=new ArrayList<StrokeStep>();
+  strokeStepList=new ArrayList<StrokeStep>();
   brush=b;
 }
 
 void record(int f,int x,int y,int px, int py,float p)
 {
   StrokeStep strokeStep=new StrokeStep(f, x, y,px,py,p);
-  strokeList.add(strokeStep);
+  strokeStepList.add(strokeStep);
 }
 
 void execute(){
-  
-    if (!strokeList.isEmpty())
+        if (!strokeStepList.isEmpty() )
   {
-    for(StrokeStep strokeStep: strokeList){
+    //println("strokestepList : "+strokeStepList.size());
+    for(StrokeStep strokeStep: strokeStepList){
      drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure());
     }
-  } 
+   
+  }
 }
 
 int getSize()
 {
-  return strokeList.size();
+  return strokeStepList.size();
 }
 
 
  void drawBrushStroke(int x,int y,int px, int py, float p)
 {
+  
   brush.drawBrushStroke(x,y,px,py,p);
+   
 } 
 
+
+void draw()
+  {
+    pg.beginDraw();
+  
+    pg.endDraw();
+    
+  }
 
 String toString()
 {
   String listStrokes="";
-  if (!strokeList.isEmpty())
+  if (!strokeStepList.isEmpty())
   {
-    for(StrokeStep object: strokeList){
+    for(StrokeStep object: strokeStepList){
     listStrokes=listStrokes+object.toString();
     }
   } 

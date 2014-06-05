@@ -21,6 +21,7 @@ class BrushBase
   boolean rotateBrush;
   int randomBrush;
   int transparency=255;
+  List<Stroke> strokeList;
   Stroke stroke;
   Tablet tablet;
   
@@ -36,6 +37,7 @@ class BrushBase
     update(p, p2, n);
     idle=false;
      stroke=new Stroke(this);
+     strokeList=new ArrayList<Stroke>();
     //redraw();
   }
 
@@ -67,30 +69,74 @@ void drawBrushStroke(int mX,int mY,int pX, int pY,float p)
 void recordStroke(){
   
                 
-        if(isNewStroke){
-        stroke=new Stroke(this);
-        isNewStroke=false;
+       
+        println("recordCounter = "+recordCounter);
         recordCounter=0;
-        println("recordCounter =0 "+recordCounter);
-        }
-        else
-        {
-        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+        
+      
         recordCounter++;
-         //println("recordCounter = "+recordCounter+" - " +frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
-        } 
+        
+        
+      if(isNewStroke){
+      strokeList.add(stroke);
+      stroke=new Stroke(this);
+      isNewStroke=false;
+        
+      println("recordCounter = "+recordCounter);
+      recordCounter=0;
+      println("recordCounter =0 "+recordCounter);
+      }
+      else
+      {
+        
+        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+      
+      }
+      
+        // println("recordCounter = "+recordCounter+" - " +frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+   
     
-
 } 
+
+void playStrokeSession(){
+  strokeList.add(stroke);
+   if (!strokeList.isEmpty())
+  {
+    println("taille de la strokeList : "+strokeList.size());
+    int i=0;
+    for(Stroke item: strokeList){
+      print(i+".");
+     stroke=item;
+     item.execute();
+     image(pg, 0, 0);
+     i++;
+    
+    previousX=0;
+    previousY=0;
+    
+    }
+  } 
+}
+
+void startStrokeSession(){
+  strokeList=new ArrayList<Stroke>();
+}
+
 
 void mouseReleased()
 {
  isNewStroke=true;
+ strokeList.add(stroke);
 }
 
 void executeStroke(){
-stroke.execute();
-println("stroke arraylist size "+stroke.getSize());
+   if (!strokeList.isEmpty())
+  {
+   // 
+    println("executeStroke stroke arraylist size "+strokeList.get(strokeList.size()-1));
+    strokeList.get(strokeList.size()-1).execute();
+  }
+//println("stroke arraylist size "+stroke.getSize());
 //stroke=new Stroke(this);
 }
 
@@ -125,22 +171,24 @@ println("stroke arraylist size "+stroke.getSize());
   {
     if(idle)
     { return;   }
-  
+  smooth();
      noFill();
      stroke(#000000, 50);
       ellipse(mouseX, mouseY, rayon, rayon);
-
 
      showRadiusGizmo();
      pg.beginDraw();
      pg.stroke(brushcolor);
      pg.endDraw();
+     
    if (mousePressed )
     {
        ShowDrawingGizmo();
     }
    previousX=0;
    previousY=0;
+  
+     
    
   }
 
