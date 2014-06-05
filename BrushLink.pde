@@ -7,7 +7,7 @@ class BrushLink extends BrushBase
     makeLinkFlag=true;
   }
   
-  void makeLink(int mX,int mY,int pX, int pY)
+  void makeLink(int mX,int mY,int pX, int pY, float p)
   {
     if (makeLinkFlag)
     {
@@ -42,14 +42,14 @@ class BrushLink extends BrushBase
     }
   }
 
-  void drawBrushStroke(int mX,int mY,int pX, int pY)
+  void drawBrushStroke(int mX,int mY,int pX, int pY,float p)
   {
-   makeLink(mX, mY, pX, pY);;
-      if (previousX==0 && previousY==0)
-      {
-        previousX=mX;
-        previousY=mY;
-      }
+   makeLink(mX, mY, pX, pY, p);;
+       if (previousX==0 && previousY==0)
+    {
+    previousX=pX;
+   previousY=pY;
+    }
       pg.fill(153);
    
       pg.stroke(brushColor);
@@ -77,8 +77,8 @@ void draw()
     }
   super.draw();
    if (mousePressed && (mouseButton ==LEFT)) {
- 
-  drawBrushStroke(mouseX, mouseY, pmouseX, pmouseY);
+      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+       recordStroke();
    }
    else
     {
@@ -86,7 +86,7 @@ void draw()
       previousY=0;
     }
   
-  recordStroke();
+ 
 }
 
 }

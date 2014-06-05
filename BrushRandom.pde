@@ -8,7 +8,7 @@ class BrushRandom extends BrushBase
   
   
   
-   void drawBrushStroke(int mX,int mY,int pX, int pY)
+  void drawBrushStroke(int mX,int mY,int pX, int pY, float p) 
 {
   
     
@@ -48,7 +48,8 @@ class BrushRandom extends BrushBase
    super.draw();
    
     if (mousePressed && (mouseButton ==LEFT)) {
-  drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY);
+      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+        recordStroke();
     }
     else
   {
@@ -56,7 +57,7 @@ class BrushRandom extends BrushBase
     previousY=0;
   }
   
-  recordStroke();
+
   }
 
 

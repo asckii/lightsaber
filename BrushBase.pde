@@ -58,26 +58,28 @@ class BrushBase
   }
   
   
-void drawBrushStroke(int mX,int mY,int pX, int pY)
+void drawBrushStroke(int mX,int mY,int pX, int pY,float p)
 {
 }
   
   
+  int recordCounter=0;
+void recordStroke(){
   
-void recordStroke()
-{
-    if (mousePressed && (mouseButton ==LEFT)) {
                 
         if(isNewStroke){
         stroke=new Stroke(this);
         isNewStroke=false;
+        recordCounter=0;
+        println("recordCounter =0 "+recordCounter);
         }
         else
         {
-        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY);
+        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+        recordCounter++;
+         //println("recordCounter = "+recordCounter+" - " +frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
         } 
-    }
-  
+    
 
 } 
 
@@ -88,6 +90,7 @@ void mouseReleased()
 
 void executeStroke(){
 stroke.execute();
+println("stroke arraylist size "+stroke.getSize());
 //stroke=new Stroke(this);
 }
 
@@ -136,9 +139,8 @@ stroke.execute();
     {
        ShowDrawingGizmo();
     }
-   
-  
-   
+   previousX=0;
+   previousY=0;
    
   }
 

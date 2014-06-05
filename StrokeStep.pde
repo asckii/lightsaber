@@ -3,9 +3,10 @@ class StrokeStep
  
   int frame;
   int x,y,px,py;
+  float pressure;
   BrushBase brush;
   
-StrokeStep(int f,int x,int y,int x2, int y2)
+StrokeStep(int f,int x,int y,int x2, int y2, float p)
 { 
 
   frame=f;
@@ -13,9 +14,18 @@ StrokeStep(int f,int x,int y,int x2, int y2)
   this.y=y;
   this.px=x;
   this.py=y;
+  this.pressure=p;
 }
 
+void setPressure(float f)
+{
+  pressure=f;
+}
 
+float  getPressure()
+{
+  return pressure;
+}
 
 void setX(int i)
 {

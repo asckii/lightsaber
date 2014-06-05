@@ -8,18 +8,17 @@ class BrushSimple extends BrushBase
   
   
   
-   void drawBrushStroke(int mX,int mY,int pX, int pY)
+   void drawBrushStroke(int mX,int mY,int pX, int pY, float p)
 {
-  
-
 
     println("dans le draw "+key);
     //  - section draw lines
-    if (previousX==0 && previousY==0)
+      if (previousX==0 && previousY==0)
     {
-      previousX=mX;
-      previousY=mY;
+    previousX=pX;
+    previousY=pY;
     }
+    
     
     pg.beginDraw();
     Point2d pt=new Point2d(mX, mY);
@@ -48,7 +47,9 @@ class BrushSimple extends BrushBase
    super.draw();
    
    if (mouseButton ==LEFT) {
-     drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY);
+      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+       recordStroke();
+
     }
   else
   {
@@ -56,8 +57,7 @@ class BrushSimple extends BrushBase
     previousY=0;
   }
    
-  recordStroke();
-
+ 
   }
 
 

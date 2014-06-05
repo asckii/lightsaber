@@ -16,7 +16,7 @@ import java.util.*;
 
 // branch brush_cursor
 Point2dArray pointsArray;
-static String VERSION="beta 01";
+String version="beta 01";
 static int WIDTH=1000, HEIGHT=600;
 static String DEFAULT_LOADING_DIRECTORY="C:\\Users\\bruno\\Desktop\\temp_web";
 static String SAVE_FOLDER="C:\\Users\\bruno\\Desktop\\";
@@ -117,13 +117,23 @@ void setup() {
   useCurveToDraw=false;
 
 
- dragimage = new DragImage("test.jpg",0,0);
-
+  dragimage = new DragImage("test.jpg",0,0);
   jFileChooser1 = new JFileChooser();
-
- //
- 
   jColorChooser=new JColorChooser();
+  
+//get current version from getversion.bat
+  try{
+    println(sketchPath("")+"getversion.bat");
+    Process p = Runtime.getRuntime().exec(sketchPath("")+"getversion.bat");
+   println("getversion.bat exécuté");
+   }
+   catch(IOException e)
+   {
+     println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
+   }
+//load the generated text file and put the content in version
+  String lines[] = loadStrings("version.txt");
+  version=lines[0];
   
    cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
    cfFrame.setVisible(true);
@@ -405,7 +415,7 @@ void  saveByJDialog(boolean transparent)
     tmppg.image(pg, 0, 0);
     tmppg.noSmooth();
     tmppg.fill(0, 102, 153);
-    tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+VERSION,WIDTH-200,HEIGHT-20);
+    tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+version,WIDTH-200,HEIGHT-20);
     tmppg.smooth();
     tmppg.endDraw();
    
@@ -433,7 +443,7 @@ void debugInfo()
     text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +DEBUG_INFO_TEXT, 50, 50);
     text(DEBUG_FRAMECOUNT+frameCount,50,63);
     pg.fill(0, 102, 153);
-    text(UtilsFunctions.getDate()+" - Lightsaber_"+VERSION,WIDTH-200,HEIGHT-20);
+    text(UtilsFunctions.getDate()+" - Lightsaber_"+version,WIDTH-350,HEIGHT-20);
 
   }
   else
