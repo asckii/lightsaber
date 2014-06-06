@@ -14,11 +14,11 @@ class BrushRandom extends BrushBase
     
     if (previousX==0 && previousY==0)
     {
-      previousX=mX;
-      previousY=mY;
+      previousX=pX;
+      previousY=pY;
     }
     pg.beginDraw();
-     pg.stroke(brushColor,transparency);
+    pg.stroke(brushColor,transparency);
     pg.strokeWeight(0.5);
     float mrx=mX+random(-rayon/5,rayon/5);
     float mry=mY+random(-rayon/5,rayon/5);
@@ -50,12 +50,9 @@ class BrushRandom extends BrushBase
     if (mousePressed && (mouseButton ==LEFT)) {
       drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
         recordStroke();
+         postDrawOperation();
     }
-    else
-  {
-    previousX=0;
-    previousY=0;
-  }
+   
   
 
   }

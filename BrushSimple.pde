@@ -21,8 +21,8 @@ class BrushSimple extends BrushBase
     
     pg.beginDraw();
     Point2d pt=new Point2d(mX, mY);
-      pg.stroke(brushColor);
-    pg.strokeWeight(rayon);
+    pg.stroke(brushColor);
+    pg.strokeWeight(rayon); 
     pg.line( mX, mY, previousX, previousY);
     pg.endDraw();
 
@@ -46,13 +46,9 @@ class BrushSimple extends BrushBase
    if (mouseButton ==LEFT) {
       drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
        recordStroke();
-
+     postDrawOperation();
     }
-  else
-  {
-    previousX=0;
-    previousY=0;
-  }
+  
    
  
   }

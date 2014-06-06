@@ -26,6 +26,9 @@ class BrushBase
   Tablet tablet;
   Object parent;
   boolean isNewStroke=true;
+  boolean isXMirrored=false;
+  boolean isYMirrored=false;
+  
   BrushBase(Object pa,PGraphics p, Point2dArray p2, String n)
   {
     parent=pa;
@@ -41,6 +44,16 @@ class BrushBase
      strokeList=new ArrayList<Stroke>();
     //redraw();
   }
+  
+void setMirrored(boolean b)
+{ 
+    isXMirrored=b; 
+}
+
+boolean getMirrored( )
+{  
+    return isXMirrored;
+}
 
   void update(PGraphics p, Point2dArray p2, String n)
   {
@@ -165,8 +178,26 @@ void executeStroke(){
       break;
     }
   }
+  
 
+  
+void postDrawOperation()
+{
+  
+if (isXMirrored)
+{
+  println("isXMirrored "+isXMirrored);
+     previousX=0;
+     previousY=0;
+     
+     WIDTH=1000;HEIGHT=600;
+    int midleX=WIDTH/2;int midleY=HEIGHT/2;
+    int mmx=(2*midleX)-mouseX;int pmmx=(2*midleX)-pmouseX;
+     drawBrushStroke(mmx,mouseY,pmmx,pmouseY,tablet.getPressure());
+   //recordStroke();
+}
 
+}
   void draw()
   {
     if(idle)
@@ -193,6 +224,9 @@ void executeStroke(){
      playStrokeSessionFrame(incrementStroke);
      incrementStroke++;
      }
+   
+   
+   
    
   }
 

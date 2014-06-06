@@ -73,6 +73,7 @@ class BrushMotif extends BrushBase
     if (mousePressed && (mouseButton ==LEFT)) {
           drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
           recordStroke();
+           postDrawOperation();
     }
     
  

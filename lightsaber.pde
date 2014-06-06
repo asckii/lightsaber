@@ -158,12 +158,20 @@ menu actions
 **/
 
 
+void getModifier()
+{
+  
+
+  println() ;
+}
+
 
 
 void keyPressed() {
   pressedKey=str(keyCode); 
  selectedBrush.keyPressed();
-
+  boolean isShiftPressed=false;
+ 
   switch(keyCode)
   {
   
@@ -236,11 +244,14 @@ void keyPressed() {
     break;
     
     case 87: //w
+    
    changeFlip(false);
     break;
     
      case 88: // x
-   changeFlip(true);
+     
+           changeFlip(true);
+         
     break;
     
       case 44: // ?
@@ -251,15 +262,28 @@ void keyPressed() {
      playStrokeSession();
     break;
 
+    case 66: // .
+     changeMirrorMode();
+    break;
+
+
 case 513: // /
    startStrokeSession();
     break;
 
   }
+  
+
 }
 
+boolean isMirrored=false;
+public void  changeMirrorMode(){
+  isMirrored=!isMirrored;
+  println("isMirrored "+isMirrored);
+  
+
+}
 public void playStrokeSession(){
-  //ointsArray=new Point2dArray();
    clearPg();
     println("play stroke session");
  selectedBrush.playStrokeSession();
@@ -531,6 +555,7 @@ void changeScale()
 
 void draw() {
   background(BACKGROUND_FILL);
+  selectedBrush.setMirrored(isMirrored);
  selectedBrush.setTransparency(brushTransparency);
   dragimage.display();
   
