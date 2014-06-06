@@ -103,29 +103,11 @@ void playStrokeSessionFrame(int increment){
   
    if (!strokeList.isEmpty())
   {
-    println("taille de la strokeList : "+strokeList.size());
-    
-    //for(Stroke item: strokeList){
-    // print(i+".");
-    // stroke=item;
-     //item.execute();
-     
-     // for(StrokeStep strokeStep: stroke.getList()){ 
-    // drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure());
-   //  }
-
-    // i++;
-   // previousX=0;
-   // previousY=0;
     if (incrementStroke<strokeList.size()){
       //récuprérer le stroke
      Stroke item=strokeList.get(incrementStroke);
-     
-     for(StrokeStep strokeStep: item.getList()){ 
-     drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure());
-     }
-     
-     
+     item.execute();
+  
     }else
     {
       // fin des strokes
@@ -152,12 +134,10 @@ void mouseReleased()
 void executeStroke(){
    if (!strokeList.isEmpty())
   {
-   // 
     println("executeStroke stroke arraylist size "+strokeList.get(strokeList.size()-1));
     strokeList.get(strokeList.size()-1).execute();
   }
-//println("stroke arraylist size "+stroke.getSize());
-//stroke=new Stroke(this);
+
 }
 
 
@@ -191,7 +171,7 @@ void executeStroke(){
   {
     if(idle)
     { return;   }
-  smooth();
+    smooth();
      noFill();
      stroke(#000000, 50);
       ellipse(mouseX, mouseY, rayon, rayon);

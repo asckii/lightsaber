@@ -44,8 +44,16 @@ class BrushJpen extends BrushBase
      super.draw();
    
      if (mousePressed && (mouseButton ==LEFT)) {
-    drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
- recordStroke();
+      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
+     
+     previousX=0;
+     previousY=0;
+     WIDTH=1000;HEIGHT=600;
+     int midleX=WIDTH/2;int midleY=HEIGHT/2;
+    int mmx=(2*midleX)-mouseX;int pmmx=(2*midleX)-pmouseX;
+     drawBrushStroke(mmx,mouseY,pmmx,pmouseY,tablet.getPressure());
+     
+     recordStroke();
      }
     
    

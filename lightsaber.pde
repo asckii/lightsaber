@@ -41,6 +41,8 @@ static String BRUSH_NAME_RANDOM="random";
 static String BRUSH_NAME_JPEN="Jpen";
 static String BRUSH_NAME_MOTIF="motif";
 
+static int DEBUG_FRAMECOUNT_X=WIDTH-350;
+static int DEBUG_FRAMECOUNT_Y=HEIGHT-20;
 
 PGraphics pg, pg2; 
 ControlP5 cp5;
@@ -422,9 +424,12 @@ Color c = jColorChooser.showDialog(this, COLOR_CHOOSER_TEXT, selectedBrushColor)
 
 void  saveByJDialog(boolean transparent)
 { 
+  
   String savename=SAVE_FOLDER+SAVE_NAME+"-"+UtilsFunctions.getDate()+"_"+UtilsFunctions.getHour()+".png";
   JFileChooser chooser = new JFileChooser();
   File f = new File(savename);
+
+ try{
   chooser.setSelectedFile(f);
   chooser.setFileFilter(chooser.getAcceptAllFileFilter());
   int returnVal = chooser.showSaveDialog(null);
@@ -445,15 +450,19 @@ void  saveByJDialog(boolean transparent)
     tmppg.image(pg, 0, 0);
     tmppg.noSmooth();
     tmppg.fill(0, 102, 153);
-    tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+version,WIDTH-200,HEIGHT-20);
+    tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+version,DEBUG_FRAMECOUNT_X,DEBUG_FRAMECOUNT_Y);
     tmppg.smooth();
     tmppg.endDraw();
    
     tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
   
   }
+ }
+ catch(Exception e)
+ {
+   println("--->EXCEPTION");
+ }
  
-  //
 }
 
 void saveJavascript()
@@ -473,7 +482,7 @@ void debugInfo()
     text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +DEBUG_INFO_TEXT, 50, 50);
     text(DEBUG_FRAMECOUNT+frameCount,50,63);
     pg.fill(0, 102, 153);
-    text(UtilsFunctions.getDate()+" - Lightsaber_"+version,WIDTH-350,HEIGHT-20);
+    text(UtilsFunctions.getDate()+" - Lightsaber_"+version,DEBUG_FRAMECOUNT_X,DEBUG_FRAMECOUNT_Y);
 
   }
   else
