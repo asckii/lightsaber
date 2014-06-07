@@ -556,7 +556,14 @@ void changeScale()
 
 void draw() {
   background(BACKGROUND_FILL);
+  
+  
   selectedBrush.setMirrored(isMirrored);
+  if(isMirrored)
+  {
+  line( WIDTH/2, 0, WIDTH/2, HEIGHT);;
+  }
+  
  selectedBrush.setTransparency(brushTransparency);
   dragimage.display();
   
