@@ -11,4 +11,5 @@
 - stopper le playing des stokes, arréter le stroke
 - empécher les clics pendant le playing
 - reprendre le playing au moment ou on l'a arrété
+- nettoyage code remplacer strokestep dans draw
 */

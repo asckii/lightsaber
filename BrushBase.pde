@@ -56,11 +56,25 @@ void update(PGraphics p, Point2dArray p2, String n)
     name=n;
 }
 
+void resetPreviousPoints()
+{
+    previousX=0;
+    previousY=0;
+}
+
+void setPreviousPoints(int x,int y)
+{
+    previousX=x;
+    previousY=y;
+}
+
+
+
 void IsCleared()
 { 
   println("is cleared");
-    previousX=0;
-    previousY=0;
+ 
+    resetPreviousPoints();
   stroke.record(this,0,0,0,0,0,0,0,isXMirrored,true);
 }
 

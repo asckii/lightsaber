@@ -43,7 +43,7 @@ static String BRUSH_NAME_MOTIF="motif";
 
 static int DEBUG_FRAMECOUNT_X=WIDTH-350;
 static int DEBUG_FRAMECOUNT_Y=HEIGHT-20;
-
+static Stroke stroke;
 PGraphics pg, pg2; 
 ControlP5 cp5;
 ControlFrame cf;
@@ -106,7 +106,7 @@ void setup() {
   brushList.add(brushsimple);
   brushList.add(brushrandom);
   brushList.add(brusherase);
- 
+ stroke=new Stroke(brushjpen,pg);
     cp5 = new ControlP5(this);
     cf = addControlFrame("Toolbox", 200,200);
   
