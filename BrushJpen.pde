@@ -11,7 +11,7 @@ class BrushJpen extends BrushBase
   }
   
   
- void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure)
+ void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
   {
     
   if (previousX==0 && previousY==0)
@@ -22,7 +22,6 @@ class BrushJpen extends BrushBase
     
     
     pg.beginDraw();
-    pg.smooth();
     pg.stroke(brushColor,transparency);
     pg.strokeWeight(int(rayon *vpressure));
     pg.line(mX, mY,previousX, previousY );  
@@ -30,6 +29,7 @@ class BrushJpen extends BrushBase
     
    previousX=mX;
    previousY=mY;
+   
     
   }
   
@@ -43,12 +43,7 @@ class BrushJpen extends BrushBase
     
      super.draw();
    
-     if (mousePressed && (mouseButton ==LEFT)) {
-      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
-     
-     recordStroke();
-     postDrawOperation();
-     }
+    
     
    
   }

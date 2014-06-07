@@ -14,23 +14,30 @@ Stroke(BrushBase b,PGraphics pg)
   brush=b;
 }
 
-void record(int f,int x,int y,int px, int py,float p)
+void record(int f,int x,int y,int px, int py,float p,int t, boolean m)
 {
-  StrokeStep strokeStep=new StrokeStep(f, x, y,px,py,p);
+  StrokeStep strokeStep=new StrokeStep(f, x, y,px,py,p,t,m);
   strokeStepList.add(strokeStep);
 }
 
 void execute(){
-        if (!strokeStepList.isEmpty() )
+  
+  if (!strokeStepList.isEmpty() )
   {
     //println("strokestepList : "+strokeStepList.size());
     for(StrokeStep strokeStep: strokeStepList){
-      
-     drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure());
-     
+     drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure(),strokeStep.getTransparency(),strokeStep.getIsMirrored()); 
+    
+   if(strokeStep.getIsMirrored())
+     {
+     postDrawOperation(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure(),strokeStep.getTransparency(),strokeStep.getIsMirrored()); 
+     }
    }
    
+    
+     
   }
+  
 }
 
 List<StrokeStep> getList()
@@ -43,12 +50,21 @@ int getSize()
   return strokeStepList.size();
 }
 
- void drawBrushStroke(int x,int y,int px, int py, float p)
+ void drawBrushStroke(int x,int y,int px, int py, float p,int t, boolean m)
 {
   
-  brush.drawBrushStroke(x,y,px,py,p);
+  brush.drawBrushStroke(x,y,px,py,p,t,m);
+   
  
+}
+ void postDrawOperation(int x,int y,int px, int py, float p,int t, boolean m)
+{
   
+  
+      
+  brush.postDrawOperation(x,y,px,py,p,t,m);
+ 
+    
 } 
 
 

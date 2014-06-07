@@ -8,7 +8,7 @@ class BrushRandom extends BrushBase
   
   
   
-  void drawBrushStroke(int mX,int mY,int pX, int pY, float p) 
+  void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
 {
   
     
@@ -24,7 +24,7 @@ class BrushRandom extends BrushBase
     float mry=mY+random(-rayon/5,rayon/5);
     
     Point2d pt=new Point2d((int)mrx,(int) mry);
-    pg.line( mrx, mry, previousX, previousY);
+    pg.line( mrx, mry, pX, pY);
     pg.endDraw();
 
     pointsArray.add(pt);  
@@ -46,14 +46,7 @@ class BrushRandom extends BrushBase
       return;
     }
    super.draw();
-   
-    if (mousePressed && (mouseButton ==LEFT)) {
-      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
-        recordStroke();
-         postDrawOperation();
-    }
-   
-  
+
 
   }
 

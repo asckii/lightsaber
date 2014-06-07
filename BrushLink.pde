@@ -42,9 +42,9 @@ class BrushLink extends BrushBase
     }
   }
 
-  void drawBrushStroke(int mX,int mY,int pX, int pY,float p)
+  void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
   {
-   makeLink(mX, mY, pX, pY, p);;
+   makeLink(mX, mY, pX, pY, vpressure);;
        if (previousX==0 && previousY==0)
     {
     previousX=pX;
@@ -76,16 +76,8 @@ void draw()
       return;
     }
   super.draw();
-   if (mousePressed && (mouseButton ==LEFT)) {
-      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
-       recordStroke();
-       postDrawOperation();
-   }
-   else
-    {
-      previousX=0;
-      previousY=0;
-    }
+  
+  
   
  
 }

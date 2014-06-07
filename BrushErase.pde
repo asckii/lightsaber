@@ -7,7 +7,7 @@ class BrushErase extends BrushBase
   }
    
   
- void drawBrushStroke(int mX,int mY,int pX, int pY,float p)
+ void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
 {
 
     
@@ -73,11 +73,7 @@ class BrushErase extends BrushBase
       return;
     }
     
-      if (mousePressed && (mouseButton ==LEFT)) {
-    drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
-    recordStroke();
-    postDrawOperation();
-      }
+    
    super.draw();
   
   }

@@ -21,7 +21,7 @@ class BrushMotif extends BrushBase
     
   }
   
-  void drawBrushStroke(int mX,int mY,int pX, int pY, float vPressure)
+  void drawBrushStroke(int mX,int mY,int pX, int pY,float vPressure,int t,boolean m)
 {
  
    if (previousX==0 && previousY==0)
@@ -70,11 +70,7 @@ class BrushMotif extends BrushBase
     }
    super.draw();
    
-    if (mousePressed && (mouseButton ==LEFT)) {
-          drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
-          recordStroke();
-           postDrawOperation();
-    }
+  
     
  
 

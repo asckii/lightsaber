@@ -8,7 +8,7 @@ class BrushSimple extends BrushBase
   
   
   
-   void drawBrushStroke(int mX,int mY,int pX, int pY, float p)
+   void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
 {
 
     //  - section draw lines
@@ -43,12 +43,7 @@ class BrushSimple extends BrushBase
     }
    super.draw();
    
-   if (mouseButton ==LEFT) {
-      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
-       recordStroke();
-     postDrawOperation();
-    }
-  
+ 
    
  
   }
