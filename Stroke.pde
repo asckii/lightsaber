@@ -14,9 +14,9 @@ Stroke(BrushBase b,PGraphics pg)
   brush=b;
 }
 
-void record(BrushBase usedbrush,int f,int x,int y,int px, int py,float p,int t, boolean m,boolean cleared)
+void record(StrokeStep strokeStep)
 {
-  StrokeStep strokeStep=new StrokeStep(usedbrush,f, x, y,px,py,p,t,m,cleared);
+
   strokeStepList.add(strokeStep);
 }
 
@@ -37,45 +37,23 @@ void execute(){
         else 
         {
           
-          
-          
-        
         
        if(strokeStep.getIsMirrored())
          {
            
             println("deux opérations");
-            int xop1=strokeStep.getX();
-            int yop1=strokeStep.getY();
-            int xopp1=strokeStep.getpX();
-            int yopp1=strokeStep.getpY();
-            float op1Pressure=strokeStep.getPressure();
-            int op1Transparency=strokeStep.getTransparency();
-            boolean op1Mirrored=strokeStep.getIsMirrored();
-            boolean op1Iscleared=strokeStep.getIsCleared();
-              brush.setPreviousPoints(xopp1,yopp1);
-         drawBrushStroke(brush,xop1,yop1,xopp1,yopp1,op1Pressure,op1Transparency,op1Mirrored,op1Iscleared); 
-            
-           int xop2=strokeStep.getX();
-            int yop2=strokeStep.getY();
-             int xopp2=strokeStep.getpX();
-            int yopp2=strokeStep.getpY();
-             float op2Pressure=strokeStep.getPressure();
-            int op2Transparency=strokeStep.getTransparency();
-            boolean op2Mirrored=strokeStep.getIsMirrored();
-            boolean op2Iscleared=strokeStep.getIsCleared();
-            brush.setPreviousPoints(xopp2,yopp2);
-         postDrawOperation(brush,xop2,yop2,xopp2,yopp2,op2Pressure,op2Transparency,op2Mirrored,op2Iscleared); 
+           
+           drawBrushStroke(strokeStep);
+ 
+         
+         postDrawOperation(strokeStep);
          
          }
          else
          {
-           println("une seule opération");
-         drawBrushStroke(brush,strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure(),strokeStep.getTransparency(),strokeStep.getIsMirrored(),strokeStep.getIsCleared()); 
+         drawBrushStroke(strokeStep); 
          }
-         
-         
-         
+
      }
      
    }
@@ -92,15 +70,15 @@ int getSize()
   return strokeStepList.size();
 }
 
- void drawBrushStroke(BrushBase usedbrush,int x,int y,int px, int py, float p,int t, boolean m, boolean cleared){
+ void drawBrushStroke(StrokeStep strokeStep){
   
-  brush.drawBrushStroke(usedbrush,x,y,px,py,p,t,m,cleared);
+  brush.drawBrushStroke(strokeStep);
    
  
 }
- void postDrawOperation(BrushBase usedbrush,int x,int y,int px, int py, float p,int t, boolean m,boolean cleared){
+ void postDrawOperation(StrokeStep strokeStep){
        
-  brush.postDrawOperation(usedbrush,x,y,px,py,p,t,m,cleared);
+  brush.postDrawOperation(strokeStep);
  
 } 
 

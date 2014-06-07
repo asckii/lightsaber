@@ -21,34 +21,41 @@ class BrushMotif extends BrushBase
     
   }
   
-  void drawBrushStroke(BrushBase usedbrush,int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
+  void drawBrushStroke(StrokeStep strokeStep)
 {
- 
+   int mx=strokeStep.getX();
+    int my=strokeStep.getY();
+    int px=strokeStep.getpX();
+    int py=strokeStep.getpY(); 
+    float strokePressure=strokeStep.getPressure();
+    int strokeTransparency=strokeStep.getTransparency();
+  
+  
    if (previousX==0 && previousY==0)
       {
-        previousX=pX;
-        previousY=pY;
+        previousX=px;
+        previousY=py;
+        prayon=rayon;
       }
   
     pg.beginDraw(); 
     pg.smooth();
-   float distance=map(dist(mX, mY, previousX, previousY),0,50,9,15);
+   float distance=map(dist(mx, my, previousX, previousY),0,50,9,15);
   for (int i = 0; i <= (int)distance; i++) {
-  float x = lerp(previousX,mX, i/ distance);
-  float y = lerp(previousY,mY, i/distance);
+  float x = lerp(previousX,mx, i/ distance);
+  float y = lerp(previousY,my, i/distance);
 
   
-  int tmpRayon=int(lerp(prayon,rayon,i/distance) *vpressure);
-  pg.tint(brushColor,transparency);//);//map( tablet.getPressure()*100,0,255,0,255)
+  int tmpRayon=int(lerp(prayon,rayon,i/distance) *strokePressure);
+  pg.tint(brushColor,strokeTransparency);//);//map( tablet.getPressure()*100,0,255,0,255)
   pg.image(img,x-tmpRayon/2,y-tmpRayon/2,tmpRayon,tmpRayon);
   }
  
   pg.endDraw();
-  prayon=rayon;
-  ppressure=vpressure;
-  
-   previousX=mX;
-   previousY=mY;
+
+   previousX=mx;
+   previousY=my;
+   prayon=rayon;
  
 } 
   

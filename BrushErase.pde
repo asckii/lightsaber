@@ -7,13 +7,13 @@ class BrushErase extends BrushBase
   }
    
   
- void drawBrushStroke(BrushBase usedbrush,int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
+ void drawBrushStroke(StrokeStep strokeStep)
 {
-
-    
+    int mx=strokeStep.getX();
+    int my=strokeStep.getY();
     noFill(); stroke(0,255,0);
-    ellipse(mX,mY,rayon,rayon);
-   eraseFunction(mX,mY);
+    ellipse(mx,my,rayon,rayon);
+   eraseFunction(mx,my);
 
  
 } 

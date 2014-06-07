@@ -8,28 +8,35 @@ class BrushSimple extends BrushBase
   
   
   
-  void drawBrushStroke(BrushBase usedbrush,int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
+  void drawBrushStroke(StrokeStep strokeStep)
 {
-
-    //  - section draw lines
+  
+     int mx=strokeStep.getX();
+    int my=strokeStep.getY();
+    int px=strokeStep.getpX();
+    int py=strokeStep.getpY(); 
+    float pressure=strokeStep.getPressure();
+    int transparency=strokeStep.getTransparency();
+    
+  
       if (previousX==0 && previousY==0)
     {
-    previousX=pX;
-    previousY=pY;
+    previousX=px;
+    previousY=py;
     }
     
     
     pg.beginDraw();
-    Point2d pt=new Point2d(mX, mY);
+    Point2d pt=new Point2d(mx, my);
     pg.stroke(brushColor);
     pg.strokeWeight(rayon); 
-    pg.line( mX, mY, previousX, previousY);
+    pg.line( mx, my, previousX, previousY);
     pg.endDraw();
 
     pointsArray.add(pt);  
 
-    previousX=mX;
-    previousY=mY;
+    previousX=mx;
+    previousY=my;
  
 } 
   

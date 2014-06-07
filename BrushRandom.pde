@@ -8,23 +8,30 @@ class BrushRandom extends BrushBase
   
   
   
-  void drawBrushStroke(BrushBase usedbrush,int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
+  void drawBrushStroke(StrokeStep strokeStep)
 {
   
+    int mx=strokeStep.getX();
+    int my=strokeStep.getY();
+    int px=strokeStep.getpX();
+    int py=strokeStep.getpY(); 
+    float pressure=strokeStep.getPressure();
+    int transparency=strokeStep.getTransparency();
     
     if (previousX==0 && previousY==0)
     {
-      previousX=pX;
-      previousY=pY;
+      previousX=px;
+      previousY=py;
     }
+    
     pg.beginDraw();
     pg.stroke(brushColor,transparency);
     pg.strokeWeight(0.5);
-    float mrx=mX+random(-rayon/5,rayon/5);
-    float mry=mY+random(-rayon/5,rayon/5);
+    float mrx=mx+random(-rayon/5,rayon/5);
+    float mry=my+random(-rayon/5,rayon/5);
     
     Point2d pt=new Point2d((int)mrx,(int) mry);
-    pg.line( mrx, mry, pX, pY);
+    pg.line( mrx, mry, previousX, previousY);
     pg.endDraw();
 
     pointsArray.add(pt);  

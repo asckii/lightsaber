@@ -39,6 +39,20 @@ BrushBase  getBrush()
 
 
 
+void setFrame(int i)
+{
+  frame=i;
+}
+
+int  getFrame()
+{
+  return frame;
+}
+
+
+
+
+
 void setIsCleared(boolean b)
 {
   isCleared=b;
