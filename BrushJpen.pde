@@ -11,7 +11,7 @@ class BrushJpen extends BrushBase
   }
   
   
- void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
+ void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
   {
     
   if (previousX==0 && previousY==0)

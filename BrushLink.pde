@@ -42,7 +42,7 @@ class BrushLink extends BrushBase
     }
   }
 
-  void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
+  void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
   {
    makeLink(mX, mY, pX, pY, vpressure);;
        if (previousX==0 && previousY==0)
@@ -52,7 +52,7 @@ class BrushLink extends BrushBase
     }
       pg.fill(153);
    
-      pg.stroke(brushColor);
+      pg.stroke(brushColor,transparency);
      
       Point2d pt=new Point2d(mX, mY);
       pg.strokeWeight(0.5);

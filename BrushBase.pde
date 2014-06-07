@@ -28,7 +28,10 @@ class BrushBase
   boolean isNewStroke=true;
   boolean isXMirrored=false;
   boolean isYMirrored=false;
-  
+  boolean playSession=false;
+  boolean isCleared=false;
+   int recordCounter=0;
+   int incrementStroke=0;
   BrushBase(Object pa,PGraphics p, Point2dArray p2, String n)
   {
     parent=pa;
@@ -45,6 +48,31 @@ class BrushBase
     //redraw();
   }
   
+
+void update(PGraphics p, Point2dArray p2, String n)
+{
+    pg=p;
+    pointsArray=p2;
+    name=n;
+}
+
+void IsCleared()
+{ 
+  println("is cleared");
+    previousX=0;
+    previousY=0;
+  stroke.record(0,0,0,0,0,0,0,isXMirrored,true);
+}
+
+void commandClear()
+{
+  pg.beginDraw();
+  pg.clear();
+  pointsArray=new Point2dArray();
+  pg.endDraw();
+  image(pg, 0, 0);
+}
+
 void setMirrored(boolean b)
 { 
     isXMirrored=b; 
@@ -55,31 +83,24 @@ boolean getMirrored( )
     return isXMirrored;
 }
 
-  void update(PGraphics p, Point2dArray p2, String n)
-  {
-    pg=p;
-    pointsArray=p2;
-    name=n;
-  }
 
-
-  float getRayon()
-  {
+float getRayon()
+{
     return rayon;
-  }
-  
-  void setRayon(int r)
-  {
+}
+
+void setRayon(int r)
+{
     rayon=r;
-  }
+}
   
   
-void drawBrushStroke(int mX,int mY,int pX, int pY,float p,int t, boolean m)
+void drawBrushStroke(int mX,int mY,int pX, int pY,float p,int t, boolean m,boolean cleared)
 {
 }
   
   
-  int recordCounter=0;
+ 
 void recordStroke(){
           
         recordCounter=0;
@@ -95,7 +116,7 @@ void recordStroke(){
       else
       {
         
-        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored);
+        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored, false);
       
       }
       
@@ -104,14 +125,15 @@ void recordStroke(){
     
 } 
 
-boolean playSession=false;
+
 
 void playStrokeSession()
 {
   playSession=true;
+  pointsArray=new Point2dArray();
 }
 
-int incrementStroke=0;
+
 void playStrokeSessionFrame(int increment){
   
    if (!strokeList.isEmpty())
@@ -137,13 +159,6 @@ void startStrokeSession(){
   strokeList=new ArrayList<Stroke>();
 }
 
-
-void mouseReleased()
-{
- isNewStroke=true;
- strokeList.add(stroke);
-}
-
 void executeStroke(){
    if (!strokeList.isEmpty())
   {
@@ -152,6 +167,14 @@ void executeStroke(){
   }
 
 }
+
+void mouseReleased()
+{
+ isNewStroke=true;
+ strokeList.add(stroke);
+}
+
+
 
 
   void keyPressed() {
@@ -181,7 +204,7 @@ void executeStroke(){
   
 
   
-void postDrawOperation(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
+void postDrawOperation(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean cleared)
 {
   
 if (m)
@@ -194,7 +217,7 @@ if (m)
     int midleX=WIDTH/2;int midleY=HEIGHT/2;
     int mmx=(2*midleX)-mX;int pmmx=(2*midleX)-pX;
      int mmy=(2*midleY)-mY;int pmmy=(2*midleY)-pY;
-     drawBrushStroke(mmx,mY,pmmx,pY,vpressure,transparency,isXMirrored);
+     drawBrushStroke(mmx,mY,pmmx,pY,vpressure,transparency,isXMirrored,false);
       stroke(#000000, 50);
      ellipse(mmx,mY,rayon,rayon);
    
@@ -232,10 +255,9 @@ if (m)
       
     if (mousePressed && (mouseButton ==LEFT)) {
     
-      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored);
-     
+      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored,false);
      recordStroke();
-     postDrawOperation(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored);
+     postDrawOperation(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored,false);
      }
     /* else
      {
@@ -271,16 +293,6 @@ if (m)
     }
   }
 
-void setTransparency(int i)
-{
-  transparency=i;
-}
-
-int getTransparency()
-{
-return transparency;
-}
-
 
 
 void setIdle(boolean b)
@@ -307,6 +319,17 @@ return idle;
    brushColor=c;
   }
   
+void setTransparency(int i)
+{
+  transparency=i;
+}
+
+int getTransparency()
+{
+return transparency;
+}
+
+
   
   String toString()
   {

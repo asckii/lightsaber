@@ -21,7 +21,7 @@ class BrushMotif extends BrushBase
     
   }
   
-  void drawBrushStroke(int mX,int mY,int pX, int pY,float vPressure,int t,boolean m)
+  void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
 {
  
    if (previousX==0 && previousY==0)
@@ -38,14 +38,14 @@ class BrushMotif extends BrushBase
   float y = lerp(previousY,mY, i/distance);
 
   
-  int tmpRayon=int(lerp(prayon,rayon,i/distance) *vPressure);
+  int tmpRayon=int(lerp(prayon,rayon,i/distance) *vpressure);
   pg.tint(brushColor,transparency);//);//map( tablet.getPressure()*100,0,255,0,255)
   pg.image(img,x-tmpRayon/2,y-tmpRayon/2,tmpRayon,tmpRayon);
   }
  
   pg.endDraw();
   prayon=rayon;
-  ppressure=vPressure;
+  ppressure=vpressure;
   
    previousX=mX;
    previousY=mY;

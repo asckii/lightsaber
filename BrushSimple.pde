@@ -8,7 +8,7 @@ class BrushSimple extends BrushBase
   
   
   
-   void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m)
+  void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
 {
 
     //  - section draw lines

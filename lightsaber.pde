@@ -284,7 +284,7 @@ public void  changeMirrorMode(){
 
 }
 public void playStrokeSession(){
-   clearPg();
+   selectedBrush.commandClear();
     println("play stroke session");
  selectedBrush.playStrokeSession();
 }
@@ -296,7 +296,7 @@ public void startStrokeSession(){
 }
 
 public void replayBrush(){
-  pointsArray=new Point2dArray();
+  
  selectedBrush.executeStroke();
 }
 
@@ -410,6 +410,7 @@ void clearPg()
   pg.clear();
   pointsArray=new Point2dArray();
   pg.endDraw();
+  selectedBrush.IsCleared();
   image(pg, 0, 0);
   
 }

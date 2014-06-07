@@ -7,8 +7,9 @@ class StrokeStep
   BrushBase brush;
   int transparency;
   boolean isMirrored;
+  boolean isCleared;
   
-StrokeStep(int f,int x,int y,int x2, int y2, float p,int t,boolean m)
+StrokeStep(int f,int x,int y,int x2, int y2, float p,int t,boolean m, boolean cl)
 { 
 
   frame=f;
@@ -19,7 +20,22 @@ StrokeStep(int f,int x,int y,int x2, int y2, float p,int t,boolean m)
   this.pressure=p;
   this.transparency=t;
   this.isMirrored=m;
+  this.isCleared=cl;
 }
+
+void setIsCleared(boolean b)
+{
+  isCleared=b;
+}
+
+boolean  getIsCleared()
+{
+  return isCleared;
+}
+
+
+
+
 
 void setIsMirrored(boolean b)
 {
