@@ -14,9 +14,9 @@ Stroke(BrushBase b,PGraphics pg)
   brush=b;
 }
 
-void record(int f,int x,int y,int px, int py,float p,int t, boolean m,boolean cleared)
+void record(BrushBase usedbrush,int f,int x,int y,int px, int py,float p,int t, boolean m,boolean cleared)
 {
-  StrokeStep strokeStep=new StrokeStep(f, x, y,px,py,p,t,m,cleared);
+  StrokeStep strokeStep=new StrokeStep(usedbrush,f, x, y,px,py,p,t,m,cleared);
   strokeStepList.add(strokeStep);
 }
 
@@ -29,14 +29,16 @@ void execute(){
     
     for(StrokeStep strokeStep: strokeStepList){
       
+        brush=strokeStep.getBrush();;
+        
          if(strokeStep.getIsCleared()){
           brush.commandClear();
         }  else {
-         drawBrushStroke(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure(),strokeStep.getTransparency(),strokeStep.getIsMirrored(),strokeStep.getIsCleared()); 
+         drawBrushStroke(brush,strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure(),strokeStep.getTransparency(),strokeStep.getIsMirrored(),strokeStep.getIsCleared()); 
         
        if(strokeStep.getIsMirrored())
          {
-         postDrawOperation(strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure(),strokeStep.getTransparency(),strokeStep.getIsMirrored(),strokeStep.getIsCleared()); 
+         postDrawOperation(brush,strokeStep.getX(),strokeStep.getY(),strokeStep.getpX(),strokeStep.getpY(),strokeStep.getPressure(),strokeStep.getTransparency(),strokeStep.getIsMirrored(),strokeStep.getIsCleared()); 
          }
      }
    }
@@ -53,15 +55,15 @@ int getSize()
   return strokeStepList.size();
 }
 
- void drawBrushStroke(int x,int y,int px, int py, float p,int t, boolean m, boolean cleared){
+ void drawBrushStroke(BrushBase usedbrush,int x,int y,int px, int py, float p,int t, boolean m, boolean cleared){
   
-  brush.drawBrushStroke(x,y,px,py,p,t,m,cleared);
+  brush.drawBrushStroke(usedbrush,x,y,px,py,p,t,m,cleared);
    
  
 }
- void postDrawOperation(int x,int y,int px, int py, float p,int t, boolean m,boolean cleared){
+ void postDrawOperation(BrushBase usedbrush,int x,int y,int px, int py, float p,int t, boolean m,boolean cleared){
        
-  brush.postDrawOperation(x,y,px,py,p,t,m,cleared);
+  brush.postDrawOperation(usedbrush,x,y,px,py,p,t,m,cleared);
  
 } 
 

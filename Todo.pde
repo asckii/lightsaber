@@ -8,4 +8,7 @@
 - more option on the menu (colors, brush parameters)
 - menu on top
 - ajouter la pression, la transparence dans le stroke
+- stopper le playing des stokes, arréter le stroke
+- empécher les clics pendant le playing
+- reprendre le playing au moment ou on l'a arrété
 */

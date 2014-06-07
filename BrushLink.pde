@@ -42,7 +42,7 @@ class BrushLink extends BrushBase
     }
   }
 
-  void drawBrushStroke(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
+  void drawBrushStroke(BrushBase usedbrush,int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean clear)
   {
    makeLink(mX, mY, pX, pY, vpressure);;
        if (previousX==0 && previousY==0)

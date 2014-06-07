@@ -22,7 +22,7 @@ class BrushBase
   int randomBrush;
   int transparency=255;
   List<Stroke> strokeList;
-  Stroke stroke;
+   Stroke stroke;
   Tablet tablet;
   Object parent;
   boolean isNewStroke=true;
@@ -61,7 +61,7 @@ void IsCleared()
   println("is cleared");
     previousX=0;
     previousY=0;
-  stroke.record(0,0,0,0,0,0,0,isXMirrored,true);
+  stroke.record(this,0,0,0,0,0,0,0,isXMirrored,true);
 }
 
 void commandClear()
@@ -95,7 +95,7 @@ void setRayon(int r)
 }
   
   
-void drawBrushStroke(int mX,int mY,int pX, int pY,float p,int t, boolean m,boolean cleared)
+void drawBrushStroke(BrushBase usedbrush,int mX,int mY,int pX, int pY,float p,int t, boolean m,boolean cleared)
 {
 }
   
@@ -116,7 +116,7 @@ void recordStroke(){
       else
       {
         
-        stroke.record(frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored, false);
+        stroke.record(this,frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored, false);
       
       }
       
@@ -204,7 +204,7 @@ void mouseReleased()
   
 
   
-void postDrawOperation(int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean cleared)
+void postDrawOperation(BrushBase usedbrush,int mX,int mY,int pX, int pY,float vpressure,int t,boolean m,boolean cleared)
 {
   
 if (m)
@@ -217,7 +217,7 @@ if (m)
     int midleX=WIDTH/2;int midleY=HEIGHT/2;
     int mmx=(2*midleX)-mX;int pmmx=(2*midleX)-pX;
      int mmy=(2*midleY)-mY;int pmmy=(2*midleY)-pY;
-     drawBrushStroke(mmx,mY,pmmx,pY,vpressure,transparency,isXMirrored,false);
+     drawBrushStroke(this,mmx,mY,pmmx,pY,vpressure,transparency,isXMirrored,false);
       stroke(#000000, 50);
      ellipse(mmx,mY,rayon,rayon);
    
@@ -255,9 +255,9 @@ if (m)
       
     if (mousePressed && (mouseButton ==LEFT)) {
     
-      drawBrushStroke(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored,false);
+      drawBrushStroke(this,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored,false);
      recordStroke();
-     postDrawOperation(mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored,false);
+     postDrawOperation(this,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored,false);
      }
     /* else
      {
