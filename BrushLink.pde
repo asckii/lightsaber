@@ -42,38 +42,31 @@ class BrushLink extends BrushBase
     }
   }
 
-  void drawBrushStroke(StrokeStep strokeStep)
+  void customDraw(StrokeStep strokeStep,float tmpPreviousX,float tmpPreviousY)
   {
-    int mx=strokeStep.getX();
+      int mx=strokeStep.getX();
     int my=strokeStep.getY();
     int px=strokeStep.getpX();
     int py=strokeStep.getpY(); 
+    
     float strokePressure=strokeStep.getPressure();
     int strokeTransparency=strokeStep.getTransparency();
     
     makeLink(mx, my, px, py, pressure);;
     
    
-       if (previousX==0 && previousY==0)
-    {
-    previousX=px;
-   previousY=py;
-    }
       pg.fill(153);
    
       pg.stroke(brushColor,transparency);
      
       Point2d pt=new Point2d(mx, my);
       pg.strokeWeight(0.5);
-      pg.line( mx, my, previousX, previousY);
+      pg.line( mx, my, tmpPreviousX, tmpPreviousY);
       pg.endDraw();
 
      pointsArray.add(pt);  
 
-      previousX=mx;
-      previousY=my;
-    
-    
+ 
   } 
 
 

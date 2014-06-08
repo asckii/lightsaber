@@ -21,7 +21,7 @@ class BrushMotif extends BrushBase
     
   }
   
-  void drawBrushStroke(StrokeStep strokeStep)
+  void customDraw(StrokeStep strokeStep,float tmpPreviousX,float tmpPreviousY)
 {
    int mx=strokeStep.getX();
     int my=strokeStep.getY();
@@ -31,31 +31,23 @@ class BrushMotif extends BrushBase
     int strokeTransparency=strokeStep.getTransparency();
   
   
-   if (previousX==0 && previousY==0)
-      {
-        previousX=px;
-        previousY=py;
-        prayon=rayon;
-      }
+   
   
     pg.beginDraw(); 
     pg.smooth();
-   float distance=map(dist(mx, my, previousX, previousY),0,50,9,15);
+   float distance=map(dist(mx, my, tmpPreviousX, tmpPreviousY),0,50,9,15);
   for (int i = 0; i <= (int)distance; i++) {
-  float x = lerp(previousX,mx, i/ distance);
-  float y = lerp(previousY,my, i/distance);
+  float x = lerp(tmpPreviousX,mx, i / distance);
+  float y = lerp(tmpPreviousY,my, i / distance);
 
-  
   int tmpRayon=int(lerp(prayon,rayon,i/distance) *strokePressure);
-  pg.tint(brushColor,strokeTransparency);//);//map( tablet.getPressure()*100,0,255,0,255)
+  pg.tint(brushColor,strokeTransparency);
   pg.image(img,x-tmpRayon/2,y-tmpRayon/2,tmpRayon,tmpRayon);
   }
  
   pg.endDraw();
 
-   previousX=mx;
-   previousY=my;
-   prayon=rayon;
+  prayon=rayon;
  
 } 
   

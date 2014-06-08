@@ -87,6 +87,7 @@ void IsCleared()
   println("is cleared");
  
     resetPreviousPoints();
+    incrementStroke=0;
   stroke.record(new StrokeStep(this,0,0,0,0,0,0,0,isXMirrored,true));
 }
 
@@ -119,11 +120,77 @@ void setRayon(int r)
 {
     rayon=r;
 }
+
+
+
+void customDraw(StrokeStep strokeStep,float tmpPreviousX,float tmpPreviousY){
   
+  }
   
 void drawBrushStroke(StrokeStep strokeStep)
 {
-}
+  
+    int mx=strokeStep.getX();
+    int my=strokeStep.getY();
+    int px=strokeStep.getpX();
+    int py=strokeStep.getpY(); 
+    
+    float strokePressure=strokeStep.getPressure();
+    int strokeTransparency=strokeStep.getTransparency();
+    float tmpPreviousX=0; float tmpPreviousY=0;
+  
+   // déterminer previousx, previousy en fonction de la valeur de isPostDrawOperation
+    if (isPostDrawOperation)
+    {
+      
+       if (pdopreviousX==0 && pdopreviousY==0)
+    {
+      //println("init isPostDrawOperation");
+      //  la brosse a été levée au paravant alors previousx et previousy ont été remis à 0
+      // on récupère les dernières positions connues du pinceau si on est en mode mirroir
+      pdopreviousX=px;
+      pdopreviousY=py; 
+    }
+      
+      tmpPreviousX=pdopreviousX;
+      tmpPreviousY=pdopreviousY;
+    
+    }else {
+         if (previousX==0 && previousY==0)
+      {
+        //  println("init normal");
+        //  la brosse a été levée au paravant alors previousx et previousy ont été remis à 0
+        // on récupère les dernières positions connues du pinceau si on est en mode mirroir
+      previousX=px;
+      previousY=py;
+      }
+        
+      tmpPreviousX=previousX;
+      tmpPreviousY=previousY;
+    }
+    
+   
+    // on dessine
+    customDraw(strokeStep,tmpPreviousX,tmpPreviousY);
+    
+    
+    if (isPostDrawOperation)
+    {
+      // tant qu'on appuie sur le bouton droit, on conserve les ancienes positions
+      pdopreviousX=mx;
+      pdopreviousY=my;   
+    } else
+    {
+      // tant qu'on appuie sur le bouton droit, on conserve les ancienes positions
+    previousX=mx;
+    previousY=my;
+    }
+    
+  }
+  
+  
+  
+
   
   
  
@@ -131,21 +198,14 @@ void recordStroke(StrokeStep strokeStep){
           
         
         
-
-      if(isNewStroke){
-      UtilsFunctions.strokeList.add(stroke);
-      stroke=new Stroke(this,pg);
-      isNewStroke=false;
-     
-     recordCounter++;;
-    // println("\n-->creation de stroke "+recordCounter);
-      }
-      else
-      {
-      //   print(".");
+// au lacher de souris isNewStroke est vrai on crée alors un stroke
+// sinon on archive un strokestep
+    
+    
+        print(".");
         stroke.record(strokeStep);
       
-      }
+      
       
         // println("recordCounter = "+recordCounter+" - " +frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure());
    
@@ -160,16 +220,21 @@ void playStrokeSession()
   pointsArray=new Point2dArray();
 }
 
+/*
+* playStrokeSessionFrame
+* play the stroke session
+*
+*/
 
 void playStrokeSessionFrame(){
   //println("executeStroke stroke arraylist size "+strokeList.size());
    if (!UtilsFunctions.strokeList.isEmpty())
   {
-    print("|");
-     
+ 
     isPlaying=true;
+    println("\n playStrokeSessionFrame "+ incrementStroke+"/"+UtilsFunctions.strokeList.size());
     if (incrementStroke<UtilsFunctions.strokeList.size()){
-      //récuprérer le stroke
+      //récupérer le stroke
      Stroke item=UtilsFunctions.strokeList.get(incrementStroke);
      
      item.execute();
@@ -177,35 +242,41 @@ void playStrokeSessionFrame(){
     
     }else
     {
+      
       // fin des strokes
       //println("\nfin des strokes");
       playSession=false;
-      incrementStroke=0;
        isPlaying=false;
+       incrementStroke=0;
+       return;
     }
+   
+    
+    
+     incrementStroke++;
+    
     
     }
+    
+   
+   
   } 
 
 
 void startStrokeSession(){
   UtilsFunctions.strokeList=new ArrayList<Stroke>();
   recordCounter=0;
+  isPlaying=false;
 }
 
 void executeStroke(){
    if (!UtilsFunctions.strokeList.isEmpty())
   {
     //println("executeStroke stroke arraylist size "+strokeList.get(strokeList.size()-1));
+   brushColor=#FF0000;
     UtilsFunctions.strokeList.get(UtilsFunctions.strokeList.size()-1).execute();
   }
 
-}
-
-void mouseReleased()
-{
- isNewStroke=true;
- //strokeList.add(stroke);
 }
 
 
@@ -268,6 +339,23 @@ if (strokeStep.getIsMirrored())
 }
 
 }
+
+
+
+
+void mouseReleased()
+{
+ //isNewStroke=true;
+ //strokeList.add(stroke);
+  UtilsFunctions.strokeList.add(stroke);
+      stroke=new Stroke(this,pg);
+      isNewStroke=false;
+      println("stroke "+recordCounter);
+      recordCounter++;
+}
+
+
+
   void draw()
   {
     if(idle)
@@ -290,19 +378,26 @@ if (strokeStep.getIsMirrored())
   
      if(playSession)
      {
-       incrementStroke++;
+       
      playStrokeSessionFrame();
-     
+    // incrementStroke++;
      }
+
+
 
        
     if ((mousePressed && (mouseButton ==LEFT))&&isPlaying==false) {
+      
+      
+      
     StrokeStep tmpStroke=new StrokeStep(this,frameCount,mouseX,mouseY,pmouseX,pmouseY,tablet.getPressure(),transparency,isXMirrored,false);
      isPostDrawOperation=false;
      drawBrushStroke(tmpStroke);
      recordStroke(tmpStroke);
+     
      isPostDrawOperation=true;
      postDrawOperation(tmpStroke);
+     
      }
      else
      {
@@ -311,6 +406,12 @@ if (strokeStep.getIsMirrored())
        previousY=0;
        pdopreviousX=0;
       pdopreviousY=0; 
+      
+      if(!isNewStroke&&!UtilsFunctions.strokeList.isEmpty())
+      {
+        isNewStroke=true;
+      }
+      
      }
 
    

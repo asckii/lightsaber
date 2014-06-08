@@ -7,10 +7,16 @@ class BrushErase extends BrushBase
   }
    
   
- void drawBrushStroke(StrokeStep strokeStep)
+ void customDraw(StrokeStep strokeStep,float tmpPreviousX,float tmpPreviousY)
 {
-    int mx=strokeStep.getX();
+      int mx=strokeStep.getX();
     int my=strokeStep.getY();
+    int px=strokeStep.getpX();
+    int py=strokeStep.getpY(); 
+    
+    float strokePressure=strokeStep.getPressure();
+    int strokeTransparency=strokeStep.getTransparency();
+    
     noFill(); stroke(0,255,0);
     ellipse(mx,my,rayon,rayon);
    eraseFunction(mx,my);
