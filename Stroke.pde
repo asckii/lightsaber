@@ -30,7 +30,7 @@ void execute(){
     for(StrokeStep strokeStep: strokeStepList){
       
         brush=strokeStep.getBrush();;
-        
+        print(" * "+ brush.getName()+" ");
          if(strokeStep.getIsCleared()){
           brush.commandClear();
         }  
@@ -41,7 +41,7 @@ void execute(){
        if(strokeStep.getIsMirrored())
          {
            
-            println("deux opérations");
+           // println("deux opérations");
            brush.setIsPostDrawOperation(false);
          drawBrushStroke(strokeStep);
         brush.setIsPostDrawOperation(true);

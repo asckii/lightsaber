@@ -22,7 +22,7 @@ class BrushBase
   boolean rotateBrush;
   int randomBrush;
   int transparency=255;
-  List<Stroke> strokeList;
+ 
    Stroke stroke;
   Tablet tablet;
   Object parent;
@@ -35,7 +35,7 @@ class BrushBase
    int recordCounter=0;
    int incrementStroke=0;
    
-   
+   // List<Stroke> strokeList;
    
    
   BrushBase(Object pa,PGraphics p, Point2dArray p2, String n)
@@ -50,7 +50,7 @@ class BrushBase
     update(p, p2, n);
     idle=false;
      stroke=new Stroke(this,pg);
-     strokeList=new ArrayList<Stroke>();
+     UtilsFunctions.strokeList=new ArrayList<Stroke>();
     //redraw();
   }
   
@@ -133,7 +133,7 @@ void recordStroke(StrokeStep strokeStep){
         
 
       if(isNewStroke){
-      strokeList.add(stroke);
+      UtilsFunctions.strokeList.add(stroke);
       stroke=new Stroke(this,pg);
       isNewStroke=false;
      
@@ -163,14 +163,14 @@ void playStrokeSession()
 
 void playStrokeSessionFrame(){
   //println("executeStroke stroke arraylist size "+strokeList.size());
-   if (!strokeList.isEmpty())
+   if (!UtilsFunctions.strokeList.isEmpty())
   {
-     println("|");
+    print("|");
      
     isPlaying=true;
-    if (incrementStroke<strokeList.size()){
+    if (incrementStroke<UtilsFunctions.strokeList.size()){
       //récuprérer le stroke
-     Stroke item=strokeList.get(incrementStroke);
+     Stroke item=UtilsFunctions.strokeList.get(incrementStroke);
      
      item.execute();
    
@@ -189,15 +189,15 @@ void playStrokeSessionFrame(){
 
 
 void startStrokeSession(){
-  strokeList=new ArrayList<Stroke>();
+  UtilsFunctions.strokeList=new ArrayList<Stroke>();
   recordCounter=0;
 }
 
 void executeStroke(){
-   if (!strokeList.isEmpty())
+   if (!UtilsFunctions.strokeList.isEmpty())
   {
     //println("executeStroke stroke arraylist size "+strokeList.get(strokeList.size()-1));
-    strokeList.get(strokeList.size()-1).execute();
+    UtilsFunctions.strokeList.get(UtilsFunctions.strokeList.size()-1).execute();
   }
 
 }

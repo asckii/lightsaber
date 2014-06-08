@@ -30,7 +30,7 @@ class BrushJpen extends BrushBase
       
        if (pdopreviousX==0 && pdopreviousY==0)
     {
-      println("init isPostDrawOperation");
+      //println("init isPostDrawOperation");
       //  la brosse a été levée au paravant alors previousx et previousy ont été remis à 0
       // on récupère les dernières positions connues du pinceau si on est en mode mirroir
       pdopreviousX=px;
@@ -43,7 +43,7 @@ class BrushJpen extends BrushBase
     }else {
          if (previousX==0 && previousY==0)
       {
-          println("init normal");
+        //  println("init normal");
         //  la brosse a été levée au paravant alors previousx et previousy ont été remis à 0
         // on récupère les dernières positions connues du pinceau si on est en mode mirroir
       previousX=px;

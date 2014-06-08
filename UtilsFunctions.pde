@@ -1,6 +1,6 @@
 static class UtilsFunctions
 {
-  
+ static List<Stroke> strokeList;
   UtilsFunctions()
   {
   }
