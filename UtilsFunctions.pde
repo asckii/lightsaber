@@ -1,6 +1,7 @@
 static class UtilsFunctions
 {
   static List<Stroke> strokeList;
+  static float pdopreviousX, pdopreviousY, previousX, previousY;
   UtilsFunctions()
   {
   }

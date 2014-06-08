@@ -10,7 +10,7 @@ class BrushBase
   PGraphics pg;
   boolean makeCircleFlag;
   boolean circleConstructionFlag;
-  float previousX, previousY, storedCenterX, storedCenterY, pdopreviousX, pdopreviousY;
+  float storedCenterX, storedCenterY;
 
   int brushSize;
   color brushColor;
@@ -42,8 +42,8 @@ class BrushBase
   {
     parent=pa;
     tablet= new Tablet((lightsaber)parent); 
-    previousX=0;
-    previousY=0;
+    UtilsFunctions.previousX=0;
+    UtilsFunctions.previousY=0;
     brushSize=1;
     color c=color(0, 0, 0, 255);
     setBrushColor(c);
@@ -64,10 +64,10 @@ class BrushBase
 
   void resetPreviousPoints()
   {
-    previousX=0;
-    previousY=0;
-    pdopreviousX=0;
-    pdopreviousY=0;
+    UtilsFunctions.previousX=0;
+    UtilsFunctions.previousY=0;
+    UtilsFunctions.pdopreviousX=0;
+    UtilsFunctions.pdopreviousY=0;
   }
 
   void setIsPostDrawOperation(boolean b)
@@ -77,8 +77,8 @@ class BrushBase
 
   void setPreviousPoints(int x, int y)
   {
-    previousX=x;
-    previousY=y;
+    UtilsFunctions.previousX=x;
+    UtilsFunctions.previousY=y;
   }
 
 
@@ -143,29 +143,29 @@ class BrushBase
     if (isPostDrawOperation)
     {
 
-      if (pdopreviousX==0 && pdopreviousY==0)
+      if (UtilsFunctions.pdopreviousX==0 && UtilsFunctions.pdopreviousY==0)
       {
         //println("init isPostDrawOperation");
         //  la brosse a été levée au paravant alors previousx et previousy ont été remis à 0
         // on récupère les dernières positions connues du pinceau si on est en mode mirroir
-        pdopreviousX=px;
-        pdopreviousY=py;
+        UtilsFunctions.pdopreviousX=px;
+        UtilsFunctions.pdopreviousY=py;
       }
 
-      tmpPreviousX=pdopreviousX;
-      tmpPreviousY=pdopreviousY;
+      tmpPreviousX=UtilsFunctions.pdopreviousX;
+      tmpPreviousY=UtilsFunctions.pdopreviousY;
     } else {
-      if (previousX==0 && previousY==0)
+      if (UtilsFunctions.previousX==0 && UtilsFunctions.previousY==0)
       {
         //  println("init normal");
         //  la brosse a été levée au paravant alors previousx et previousy ont été remis à 0
         // on récupère les dernières positions connues du pinceau si on est en mode mirroir
-        previousX=px;
-        previousY=py;
+        UtilsFunctions.previousX=px;
+        UtilsFunctions.previousY=py;
       }
 
-      tmpPreviousX=previousX;
-      tmpPreviousY=previousY;
+      tmpPreviousX=UtilsFunctions.previousX;
+      tmpPreviousY=UtilsFunctions.previousY;
     }
 
 
@@ -176,13 +176,13 @@ class BrushBase
     if (isPostDrawOperation)
     {
       // tant qu'on appuie sur le bouton droit, on conserve les ancienes positions
-      pdopreviousX=mx;
-      pdopreviousY=my;
+      UtilsFunctions.pdopreviousX=mx;
+      UtilsFunctions.pdopreviousY=my;
     } else
     {
       // tant qu'on appuie sur le bouton droit, on conserve les ancienes positions
-      previousX=mx;
-      previousY=my;
+      UtilsFunctions.previousX=mx;
+     UtilsFunctions.previousY=my;
     }
   }
 
@@ -368,10 +368,10 @@ class BrushBase
     } else
     {
       // mouseup
-      previousX=0;
-      previousY=0;
-      pdopreviousX=0;
-      pdopreviousY=0; 
+      UtilsFunctions.previousX=0;
+      UtilsFunctions.previousY=0;
+      UtilsFunctions.pdopreviousX=0;
+      UtilsFunctions.pdopreviousY=0; 
 
       if (!isNewStroke&&!UtilsFunctions.strokeList.isEmpty())
       {
@@ -448,8 +448,8 @@ class BrushBase
       "'makeLinkFlag':"+makeLinkFlag+","+
       "'idle':"+idle+","+
       "'pg':"+pg+","+
-      "'previousX':"+previousX+","+
-      "'previousY':"+previousY+","+
+      "'previousX':"+UtilsFunctions.previousX+","+
+      "'previousY':"+UtilsFunctions.previousY+","+
       "'storedCenterX':"+storedCenterX+","+
       "'storedCenterY':"+storedCenterY+","+
       "'brushSize':"+brushSize+","+
