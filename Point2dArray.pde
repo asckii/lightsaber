@@ -4,6 +4,5 @@ class Point2dArray extends ArrayList
   {
     super();
   }
-
 }
 

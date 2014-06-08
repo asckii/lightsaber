@@ -1,13 +1,13 @@
 class BrushLink extends BrushBase
 {
 
-   BrushLink(Object parent,PGraphics p, Point2dArray p2,String n)
+  BrushLink(Object parent, PGraphics p, Point2dArray p2, String n)
   {
-    super(parent,p,p2,n);
+    super(parent, p, p2, n);
     makeLinkFlag=true;
   }
-  
-  void makeLink(int mX,int mY,int pX, int pY, float p)
+
+  void makeLink(int mX, int mY, int pX, int pY, float p)
   {
     if (makeLinkFlag)
     {
@@ -19,12 +19,11 @@ class BrushLink extends BrushBase
         if (rayon<50)
         {
           step=1;
-        }
-        else
+        } else
         {
           step=6;
         }
-        for (int i=0;i<pointsArray.size();i=i+step)
+        for (int i=0; i<pointsArray.size (); i=i+step)
         {
 
           tmpPt= (Point2d) pointsArray.get(i);
@@ -32,7 +31,7 @@ class BrushLink extends BrushBase
           if (pt.distance(tmpPt)<rayon)
           {
             pg.beginDraw();
-            pg.stroke(brushColor,transparency);
+            pg.stroke(brushColor, transparency);
             pg.strokeWeight(0.25);
             pg.line((float)pt.getX(), (float)pt.getY(), (float)tmpPt.getX(), (float)tmpPt.getY());
             pg.endDraw();
@@ -42,46 +41,41 @@ class BrushLink extends BrushBase
     }
   }
 
-  void customDraw(StrokeStep strokeStep,float tmpPreviousX,float tmpPreviousY)
+  void customDraw(StrokeStep strokeStep, float tmpPreviousX, float tmpPreviousY)
   {
-      int mx=strokeStep.getX();
+    int mx=strokeStep.getX();
     int my=strokeStep.getY();
     int px=strokeStep.getpX();
     int py=strokeStep.getpY(); 
-    
+
     float strokePressure=strokeStep.getPressure();
     int strokeTransparency=strokeStep.getTransparency();
-    
-    makeLink(mx, my, px, py, pressure);;
-    
-   
-      pg.fill(153);
-   
-      pg.stroke(brushColor,transparency);
-     
-      Point2d pt=new Point2d(mx, my);
-      pg.strokeWeight(0.5);
-      pg.line( mx, my, tmpPreviousX, tmpPreviousY);
-      pg.endDraw();
 
-     pointsArray.add(pt);  
+    makeLink(mx, my, px, py, pressure);
+    ;
 
- 
+
+    pg.fill(153);
+
+    pg.stroke(brushColor, transparency);
+
+    Point2d pt=new Point2d(mx, my);
+    pg.strokeWeight(0.5);
+    pg.line( mx, my, tmpPreviousX, tmpPreviousY);
+    pg.endDraw();
+
+    pointsArray.add(pt);
   } 
 
 
 
-void draw()
-{
-    if(idle)
+  void draw()
+  {
+    if (idle)
     {
       return;
     }
-  super.draw();
-  
-  
-  
- 
+    super.draw();
+  }
 }
 
-}
