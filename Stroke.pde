@@ -42,10 +42,9 @@ void execute(){
          {
            
             println("deux opérations");
-           
-           drawBrushStroke(strokeStep);
- 
-         
+           brush.setIsPostDrawOperation(false);
+         drawBrushStroke(strokeStep);
+        brush.setIsPostDrawOperation(true);
          postDrawOperation(strokeStep);
          
          }

@@ -552,7 +552,46 @@ void changeScale()
   }
 }
 
+void drawMirrorMarks()
+{
+  line( WIDTH/2, 0, WIDTH/2, HEIGHT);
+  
+  int margin=20;
+  int lineLength=60;
+  
+  Point2d rep;
+  int ht=(HEIGHT-(margin*2))/8;
+ 
+  for (int i=0;i<=8;i++)  {
+    rep=new Point2d(WIDTH/2,(margin+ht*i));
+    //rep.draw();
+    
+    switch(i)
+    {
+      case 0:
+      case 4:
+      case 8:
+       lineLength=60;
+      break;
 
+      case 6:
+      case 2:
+       lineLength=60;
+      break;
+      
+      default:
+       lineLength=20;
+    }
+    
+     drawHorizontalMarks(rep,lineLength);
+  }
+  
+}
+
+void drawHorizontalMarks(Point2d rep,int lineLength)
+{
+  line(rep.getX()-lineLength,rep.getY(),rep.getX()+lineLength,rep.getY());
+}
 
 void draw() {
   background(BACKGROUND_FILL);
@@ -561,7 +600,8 @@ void draw() {
   selectedBrush.setMirrored(isMirrored);
   if(isMirrored)
   {
-  line( WIDTH/2, 0, WIDTH/2, HEIGHT);;
+    drawMirrorMarks();
+  
   }
   
  selectedBrush.setTransparency(brushTransparency);
