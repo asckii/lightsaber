@@ -8,24 +8,27 @@
  - more option on the menu (colors, brush parameters)
  - menu on top ok
  - ajouter la pression, la transparence dans le stroke ok
- - stopper le playing des stokes, arréter le stroke 
+ - stopper le playing des stokes, pauser le stroke 
  - empécher les clics pendant le playing ok
- - reprendre le playing au moment ou on l'a arrété
  - nettoyage code remplacer strokestep dans draw ok
  
- - bug de replay, ne joue pas l'intégralité de la liste de stroke
+ - bug de replay, ne joue pas l'intégralité de la liste de stroke ok
  - nouvelle variable pour gérer le mirroir ok
- - créer cariables statiques pour les previous
- - nouvelle brosse random
+ - créer cariables statiques pour les previous ok
+ 
+ - nouvelle brosse random ok
  - nouvelle brosse fill
- 
- 
+
  - modifiers pour les keys
  - stop pause resume
  - undo
  - mirroir dans la brosse link
  - optimiser les links
- - dump frames to file and build video
+  - sauvegarde suite image pendant le playing...dans un tableau de pimage, et les sauver en masse...
+ - dump frames to file and build video en cours
  - bug quand on change le rayon avec r sur brush link
- 
+ - remplir le menu
+ - gérer les touches spéciales
+ - palette
+ - mettre à jour les informations parent pour gérer plus facilement les appels..
  */

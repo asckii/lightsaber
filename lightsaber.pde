@@ -40,7 +40,7 @@ static String BRUSH_NAME_ERASE="erase";
 static String BRUSH_NAME_RANDOM="random";
 static String BRUSH_NAME_JPEN="Jpen";
 static String BRUSH_NAME_MOTIF="motif";
-
+String FRAMEFOLDER_PATH;
 static int DEBUG_FRAMECOUNT_X=WIDTH-350;
 static int DEBUG_FRAMECOUNT_Y=HEIGHT-20;
 static Stroke stroke;
@@ -69,7 +69,7 @@ PImage img;
 
 color brushcolor;
 
-
+boolean saveVideo=false;
 
 boolean saveTransparency=false;
 boolean showPointFlag;
@@ -118,9 +118,11 @@ void setup() {
   showPointFlag=false;
   showDebugInfo=true;
   useCurveToDraw=false;
-
+  
+ 
 
   dragimage = new DragImage("test.jpg",0,0);
+  
   jFileChooser1 = new JFileChooser();
   jColorChooser=new JColorChooser();
   
@@ -137,6 +139,12 @@ void setup() {
 //load the generated text file and put the content in version
   String lines[] = loadStrings("version.txt");
   version=lines[0];
+  
+   String tmpp=sketchPath("")+"\\tmp";
+ UtilsFunctions.createFolder(tmpp );
+ FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
+ UtilsFunctions.createFolder(FRAMEFOLDER_PATH);
+  
   
    cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
    cfFrame.setVisible(true);
@@ -172,112 +180,11 @@ void keyReleased()
 }
 
 void keyPressed() {
-   controlKeys.keyPressed();
-  pressedKey=str(keyCode); 
+ controlKeys.keyPressed();
+ pressedKey=str(keyCode); 
  selectedBrush.keyPressed();
-  boolean isShiftPressed=false;
- 
-  switch(keyCode)
-  {
-  
-    case 68:
-     debugBar();
-    break;
-  
-    case 83:
-    activateTransparency();
-    break;
-  
-    case 79:// backspace
-     switchTransparency();
-    break;
+ boolean isShiftPressed=false;
 
-    case 8:// backspace
-     clearPg();
-    break;
- 
-    case 49:// 1
-    changeBrush(brushsimple);
-    break;
-    
-    case 50:// 2
-      changeBrush(brushlink);
-    break;
-    
-    case 51:// 3
-     changeBrush(brushrandom);
-    break;
-    
-    case 52:// 4
-    changeBrush(brushMotif);
-    break;
-    
-    case 53:// 5
-     changeBrush(brushjpen);
-    break;
-    
-    case 54:// 6
-    changeBrush(brusherase);
-    break;  
-    
-    case 55:// 7
-    
-    break;  
-  
-    case 65:// a
-      chooseColor();
-    break;
-
-    case 82:// r
-    changeRaduis();
-    break;
-    
-    case 71: // g  grab drag and drop
-    grabImage();
-    break;
-    
-    case 72: // h visible true false
-     hideImage();
-     break;
-     
-    case 76: // l
-     loadImage();
-    break; 
-    
-    case 67: // c
-    pickColor();
-    break;
-    
-    case 87: //w
-    
-   changeFlip(false);
-    break;
-    
-     case 88: // x
-     
-           changeFlip(true);
-         
-    break;
-    
-      case 44: // ?
-   replayBrush();
-    break;
-  
-   case 59: // .
-     playStrokeSession();
-    break;
-
-    case 66: // .
-     changeMirrorMode();
-    break;
-
-
-case 513: // /
-   startStrokeSession();
-    break;
-
-  }
-  
 
 }
 
@@ -292,6 +199,7 @@ public void playStrokeSession(){
    selectedBrush.commandClear();
     println("play stroke session");
  selectedBrush.playStrokeSession();
+ saveVideo=true;
 }
 
 public void startStrokeSession(){
@@ -522,6 +430,7 @@ void debugInfo()
 }
 
 void mousePressed() {
+  saveVideo=false;
    dragimage.clicked();
    if ((mousePressed && mouseButton == RIGHT)  )
    {
@@ -631,7 +540,13 @@ void draw() {
   selectedBrush.draw();
 
   cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
-  
+  //saveframe
+
+if(saveVideo)
+{
+  // saveFrame(FRAMEFOLDER_PATH+'\\'+UtilsFunctions.getDate()+"-######.png");
+}
+   
 }
 
 

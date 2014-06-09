@@ -1,3 +1,4 @@
+import java.io.File;
 static class UtilsFunctions
 {
   static List<Stroke> strokeList;
@@ -21,5 +22,29 @@ static class UtilsFunctions
     String y = str(year());  
     return d+m+y;
   }
+  
+  static void createFolder(String directoryName)
+  {
+    
+    File theDir = new File(directoryName);
+
+  // if the directory does not exist, create it
+  if (!theDir.exists()) {
+    println("creating directory: " + directoryName);
+    boolean result = false;
+
+    try{
+        theDir.mkdir();
+        result = true;
+     } catch(SecurityException se){
+        System.out.println("-->SECURITY EXCEPTION !");  
+     }        
+     if(result) {    
+       System.out.println("DIR created");  
+     }
+  }
+  
+  }
+  
 }
 
