@@ -16,8 +16,11 @@ class BrushRandom extends BrushBase
     int py=strokeStep.getpY(); 
     float strokePressure=strokeStep.getPressure();
     int strokeTransparency=strokeStep.getTransparency();
-
-
+     int strokeRayon=strokeStep.getRayon();
+     color strokeBrushColor=strokeStep.getBrushColor();
+    brushColor=strokeBrushColor;
+    
+   rayon=strokeRayon;
 
     pg.beginDraw();
     pg.stroke(brushColor, strokeTransparency);

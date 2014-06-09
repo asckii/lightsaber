@@ -47,10 +47,12 @@ class BrushLink extends BrushBase
     int my=strokeStep.getY();
     int px=strokeStep.getpX();
     int py=strokeStep.getpY(); 
-
+     int strokeRayon=strokeStep.getRayon();
     float strokePressure=strokeStep.getPressure();
     int strokeTransparency=strokeStep.getTransparency();
-
+    color strokeBrushColor=strokeStep.getBrushColor();
+    brushColor=strokeBrushColor;
+       rayon=strokeRayon;
     makeLink(mx, my, px, py, pressure);
     ;
 

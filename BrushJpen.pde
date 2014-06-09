@@ -17,15 +17,17 @@ class BrushJpen extends BrushBase
     int my=strokeStep.getY();
     int px=strokeStep.getpX();
     int py=strokeStep.getpY(); 
-
+     int strokeRayon=strokeStep.getRayon();
     float strokePressure=strokeStep.getPressure();
     int strokeTransparency=strokeStep.getTransparency();
-    // float tmpPreviousX=0; float tmpPreviousY=0;
-
+    color strokeBrushColor=strokeStep.getBrushColor();
+    brushColor=strokeBrushColor;
+    
+     rayon=strokeRayon;
 
     pg.beginDraw();
     pg.stroke(brushColor, strokeTransparency);
-    pg.strokeWeight(int(rayon *strokePressure));
+    pg.strokeWeight(int(strokeRayon *strokePressure));
     pg.line( mx, my, tmpPreviousX, tmpPreviousY);  
     pg.endDraw();
   }

@@ -50,6 +50,9 @@ public class ControlFrame extends PApplet {
         j++;
       };
     }
+    
+    
+    
   }
 
   public void setSliderTransparency(float f)

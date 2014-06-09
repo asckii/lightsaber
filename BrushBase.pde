@@ -88,7 +88,7 @@ class BrushBase
 
     resetPreviousPoints();
     incrementStroke=0;
-    stroke.record(new StrokeStep(this, 0, 0, 0, 0, 0, 0, 0, isXMirrored, true));
+    stroke.record(new StrokeStep(this, 0, 0, 0, 0, 0, 0, 0,rayon,brushColor,isXMirrored, true));
   }
 
   void commandClear()
@@ -133,7 +133,7 @@ class BrushBase
     int my=strokeStep.getY();
     int px=strokeStep.getpX();
     int py=strokeStep.getpY(); 
-
+    int strokeRayon=strokeStep.getRayon();
     float strokePressure=strokeStep.getPressure();
     int strokeTransparency=strokeStep.getTransparency();
     float tmpPreviousX=0; 
@@ -214,7 +214,8 @@ class BrushBase
     //println("executeStroke stroke arraylist size "+strokeList.size());
     if (!UtilsFunctions.strokeList.isEmpty())
     {
-
+       fill(255,0, 0);
+      text("> Playing strokes "+incrementStroke+"/"+UtilsFunctions.strokeList.size(),10,20);
       isPlaying=true;
       // println("\n playStrokeSessionFrame "+ incrementStroke+"/"+UtilsFunctions.strokeList.size());
       if (incrementStroke<UtilsFunctions.strokeList.size()) {
@@ -294,7 +295,8 @@ class BrushBase
       int pmmx=(2*middleX)-strokeStep.getpX();
       int mmy=strokeStep.getY();
       int pmmy=strokeStep.getpY();
-
+      int ray=strokeStep.getRayon();
+      color col=strokeStep.getBrushColor();
       drawBrushStroke(new StrokeStep(
       this, strokeStep.getFrame(), 
       mmx, 
@@ -303,6 +305,8 @@ class BrushBase
       pmmy, 
       strokeStep.getPressure(), 
       strokeStep.getTransparency(), 
+      strokeStep.getRayon(),
+      strokeStep.getBrushColor(),
       strokeStep.getIsMirrored(), 
       strokeStep.getIsCleared()
         ));
@@ -358,7 +362,7 @@ class BrushBase
     if ((mousePressed && (mouseButton ==LEFT))&&isPlaying==false) {
 
 
-      StrokeStep tmpStroke=new StrokeStep(this, frameCount, mouseX, mouseY, pmouseX, pmouseY, tablet.getPressure(), transparency, isXMirrored, false);
+      StrokeStep tmpStroke=new StrokeStep(this, frameCount, mouseX, mouseY, pmouseX, pmouseY, tablet.getPressure(), transparency,rayon,brushColor, isXMirrored, false);
       isPostDrawOperation=false;
       drawBrushStroke(tmpStroke);
       recordStroke(tmpStroke);

@@ -17,8 +17,10 @@ class BrushSimple extends BrushBase
     int py=strokeStep.getpY(); 
     float pressure=strokeStep.getPressure();
     int transparency=strokeStep.getTransparency();
-
-
+     int strokeRayon=strokeStep.getRayon();
+     color strokeBrushColor=strokeStep.getBrushColor();
+    brushColor=strokeBrushColor;
+     rayon=strokeRayon;
 
 
 

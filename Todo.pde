@@ -19,4 +19,13 @@
  - nouvelle brosse random
  - nouvelle brosse fill
  
+ 
+ - modifiers pour les keys
+ - stop pause resume
+ - undo
+ - mirroir dans la brosse link
+ - optimiser les links
+ - dump frames to file and build video
+ - bug quand on change le rayon avec r sur brush link
+ 
  */

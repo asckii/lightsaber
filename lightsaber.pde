@@ -80,6 +80,7 @@ List<BrushBase> brushList;
 int myColorBackground = color(0,0,0);
 int knobValue = 100;
 Tablet t;
+ControlKeys controlKeys;
 
 void setup() {
   size(WIDTH, HEIGHT);
@@ -90,7 +91,7 @@ void setup() {
   
   pointsArray=new Point2dArray();
 
-  
+  controlKeys=new ControlKeys(this);
   brushlink=new BrushLink(this,pg,pointsArray,BRUSH_NAME_LINK);
   brushsimple=new BrushSimple(this,pg,pointsArray, BRUSH_NAME_SIMPLE);
   brusherase=new BrushErase(this,pg,pointsArray,BRUSH_NAME_ERASE);
@@ -165,9 +166,13 @@ void getModifier()
   println() ;
 }
 
-
+void keyReleased()
+{ 
+ controlKeys.keyReleased();
+}
 
 void keyPressed() {
+   controlKeys.keyPressed();
   pressedKey=str(keyCode); 
  selectedBrush.keyPressed();
   boolean isShiftPressed=false;
