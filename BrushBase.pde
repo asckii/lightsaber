@@ -214,7 +214,7 @@ class BrushBase
     //println("executeStroke stroke arraylist size "+strokeList.size());
     if (!UtilsFunctions.strokeList.isEmpty())
     {
-       fill(255,0, 0);
+       //fill(255,0, 0);
       text("> Playing strokes "+incrementStroke+"/"+UtilsFunctions.strokeList.size(),10,20);
       isPlaying=true;
       // println("\n playStrokeSessionFrame "+ incrementStroke+"/"+UtilsFunctions.strokeList.size());

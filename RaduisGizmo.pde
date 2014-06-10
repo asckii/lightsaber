@@ -72,9 +72,7 @@ class RaduisGizmo
 
         println(" validé "+r*2);
         visible=false;
-      } else if (key==' ') {
-        visible=false;
-      }
+      } 
     } else
     {
       return;

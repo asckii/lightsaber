@@ -81,7 +81,10 @@ int myColorBackground = color(0,0,0);
 int knobValue = 100;
 Tablet t;
 ControlKeys controlKeys;
-
+boolean isColorWheelShowed=false;
+PImage colorWheel;
+int colorWheelX=0;
+int colorWheelY=0;
 void setup() {
   size(WIDTH, HEIGHT);
   frame.setLocation(200, 100);
@@ -122,7 +125,7 @@ void setup() {
  
 
   dragimage = new DragImage("test.jpg",0,0);
-  
+  colorWheel =loadImage("colorWheel.png");
   jFileChooser1 = new JFileChooser();
   jColorChooser=new JColorChooser();
   
@@ -343,6 +346,15 @@ else
 
 }
 
+void changeColorWheel()
+{
+  isColorWheelShowed=!isColorWheelShowed;
+  colorWheelX=mouseX-colorWheel.width/2;
+  colorWheelY=mouseY-colorWheel.height/2;
+}
+
+
+
 void chooseColor()
 {
 Color selectedBrushColor=new Color( (int)red(brushcolor),(int)green(brushcolor),(int) blue(brushcolor));
@@ -350,6 +362,7 @@ Color c = jColorChooser.showDialog(this, COLOR_CHOOSER_TEXT, selectedBrushColor)
   try {
     brushcolor=color(c.getRed(),c.getGreen(),c.getBlue(),255);
     selectedBrush.setBrushColor(brushcolor);
+    
   }
   catch( NullPointerException e)
   {
@@ -502,6 +515,13 @@ void drawMirrorMarks()
   
 }
 
+void showColorWheel(){
+  if(isColorWheelShowed)
+  {
+image(colorWheel,colorWheelX,colorWheelY);
+  }
+}
+
 void drawHorizontalMarks(Point2d rep,int lineLength)
 {
   line(rep.getX()-lineLength,rep.getY(),rep.getX()+lineLength,rep.getY());
@@ -538,6 +558,7 @@ void draw() {
   changeScale();
   image(pg, 0, 0);
   selectedBrush.draw();
+  showColorWheel();
 
   cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
   //saveframe
