@@ -165,8 +165,14 @@ public class ControlKeys {
         break; 
 
   case ' ':
-   parent.changeRaduis();
-         print('.');
+   
+       if (ks==0) {
+           parent.changeRaduis();;
+        } else
+        if (ks==8) {
+           parent.changeTransparency();;
+           
+        }
         break; 
         
       case 'C':

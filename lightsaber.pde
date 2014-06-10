@@ -43,6 +43,7 @@ static String BRUSH_NAME_MOTIF="motif";
 String FRAMEFOLDER_PATH;
 static int DEBUG_FRAMECOUNT_X=WIDTH-350;
 static int DEBUG_FRAMECOUNT_Y=HEIGHT-20;
+boolean isMirrored=false;
 static Stroke stroke;
 PGraphics pg, pg2; 
 ControlP5 cp5;
@@ -60,7 +61,7 @@ BrushJpen brushjpen;
 BrushBase selectedBrush;
 BrushMotif brushMotif;
 RaduisGizmo raduisGizmo;
-
+RaduisGizmo transparencyGizmo;
 JFileChooser jFileChooser1;
 JColorChooser jColorChooser;
 
@@ -115,14 +116,13 @@ void setup() {
     cf = addControlFrame("Toolbox", 200,200);
   
 
-  raduisGizmo=new RaduisGizmo(this);
+  raduisGizmo=new RaduisGizmo(this,"raduis",1000);
+  transparencyGizmo=new RaduisGizmo(this,"transparency",255);
   selectedBrush=brushjpen;
   selectedBrush.setRayon(8);
   showPointFlag=false;
   showDebugInfo=true;
   useCurveToDraw=false;
-  
- 
 
   dragimage = new DragImage("test.jpg",0,0);
   colorWheel =loadImage("colorWheel.png");
@@ -169,14 +169,6 @@ void setup() {
 menu actions
 **/
 
-
-void getModifier()
-{
-  
-
-  println() ;
-}
-
 void keyReleased()
 { 
  controlKeys.keyReleased();
@@ -191,7 +183,7 @@ void keyPressed() {
 
 }
 
-boolean isMirrored=false;
+
 public void  changeMirrorMode(){
   isMirrored=!isMirrored;
   println("isMirrored "+isMirrored);
@@ -234,7 +226,7 @@ public void changeBrush(BrushBase brush)
 {
     selectedBrush=brush;
     selectedBrush.setBrushColor(brushcolor);
-     cf.setSliderTransparency(selectedBrush.getTransparency());
+    // cf.setSliderTransparency(selectedBrush.getTransparency());
 }
 
 public void switchTransparency()
@@ -356,6 +348,21 @@ void clearPg()
   
 }
 
+
+void changeTransparency()
+{
+  if (!transparencyGizmo.getVisible()){
+  transparencyGizmo.setVisible(true);
+  transparencyGizmo.setLoc(mouseX,mouseY);
+  selectedBrush.setIdle(true);
+
+}
+else
+{
+  selectedBrush.setIdle(false);
+}
+}
+
 void changeRaduis()
 {
   if (!raduisGizmo.getVisible()){
@@ -368,7 +375,6 @@ else
 {
   selectedBrush.setIdle(false);
 }
-
 }
 
 void changeColorWheel()
@@ -420,13 +426,11 @@ void  saveByJDialog(boolean transparent)
       {
       tmppg.rect(0, 0,WIDTH, HEIGHT);
       }
-    
-    
-     
+
     tmppg.image(pg, 0, 0);
 
     
-   if (showDebugInfo && saveVideo==false)
+   if (showDebugInfo )
    {
     tmppg.noSmooth();
     tmppg.fill(0, 102, 153);
@@ -458,7 +462,7 @@ void saveJavascript()
 void debugInfo()
 {
 
-  if (showDebugInfo && saveVideo==false)
+  if (showDebugInfo )
   {
     fill(0, 102, 153);
     text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +" saveVideo "+saveVideo+" "+DEBUG_INFO_TEXT, 50, 50);
@@ -473,18 +477,27 @@ void debugInfo()
   }
 }
 
+void setBrushIdle(boolean b)
+{
+  selectedBrush.setIdle(b); 
+ println("brushidle "+b); 
+}
+
+
 void mousePressed() {
   saveVideo=false;
    dragimage.clicked();
    if ((mousePressed && mouseButton == RIGHT)  )
    {
-       selectedBrush.setIdle(false);
+       //selectedBrush.setIdle(false);
    }
 }
 
 
 
 void mouseReleased() {
+  transparencyGizmo.mouseReleased();
+  raduisGizmo.mouseReleased();
   selectedBrush.mouseReleased();
  dragimage.stopDragging();
 }
@@ -571,17 +584,14 @@ void draw() {
   
   }
   
- selectedBrush.setTransparency(brushTransparency);
+//selectedBrush.setTransparency(brushTransparency);
   dragimage.display();
   
   debugInfo();
   
 
-  
- if (raduisGizmo.getVisible()){
-  raduisGizmo.draw();
-  selectedBrush.setRayon(raduisGizmo.getRaduis());
-  }
+  drawGizmos();
+
 
   pg.beginDraw();
    
@@ -604,8 +614,18 @@ if(saveVideo && selectedBrush.getIsPlaying())
 }
 
 
-
-
+void drawGizmos()
+{
+   if (raduisGizmo.getVisible()){
+  raduisGizmo.draw();
+  selectedBrush.setRayon(raduisGizmo.getRaduis());
+  }
+  
+   if (transparencyGizmo.getVisible()){
+  transparencyGizmo.draw();
+  selectedBrush.setTransparency(transparencyGizmo.getRaduis());
+  }
+}
 
 
 void menuAction(ControlEvent theEvent)

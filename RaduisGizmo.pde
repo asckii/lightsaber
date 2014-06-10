@@ -5,9 +5,14 @@ class RaduisGizmo
   int storedCenterX, storedCenterY;
   int raduis=0;
   boolean visible=false;
-
-  RaduisGizmo(Object parent)
+  lightsaber parent;
+  String name; 
+  int maxRaduis;
+  RaduisGizmo(Object pa,String s,int max)
   {
+    maxRaduis=max;
+    name=s;
+    parent=((lightsaber)pa);
     storedCenterX=500;
     storedCenterY=300;
     stroke(#000000, 20);
@@ -25,6 +30,27 @@ class RaduisGizmo
     }
   }
 
+
+ void setMaxRaduis(int i) {
+    maxRaduis=i;
+  }
+  
+  int getMaxRaduis()
+  {
+
+    return maxRaduis;
+  }
+
+
+ void setName(String s) {
+    name=s;
+  }
+  
+  String getName()
+  {
+
+    return name;
+  }
 
   void setLoc(int x, int y) {
     storedCenterX=x;
@@ -47,13 +73,31 @@ class RaduisGizmo
     return raduis;
   }
 
+
+void mouseReleased() {
+  println("mousereleased");
+  if (validate){
+     
+         validate=false;
+        println(" validé 2 ");
+       parent.setBrushIdle(false);
+     
+      }
+}
+
+boolean validate=false;
   void draw()
   {
-
+    
+   
 
     if (visible)
     {
-
+ float r=(float)dist(storedCenterX, storedCenterY, mouseX, mouseY);
+       if(r>maxRaduis)
+       {
+         r=maxRaduis;
+       }  
       fill(#00ff00, 60);
       stroke(#000000, 70);
       ellipse(mouseX, mouseY, 10, 10);
@@ -61,17 +105,23 @@ class RaduisGizmo
       line( storedCenterX, storedCenterY, mouseX, mouseY);
       fill(#00ff00, 40);
       stroke(#000000, 60);
-      float r=(float)dist(storedCenterX, storedCenterY, mouseX, mouseY);
+     
       ellipse(storedCenterX, storedCenterY, r*2, r*2);
       raduis=(int)r*2;
-      fill(#000000, 100);
-      text(" raduis = "+raduis/10, storedCenterX-40, storedCenterY-20);
-      if ((mousePressed && (mouseButton == RIGHT)))
+     // 
+      noFill();
+       stroke(#FF0000, 50);    
+       ellipse(storedCenterX, storedCenterY, maxRaduis, maxRaduis);
+       
+       fill(#000000, 80);
+      text(name+" = "+raduis, storedCenterX-40, storedCenterY-20);
+      if ((mousePressed && (mouseButton == LEFT )))
       {
 
 
         println(" validé "+r*2);
         visible=false;
+       validate=true;
       } 
     } else
     {

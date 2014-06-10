@@ -25,7 +25,7 @@ public class ControlFrame extends PApplet {
     size(h, w);
     frameRate(25);
     cp5 = new ControlP5(this);
-    cp5.addSlider("transparency").plugTo(parent, "brushTransparency").setRange(0, 255).setPosition(10, 10).setValue(255);
+    //cp5.addSlider("transparency").plugTo(parent, "brushTransparency").setRange(0, 255).setPosition(10, 10).setValue(255);
 
 
     Iterator<BrushBase> it = brushList.iterator();
@@ -56,7 +56,7 @@ public class ControlFrame extends PApplet {
 
   public void setSliderTransparency(float f)
   {
-    cp5.getController("transparency").setValue(f);
+   // cp5.getController("transparency").setValue(f);
   }
 
 
