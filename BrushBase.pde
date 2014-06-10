@@ -25,7 +25,7 @@ class BrushBase
 
   Stroke stroke;
   Tablet tablet;
-  Object parent;
+  lightsaber parent;
   boolean isNewStroke=true;
   boolean isXMirrored=false;
   boolean isYMirrored=false;
@@ -40,8 +40,8 @@ class BrushBase
 
   BrushBase(Object pa, PGraphics p, Point2dArray p2, String n)
   {
-    parent=pa;
-    tablet= new Tablet((lightsaber)parent); 
+    parent=((lightsaber)pa); 
+    tablet= new Tablet(parent); 
     UtilsFunctions.previousX=0;
     UtilsFunctions.previousY=0;
     brushSize=1;
@@ -231,6 +231,7 @@ class BrushBase
         playSession=false;
         isPlaying=false;
         incrementStroke=0;
+        parent.stopRecording();
         return;
       }
 
@@ -278,7 +279,11 @@ class BrushBase
       break;
     }
   }
-
+  
+  boolean getIsPlaying()
+  {
+    return isPlaying;
+  }
 
   boolean isPostDrawOperation=false;
   void postDrawOperation(StrokeStep strokeStep)
@@ -287,8 +292,7 @@ class BrushBase
     if (strokeStep.getIsMirrored())
     {
 
-      WIDTH=1000;
-      HEIGHT=600;
+   
       int middleX=WIDTH/2;
       int middleY=HEIGHT/2;
       int mmx=(2*middleX)-strokeStep.getX();
@@ -328,6 +332,10 @@ class BrushBase
   }
 
 
+
+/* 
+DRAW 
+*/
 
   void draw()
   {

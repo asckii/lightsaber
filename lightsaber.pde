@@ -202,8 +202,9 @@ public void playStrokeSession(){
    selectedBrush.commandClear();
     println("play stroke session");
  selectedBrush.playStrokeSession();
- saveVideo=true;
+ 
 }
+
 
 public void startStrokeSession(){
   clearPg();
@@ -288,6 +289,30 @@ void pickColor(){
           ;
 }
 
+void stopRecording()
+{
+saveVideo=false;
+}
+
+void changeSaveVideo()
+{
+  saveVideo=!saveVideo;
+  println(saveVideo);
+}
+
+void saveVideo()
+{
+ // FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
+  try{
+    println("enregistrement video");
+    Process p = Runtime.getRuntime().exec("ffmpeg -r 1/0.1 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p"+UtilsFunctions.getDate()+".mp4");
+  
+   }
+   catch(IOException e)
+   {
+     println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
+   }
+}
 
 void loadImage(){
 String f="";
@@ -399,10 +424,16 @@ void  saveByJDialog(boolean transparent)
     
      
     tmppg.image(pg, 0, 0);
+
+    
+   if (showDebugInfo && saveVideo==false)
+   {
     tmppg.noSmooth();
     tmppg.fill(0, 102, 153);
     tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+version,DEBUG_FRAMECOUNT_X,DEBUG_FRAMECOUNT_Y);
     tmppg.smooth();
+   }
+   
     tmppg.endDraw();
    
     tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
@@ -427,10 +458,10 @@ void saveJavascript()
 void debugInfo()
 {
 
-  if (showDebugInfo)
+  if (showDebugInfo && saveVideo==false)
   {
     fill(0, 102, 153);
-    text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +DEBUG_INFO_TEXT, 50, 50);
+    text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +" saveVideo "+saveVideo+" "+DEBUG_INFO_TEXT, 50, 50);
     text(DEBUG_FRAMECOUNT+frameCount,50,63);
     pg.fill(0, 102, 153);
     text(UtilsFunctions.getDate()+" - Lightsaber_"+version,DEBUG_FRAMECOUNT_X,DEBUG_FRAMECOUNT_Y);
@@ -527,6 +558,8 @@ void drawHorizontalMarks(Point2d rep,int lineLength)
   line(rep.getX()-lineLength,rep.getY(),rep.getX()+lineLength,rep.getY());
 }
 
+
+
 void draw() {
   background(BACKGROUND_FILL);
   
@@ -563,12 +596,16 @@ void draw() {
   cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
   //saveframe
 
-if(saveVideo)
+if(saveVideo && selectedBrush.getIsPlaying())
 {
-  // saveFrame(FRAMEFOLDER_PATH+'\\'+UtilsFunctions.getDate()+"-######.png");
+   saveFrame(FRAMEFOLDER_PATH+'\\'+"img"+"-###.png");
 }
    
 }
+
+
+
+
 
 
 void menuAction(ControlEvent theEvent)

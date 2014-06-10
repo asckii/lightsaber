@@ -10,12 +10,12 @@ public class ControlFrame extends PApplet {
   int h, w;
   List<BrushBase> brushList;
   ControlP5 cp5;
-  Object parent;
+
   Frame frame;
   int bgcolor = 100;
-
+ lightsaber parent; 
   public ControlFrame(Object theParent, List<BrushBase> bList, int theWidth, int theHeight) {
-    parent = theParent;
+    parent=((lightsaber)theParent); 
     w = theWidth;
     h = theHeight;
     brushList=bList;
@@ -51,8 +51,7 @@ public class ControlFrame extends PApplet {
       };
     }
     
-    
-    
+   
   }
 
   public void setSliderTransparency(float f)
@@ -62,7 +61,7 @@ public class ControlFrame extends PApplet {
 
 
   public void controlEvent(ControlEvent theEvent) {
-    ((lightsaber)parent).menuAction(theEvent);
+    parent.menuAction(theEvent);
   }
 
 
@@ -72,6 +71,10 @@ public class ControlFrame extends PApplet {
 
   public void draw() {
     background(bgcolor);
+     fill(selectedBrush.getBrushColor());
+    
+    rect (120,50,20,20);
+    
   }
 }
 

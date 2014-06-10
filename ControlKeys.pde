@@ -204,6 +204,9 @@ public class ControlKeys {
          parent.changeMirrorMode();
       break;
 
+       case 'Y': 
+         parent. changeSaveVideo();
+      break;
 
       
         default:
