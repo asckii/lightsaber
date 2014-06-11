@@ -94,10 +94,13 @@ boolean validate=false;
     if (visible)
     {
  float r=(float)dist(storedCenterX, storedCenterY, mouseX, mouseY);
-       if(r>maxRaduis)
+      
+       if(r*2>maxRaduis)
        {
-         r=maxRaduis;
+         r=(float)maxRaduis/2;
        }  
+       
+      println("r="+r);
       fill(#00ff00, 60);
       stroke(#000000, 70);
       ellipse(mouseX, mouseY, 10, 10);
@@ -106,12 +109,14 @@ boolean validate=false;
       fill(#00ff00, 40);
       stroke(#000000, 60);
      
+     //
       ellipse(storedCenterX, storedCenterY, r*2, r*2);
       raduis=(int)r*2;
-     // 
+     
+      //limit ellipse in red without fill
       noFill();
-       stroke(#FF0000, 50);    
-       ellipse(storedCenterX, storedCenterY, maxRaduis, maxRaduis);
+      stroke(#FF0000, 50);    
+      ellipse(storedCenterX, storedCenterY, maxRaduis, maxRaduis);
        
        fill(#000000, 80);
       text(name+" = "+raduis, storedCenterX-40, storedCenterY-20);

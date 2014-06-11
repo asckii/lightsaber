@@ -26,7 +26,7 @@ class BrushSimple extends BrushBase
 
     pg.beginDraw();
     Point2d pt=new Point2d(mx, my);
-    pg.stroke(brushColor);
+    pg.stroke(brushColor,transparency);
     pg.strokeWeight(rayon); 
     pg.line( mx, my, tmpPreviousX, tmpPreviousY);
     pg.endDraw();
