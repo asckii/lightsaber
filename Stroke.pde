@@ -26,10 +26,11 @@ class Stroke
     {
 
 
-
+ //noLoop();
       for (StrokeStep strokeStep : strokeStepList) {
 
         brush=strokeStep.getBrush();
+       
         ;
         //print(" * "+ brush.getName()+" ");
         if (strokeStep.getIsCleared()) {
@@ -52,6 +53,7 @@ class Stroke
           }
         }
       }
+     // loop();
     }
   }
 

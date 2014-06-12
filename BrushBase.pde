@@ -32,6 +32,7 @@ class BrushBase
   boolean playSession=false;
   boolean isCleared=false;
   boolean isPlaying=false;
+   
   int recordCounter=0;
   int incrementStroke=0;
 
@@ -214,9 +215,10 @@ class BrushBase
     //println("executeStroke stroke arraylist size "+strokeList.size());
     if (!UtilsFunctions.strokeList.isEmpty())
     {
-       //fill(255,0, 0);
-      text("> Playing strokes "+incrementStroke+"/"+UtilsFunctions.strokeList.size(),10,20);
+       pgDebug.fill(255,0, 0);
+      pgDebug.text("> Playing strokes "+incrementStroke+"/"+UtilsFunctions.strokeList.size(),10,20);
       isPlaying=true;
+      pgDebug.noFill();
       // println("\n playStrokeSessionFrame "+ incrementStroke+"/"+UtilsFunctions.strokeList.size());
       if (incrementStroke<UtilsFunctions.strokeList.size()) {
         //récupérer le stroke
@@ -234,8 +236,18 @@ class BrushBase
         parent.stopRecording();
         return;
       }
-
+    
+  // 
+   if (parent.isPaused)
+    {
+   // incrementStroke=0;
+   //do nothing
+  }
+  else
+  {  
       incrementStroke++;
+    }
+ 
     }
   } 
 

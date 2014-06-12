@@ -14,7 +14,19 @@ import java.awt.Frame;
 import java.awt.BorderLayout;
 import java.util.*;
 
-// branch brush_cursor
+import org.gicentre.utils.move.*;
+import java.text.NumberFormat;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+// ------------------ Sketch-wide variables --------------------
+
+ZoomPan zoomer;    // This should be declared outside any methods.
+PVector mousePos;  // Stores the mouse position.
+// For pretty formatting of mouse coordinates.
+NumberFormat formatter = new DecimalFormat("#.0");
+
 Point2dArray pointsArray;
 String version="beta 01";
 static int WIDTH=1000, HEIGHT=600;
@@ -45,7 +57,7 @@ static int DEBUG_FRAMECOUNT_X=WIDTH-350;
 static int DEBUG_FRAMECOUNT_Y=HEIGHT-20;
 boolean isMirrored=false;
 static Stroke stroke;
-PGraphics pg, pg2; 
+PGraphics pg, pgDebug,pgMarks; 
 ControlP5 cp5;
 ControlFrame cf;
 Frame cfFrame;
@@ -71,14 +83,14 @@ PImage img;
 color brushcolor;
 
 boolean saveVideo=false;
-
+boolean isPaused=false;
 boolean saveTransparency=false;
 boolean showPointFlag;
 boolean showDebugInfo;
 boolean showRaduisGizmo;
 boolean useCurveToDraw;
 List<BrushBase> brushList;
-int myColorBackground = color(0,0,0);
+int myColorBackground = color(0, 0, 0);
 int knobValue = 100;
 Tablet t;
 ControlKeys controlKeys;
@@ -86,24 +98,38 @@ boolean isColorWheelShowed=false;
 PImage colorWheel;
 int colorWheelX=0;
 int colorWheelY=0;
+boolean flipVertical=false;
+boolean flipHorizontal=false;
+
+// --------------------- Initialisation ------------------------
 void setup() {
   size(WIDTH, HEIGHT);
+  
   frame.setLocation(200, 100);
+  noCursor();
+  // --------------------- Zoomer Initialisation ------------------------
+  zoomer = new ZoomPan(this);  // Initialise the zoomer.
+  zoomer.setMouseMask(SHIFT);  // Only zoom if the shift key is down.
+
+  // Monitor end of zoom/pan events.
+  zoomer.addZoomPanListener(new MyListener());
 
   colorMode(RGB, 255);
   pg = createGraphics(WIDTH, HEIGHT);
-  
+  pgDebug = createGraphics(WIDTH, HEIGHT);
+   pgMarks = createGraphics(WIDTH, HEIGHT);
   pointsArray=new Point2dArray();
 
   controlKeys=new ControlKeys(this);
-  brushlink=new BrushLink(this,pg,pointsArray,BRUSH_NAME_LINK);
-  brushsimple=new BrushSimple(this,pg,pointsArray, BRUSH_NAME_SIMPLE);
-  brusherase=new BrushErase(this,pg,pointsArray,BRUSH_NAME_ERASE);
+  // --------------------- Brushes Initialisation ------------------------
+  brushlink=new BrushLink(this, pg, pointsArray, BRUSH_NAME_LINK);
+  brushsimple=new BrushSimple(this, pg, pointsArray, BRUSH_NAME_SIMPLE);
+  brusherase=new BrushErase(this, pg, pointsArray, BRUSH_NAME_ERASE);
 
-  brushrandom=new BrushRandom(this,pg,pointsArray,BRUSH_NAME_RANDOM);
-  brushjpen=new BrushJpen(this,pg,pointsArray,BRUSH_NAME_JPEN);
-  brushMotif=new BrushMotif(this,pg,pointsArray,BRUSH_NAME_MOTIF);
-  
+  brushrandom=new BrushRandom(this, pg, pointsArray, BRUSH_NAME_RANDOM);
+  brushjpen=new BrushJpen(this, pg, pointsArray, BRUSH_NAME_JPEN);
+  brushMotif=new BrushMotif(this, pg, pointsArray, BRUSH_NAME_MOTIF);
+
   brushList=new ArrayList<BrushBase>();
   brushList.add(brushjpen);
   brushList.add(brushMotif);
@@ -111,46 +137,58 @@ void setup() {
   brushList.add(brushsimple);
   brushList.add(brushrandom);
   brushList.add(brusherase);
- stroke=new Stroke(brushjpen,pg);
-    cp5 = new ControlP5(this);
-    cf = addControlFrame("Toolbox", 200,200);
-  
 
-  raduisGizmo=new RaduisGizmo(this,"raduis",1000);
-  transparencyGizmo=new RaduisGizmo(this,"transparency",255);
+  // --------------------- stroke Initialisation ------------------------
+  stroke=new Stroke(brushjpen, pg);
+
+  cp5 = new ControlP5(this);
+  cf = addControlFrame("Toolbox", 200, 200);
+
+
+  raduisGizmo=new RaduisGizmo(this, "raduis", 1000);
+  transparencyGizmo=new RaduisGizmo(this, "transparency", 255);
   selectedBrush=brushjpen;
   selectedBrush.setRayon(8);
   showPointFlag=false;
   showDebugInfo=true;
   useCurveToDraw=false;
 
-  dragimage = new DragImage("test.jpg",0,0);
+  dragimage = new DragImage("test.jpg", 0, 0);
   colorWheel =loadImage("colorWheel.png");
   jFileChooser1 = new JFileChooser();
   jColorChooser=new JColorChooser();
-  
-//get current version from getversion.bat
-  try{
+
+open("rundll32 SHELL32.DLL,ShellExec_RunDLL " + sketchPath("")+"getversion.bat");
+
+ //String[] params = {sketchPath("")+"getversion.bat"};
+ // open(params);
+ 
+   println("-----------"+sketchPath("")+"getversion.bat"+"--------------");
+  //get current version from getversion.bat
+/*  try {
     println(sketchPath("")+"getversion.bat");
-    Process p = Runtime.getRuntime().exec(sketchPath("")+"getversion.bat");
-   println("getversion.bat exécuté");
-   }
-   catch(IOException e)
-   {
-     println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
-   }
-//load the generated text file and put the content in version
+    final Process p = Runtime.getRuntime().exec(new String []{sketchPath("")+"getversion.bat"});
+   
+    println("getversion.bat exécuté");
+  }
+  catch(Exception e)//IOException
+  {
+    e.printStackTrace();
+    //println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
+  }*/
+  
+  //load the generated text file and put the content in version
   String lines[] = loadStrings("version.txt");
   version=lines[0];
-  
-   String tmpp=sketchPath("")+"\\tmp";
- UtilsFunctions.createFolder(tmpp );
- FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
- UtilsFunctions.createFolder(FRAMEFOLDER_PATH);
-  
-  
-   cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
-   cfFrame.setVisible(true);
+  println(sketchPath("")+"getversion.bat");
+  String tmpp=sketchPath("")+"\\tmp";
+  UtilsFunctions.createFolder(tmpp );
+  FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
+  UtilsFunctions.createFolder(FRAMEFOLDER_PATH);
+
+
+  cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
+  cfFrame.setVisible(true);
   println("Lightsaber Bruno Bertogal janvier 2013   ");
   println("touche brosse 1 : simple 2 : link  3 :  4 5 6 : erase  ");
   println("touche haut : augmenter le rayon des liaisons ");
@@ -162,61 +200,60 @@ void setup() {
   println("os = " + System.getProperty("os.name"));
   println("user.home = " + System.getProperty("user.home"));
   println("sketchpath = " + sketchPath(""));
-    
 }
 
-/*
-menu actions
-**/
 
+// --------------------- keys  ------------------------
 void keyReleased()
 { 
- controlKeys.keyReleased();
+  controlKeys.keyReleased();
+  
 }
 
 void keyPressed() {
- controlKeys.keyPressed();
- pressedKey=str(keyCode); 
- selectedBrush.keyPressed();
- boolean isShiftPressed=false;
-
-
+  controlKeys.keyPressed();
+  pressedKey=str(keyCode); 
+  selectedBrush.keyPressed();
+  
+  
 }
 
+// --------------------- change boolean values ------------------------
+public void changeIsPaused()
+{
+  isPaused=!isPaused;
+}
 
-public void  changeMirrorMode(){
+public void  changeMirrorMode() {
   isMirrored=!isMirrored;
   println("isMirrored "+isMirrored);
-  
-
 }
-public void playStrokeSession(){
-   selectedBrush.commandClear();
-    println("play stroke session");
- selectedBrush.playStrokeSession();
- 
+public void playStrokeSession() {
+  isPaused=false;
+  selectedBrush.commandClear();
+  println("play stroke session");
+  selectedBrush.playStrokeSession();
 }
 
 
-public void startStrokeSession(){
+public void startStrokeSession() {
   clearPg();
   println("new stroke session");
- selectedBrush.startStrokeSession();
+  selectedBrush.startStrokeSession();
 }
 
-public void replayBrush(){
-  
- selectedBrush.executeStroke();
+public void replayBrush() {
+
+  selectedBrush.executeStroke();
 }
 
 public void changeFlip(boolean b)
 {
-  
-  if(b)
+
+  if (b)
   {
-  flipHorizontal=!flipHorizontal;
-  }
-  else
+    flipHorizontal=!flipHorizontal;
+  } else
   {
     flipVertical=!flipVertical;
   }
@@ -224,9 +261,9 @@ public void changeFlip(boolean b)
 
 public void changeBrush(BrushBase brush)
 {
-    selectedBrush=brush;
-    selectedBrush.setBrushColor(brushcolor);
-    // cf.setSliderTransparency(selectedBrush.getTransparency());
+  selectedBrush=brush;
+  selectedBrush.setBrushColor(brushcolor);
+  // cf.setSliderTransparency(selectedBrush.getTransparency());
 }
 
 public void switchTransparency()
@@ -236,7 +273,7 @@ public void switchTransparency()
 
 public void activateTransparency()
 {
-  if(saveTransparency)
+  if (saveTransparency)
   {
     saveByJDialog(true);
   } else
@@ -245,98 +282,152 @@ public void activateTransparency()
   }
 }
 
-public void debugBar(){
- if (showDebugInfo)
-    {
-      showDebugInfo=false;
-      redraw();
-    }
-    else
-    {
-      showDebugInfo=true;
-      redraw();
-    }
+public void debugBar() {
+  if (showDebugInfo)
+  {
+    showDebugInfo=false;
+    redraw();
+  } else
+  {
+    showDebugInfo=true;
+    redraw();
+  }
 }
 
-public void hideImage(){
- dragimage.setVisible(!dragimage.getVisible()); 
+public void hideImage() {
+  dragimage.setVisible(!dragimage.getVisible());
 }
 
-void grabImage(){
-    if (dragimage.getActivateDragImage())
-      {
-        dragimage.setActivateDragImage(false);
-        selectedBrush.setIdle(false);
-      }
-      else
-      {
-        dragimage.setActivateDragImage(true);
-        selectedBrush.setIdle(true);
-      }
+void grabImage() {
+  if (dragimage.getActivateDragImage())
+  {
+    dragimage.setActivateDragImage(false);
+    selectedBrush.setIdle(false);
+  } else
+  {
+    dragimage.setActivateDragImage(true);
+    selectedBrush.setIdle(true);
+  }
 }
-
-void pickColor(){
-   println("color = "+ (get( mouseX, mouseY)+ " "+selectedBrush.getBrushColor() ));
-         selectedBrush.setBrushColor(get( mouseX, mouseY) );
-          ;
-}
-
 void stopRecording()
 {
-saveVideo=false;
+  saveVideo=false;
+  frameIncrement=0;
+  println("creating video");
+  //"ffmpeg -r 1/0.1 -i "+FRAMEFOLDER_PATH+"/frame-%03d.png -c:v libx264 -y -r  30 -pix_fmt yuv420p out.mp4"
+    String[] arg={"ffmpeg","-r","1/0.1", "-i", FRAMEFOLDER_PATH,"/frame-%03d.png", "-c:v", "libx264", "-y", "-r",  "30", "-pix_fmt", "yuv420p", "out.mp4"};
+  open(arg);
+  try {
+  // ffmpeg -r 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+  //FRAMEFOLDER_PATH+'\\'+"frame"+
+    Process p = Runtime.getRuntime().exec(arg);
+    println("video command: "+FRAMEFOLDER_PATH+'\n');
+    
+  }
+  catch(IOException e)
+  {
+
+    println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
+   //println("video command: "+FRAMEFOLDER_PATH+'\n'+arg);
+  }
+  
 }
 
 void changeSaveVideo()
 {
   saveVideo=!saveVideo;
   println(saveVideo);
+    frameIncrement=0;
 }
+
+// --------------------- change boolean values ------------------------
+void pickColor() {
+  println("color = "+ (get( mouseX, mouseY)+ " "+selectedBrush.getBrushColor() ));
+  selectedBrush.setBrushColor(get( mouseX, mouseY) );
+  ;
+}
+
 
 void saveVideo()
 {
- // FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
-  try{
+  // FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
+  try {
     println("enregistrement video");
     Process p = Runtime.getRuntime().exec("ffmpeg -r 1/0.1 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p"+UtilsFunctions.getDate()+".mp4");
-  
-   }
-   catch(IOException e)
-   {
-     println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
-   }
+  }
+  catch(IOException e)
+  {
+    println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
+  }
 }
 
-void loadImage(){
-String f="";
-        jFileChooser1.setDialogTitle(LOAD_FILE_TEXT);
+void loadImage() {
+  String f="";
+  jFileChooser1.setDialogTitle(LOAD_FILE_TEXT);
 
-        //jFileChooser1.setFileFilter(new SimpleFileFilter("jpg"));
-        jFileChooser1.setCurrentDirectory(new File(DEFAULT_LOADING_DIRECTORY));
-        // try catch ici
-        if (jFileChooser1.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-           try{
-         f=(jFileChooser1.getSelectedFile().getAbsolutePath()); //si un fichier est selectionné, récupérer le fichier puis sont path et l'afficher dans le champs de texte
-           }
-           catch (Exception e)
-         {
-          e.printStackTrace();
-           println("EXCEPTION --->");
-         }
-      }
-        
-        if (f.length()>2)
-        {
-        dragimage.initImage(f);
-        dragimage.setVisible(true);
-        selectedBrush.setIdle(true);
-        }
-        else
-        {
-          println("opération annulée");
-        }
-        println(" fichier "+f);
+  //jFileChooser1.setFileFilter(new SimpleFileFilter("jpg"));
+  jFileChooser1.setCurrentDirectory(new File(DEFAULT_LOADING_DIRECTORY));
+  // try catch ici
+  if (jFileChooser1.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+    try {
+      f=(jFileChooser1.getSelectedFile().getAbsolutePath()); //si un fichier est selectionné, récupérer le fichier puis sont path et l'afficher dans le champs de texte
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      println("EXCEPTION --->");
+    }
+  }
+
+  if (f.length()>2)
+  {
+    dragimage.initImage(f);
+    dragimage.setVisible(true);
+    selectedBrush.setIdle(true);
+  } else
+  {
+    println("opération annulée");
+  }
+  println(" fichier "+f);
 }
 
+void changeTransparency()
+{
+  if (!transparencyGizmo.getVisible()) {
+    transparencyGizmo.setVisible(true);
+    transparencyGizmo.setLoc(mouseX, mouseY);
+    selectedBrush.setIdle(true);
+  } else
+  {
+    selectedBrush.setIdle(false);
+  }
+}
+
+void changeRaduis()
+{
+  if (!raduisGizmo.getVisible()) {
+    raduisGizmo.setVisible(true);
+    raduisGizmo.setLoc(mouseX, mouseY);
+    selectedBrush.setIdle(true);
+  } else
+  {
+    selectedBrush.setIdle(false);
+  }
+}
+void changeColorWheel()
+{
+  isColorWheelShowed=!isColorWheelShowed;
+  colorWheelX=mouseX-colorWheel.width/2;
+  colorWheelY=mouseY-colorWheel.height/2;
+}
+
+void setBrushIdle(boolean b)
+{
+  selectedBrush.setIdle(b); 
+  println("brushidle "+b);
+}
+
+// --------------------- functions  ------------------------
 void clearPg()
 {
   pg.beginDraw();
@@ -345,110 +436,67 @@ void clearPg()
   pg.endDraw();
   selectedBrush.IsCleared();
   image(pg, 0, 0);
-  
 }
-
-
-void changeTransparency()
-{
-  if (!transparencyGizmo.getVisible()){
-  transparencyGizmo.setVisible(true);
-  transparencyGizmo.setLoc(mouseX,mouseY);
-  selectedBrush.setIdle(true);
-
-}
-else
-{
-  selectedBrush.setIdle(false);
-}
-}
-
-void changeRaduis()
-{
-  if (!raduisGizmo.getVisible()){
-  raduisGizmo.setVisible(true);
-  raduisGizmo.setLoc(mouseX,mouseY);
-  selectedBrush.setIdle(true);
-
-}
-else
-{
-  selectedBrush.setIdle(false);
-}
-}
-
-void changeColorWheel()
-{
-  isColorWheelShowed=!isColorWheelShowed;
-  colorWheelX=mouseX-colorWheel.width/2;
-  colorWheelY=mouseY-colorWheel.height/2;
-}
-
-
 
 void chooseColor()
 {
-Color selectedBrushColor=new Color( (int)red(brushcolor),(int)green(brushcolor),(int) blue(brushcolor));
-Color c = jColorChooser.showDialog(this, COLOR_CHOOSER_TEXT, selectedBrushColor);
+  Color selectedBrushColor=new Color( (int)red(brushcolor), (int)green(brushcolor), (int) blue(brushcolor));
+  Color c = jColorChooser.showDialog(this, COLOR_CHOOSER_TEXT, selectedBrushColor);
   try {
-    brushcolor=color(c.getRed(),c.getGreen(),c.getBlue(),255);
+    brushcolor=color(c.getRed(), c.getGreen(), c.getBlue(), 255);
     selectedBrush.setBrushColor(brushcolor);
-    
   }
   catch( NullPointerException e)
   {
     println(NULL_POINTER_EXCEPTION_TEXT);
   }
-
 }
-
+// ------------------ saveByJDialog --------------------
 
 
 void  saveByJDialog(boolean transparent)
 { 
-  
+
   String savename=SAVE_FOLDER+SAVE_NAME+"-"+UtilsFunctions.getDate()+"_"+UtilsFunctions.getHour()+".png";
   JFileChooser chooser = new JFileChooser();
   File f = new File(savename);
 
- try{
-  chooser.setSelectedFile(f);
-  chooser.setFileFilter(chooser.getAcceptAllFileFilter());
-  int returnVal = chooser.showSaveDialog(null);
-  if (returnVal == JFileChooser.APPROVE_OPTION) 
-  {
+  try {
+    chooser.setSelectedFile(f);
+    chooser.setFileFilter(chooser.getAcceptAllFileFilter());
+    int returnVal = chooser.showSaveDialog(null);
+    if (returnVal == JFileChooser.APPROVE_OPTION) 
+    {
 
-    PGraphics tmppg = createGraphics(WIDTH, HEIGHT);
-    tmppg.beginDraw();
-    tmppg.fill(BACKGROUND_FILL);
-    
+      PGraphics tmppg = createGraphics(WIDTH, HEIGHT);
+      tmppg.beginDraw();
+      tmppg.fill(BACKGROUND_FILL);
+
       if (!transparent)
       {
-      tmppg.rect(0, 0,WIDTH, HEIGHT);
+        tmppg.rect(0, 0, WIDTH, HEIGHT);
       }
 
-    tmppg.image(pg, 0, 0);
+      tmppg.image(pg, 0, 0);
 
-    
-   if (showDebugInfo )
-   {
-    tmppg.noSmooth();
-    tmppg.fill(0, 102, 153);
-    tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+version,DEBUG_FRAMECOUNT_X,DEBUG_FRAMECOUNT_Y);
-    tmppg.smooth();
-   }
-   
-    tmppg.endDraw();
-   
-    tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
-  
+
+      if (showDebugInfo )
+      {
+        tmppg.noSmooth();
+        tmppg.fill(0, 102, 153);
+        tmppg.text(UtilsFunctions.getDate()+" - Lightsaber_"+version, DEBUG_FRAMECOUNT_X, DEBUG_FRAMECOUNT_Y);
+        tmppg.smooth();
+      }
+
+      tmppg.endDraw();
+
+      tmppg.save(chooser.getCurrentDirectory()+"\\"+ chooser.getSelectedFile().getName());
+    }
   }
- }
- catch(Exception e)
- {
-   println("--->EXCEPTION");
- }
- 
+  catch(Exception e)
+  {
+    println("--->EXCEPTION");
+  }
 }
 
 void saveJavascript()
@@ -464,33 +512,34 @@ void debugInfo()
 
   if (showDebugInfo )
   {
-    fill(0, 102, 153);
-    text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+pressedKey +" saveVideo "+saveVideo+" "+DEBUG_INFO_TEXT, 50, 50);
-    text(DEBUG_FRAMECOUNT+frameCount,50,63);
-    pg.fill(0, 102, 153);
-    text(UtilsFunctions.getDate()+" - Lightsaber_"+version,DEBUG_FRAMECOUNT_X,DEBUG_FRAMECOUNT_Y);
+    pgDebug.clear();
+    pgDebug.noSmooth();
+    pgDebug.fill(0, 102, 153);
+    pgDebug.text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+ " "+
+      pressedKey + "saveVideo"+
 
-  }
-  else
-  {
-     
-  }
+      saveVideo+DEBUG_INFO_TEXT, 50, 50);
+    pgDebug.text(DEBUG_FRAMECOUNT+frameCount, 50, 63);
+    pgDebug.fill(0, 102, 153);
+    pgDebug.text(UtilsFunctions.getDate()+" - Lightsaber_"+version, DEBUG_FRAMECOUNT_X, DEBUG_FRAMECOUNT_Y);
+      pgDebug.beginDraw();
+      pgDebug.endDraw();
+      image(pgDebug, 0, 0);
+  } 
+  //
 }
 
-void setBrushIdle(boolean b)
-{
-  selectedBrush.setIdle(b); 
- println("brushidle "+b); 
-}
+// ------------------ mouse --------------------
+
 
 
 void mousePressed() {
   saveVideo=false;
-   dragimage.clicked();
-   if ((mousePressed && mouseButton == RIGHT)  )
-   {
-       //selectedBrush.setIdle(false);
-   }
+  dragimage.clicked();
+  if ((mousePressed && mouseButton == RIGHT)  )
+  {
+    //selectedBrush.setIdle(false);
+  }
 }
 
 
@@ -499,228 +548,297 @@ void mouseReleased() {
   transparencyGizmo.mouseReleased();
   raduisGizmo.mouseReleased();
   selectedBrush.mouseReleased();
- dragimage.stopDragging();
+  dragimage.stopDragging();
 }
-boolean flipVertical=false;
-boolean flipHorizontal=false;
+
 
 void changeScale()
 {
-   if (flipVertical)
+  if (flipVertical)
   {
 
-  imageFlip(pg,300,600,"v");
- flipVertical=false;
-  
+    imageFlip(pg, 300, 600, "v");
+    flipVertical=false;
   }
-  
+
   if (flipHorizontal)
   {
 
-  imageFlip(pg,300,600,"h");
- flipHorizontal=false;
-  
+    imageFlip(pg, 300, 600, "h");
+    flipHorizontal=false;
   }
 }
 
 void drawMirrorMarks()
 {
-  line( WIDTH/2, 0, WIDTH/2, HEIGHT);
-  
-  int margin=20;
+  pgMarks.beginDraw();
+  pgMarks.line( WIDTH/2, 0, WIDTH/2, HEIGHT);
+
+  int margin=40;
   int lineLength=60;
-  
+
   Point2d rep;
   int ht=(HEIGHT-(margin*2))/8;
- 
-  for (int i=0;i<=8;i++)  {
-    rep=new Point2d(WIDTH/2,(margin+ht*i));
+
+  for (int i=0; i<=8; i++) {
+    rep=new Point2d(WIDTH/2, (margin+ht*i));
     //rep.draw();
-    
+
     switch(i)
     {
-      case 0:
-      case 4:
-      case 8:
-       lineLength=60;
+    case 0:
+    case 4:
+    case 8:
+      lineLength=60;
       break;
 
-      case 6:
-      case 2:
-       lineLength=60;
+    case 6:
+    case 2:
+    case 1:
+      lineLength=60;
       break;
-      
-      default:
-       lineLength=20;
+
+    default:
+      lineLength=20;
     }
-    
-     drawHorizontalMarks(rep,lineLength);
+
+    drawHorizontalMarks(rep, lineLength);
+   
   }
-  
+  rep=new Point2d(WIDTH/2, (margin+ht*1+ht/3));
+  drawHorizontalMarks(rep, lineLength);
+  rep=new Point2d(WIDTH/2, (margin+ht*6-ht/2));
+  drawHorizontalMarks(rep, lineLength);
+  rep=new Point2d(WIDTH/2, (margin+ht*7-ht/2));
+ drawHorizontalMarks(rep, lineLength);
+   pgMarks.endDraw();
+   
 }
 
-void showColorWheel(){
-  if(isColorWheelShowed)
+void showColorWheel() {
+  if (isColorWheelShowed)
   {
-image(colorWheel,colorWheelX,colorWheelY);
+    image(colorWheel, colorWheelX, colorWheelY);
   }
 }
 
-void drawHorizontalMarks(Point2d rep,int lineLength)
+void drawHorizontalMarks(Point2d rep, int lineLength)
 {
-  line(rep.getX()-lineLength,rep.getY(),rep.getX()+lineLength,rep.getY());
+  pgMarks.line(rep.getX()-lineLength, rep.getY(), rep.getX()+lineLength, rep.getY());
 }
 
-
+// ------------------ ************************** Processing Draw  ****************************************** --------------------
 
 void draw() {
   background(BACKGROUND_FILL);
-  
-  
-  selectedBrush.setMirrored(isMirrored);
-  if(isMirrored)
-  {
-    drawMirrorMarks();
-  
-  }
-  
-//selectedBrush.setTransparency(brushTransparency);
-  dragimage.display();
-  
-  debugInfo();
-  
+  pushMatrix();    // Store a copy of the unzoomed screen transformation.
+  zoomer.transform(); // début du pan zoom
 
-  drawGizmos();
+  selectedBrush.setMirrored(isMirrored);
+  if (isMirrored)
+  {
+
+     drawMirrorMarks();
+    pgMarks.beginDraw();
+    pgMarks.endDraw();
+    image(pgMarks,0,0);
+  }
+
+
 
 
   pg.beginDraw();
-   
 
   pg.endDraw();
-  
   changeScale();
   image(pg, 0, 0);
+  noFill();
+  stroke(6);
+  rect (0-6,0-6,WIDTH+6,HEIGHT+6);
+    
   selectedBrush.draw();
+
+  //  Get the mouse position taking into account any zooming and panning.
+  mousePos = zoomer.getMouseCoord();
+  
+  // Do some drawing that will not be zoomed or panned.
+  popMatrix();   // Restore the unzoomed screen transformation.
+  
+  debugInfo();
+  showPause();
+  dragimage.display();
   showColorWheel();
-
+  drawGizmos();
+    pgDebug.beginDraw();
+  pgDebug.endDraw();
+ //
+ 
+ 
   cfFrame.setLocation(frame.getLocation().x-220, frame.getLocation().y);
+  
   //saveframe
+  if (saveVideo && selectedBrush.getIsPlaying())
+  {
+      formatter = new DecimalFormat("000");
+      String number = formatter.format(frameIncrement);
+      System.out.println("frameIncrement : " + number);
+    saveFrame(FRAMEFOLDER_PATH+'\\'+"frame"+"-"+number+".png");
+    frameIncrement++;
+  }
+}
 
-if(saveVideo && selectedBrush.getIsPlaying())
+int  frameIncrement=0;
+
+
+void resetZoom(){
+zoomer.reset();
+}
+
+
+// ------------------ gizmo pause gui  --------------------
+void showPause()
 {
-   saveFrame(FRAMEFOLDER_PATH+'\\'+"img"+"-###.png");
+  if (selectedBrush.getIsPlaying())
+  {
+    if (isPaused) {
+      pgDebug.fill(255, 0, 0);
+      pgDebug.text ("PAUSE ON (press B)", 20, 80);
+    } else {
+      pgDebug.fill(150, 0, 0);
+      pgDebug.text ("PAUSE OFF (press B)", 20, 80);
+    };
+
+
+    noFill();
+  }
 }
-   
-}
+
 
 
 void drawGizmos()
 {
-   if (raduisGizmo.getVisible()){
-  raduisGizmo.draw();
-  selectedBrush.setRayon(raduisGizmo.getRaduis());
+  if (raduisGizmo.getVisible()) {
+    raduisGizmo.draw();
+    selectedBrush.setRayon(raduisGizmo.getRaduis());
   }
-  
-   if (transparencyGizmo.getVisible()){
-  transparencyGizmo.draw();
-  selectedBrush.setTransparency(transparencyGizmo.getRaduis());
+
+  if (transparencyGizmo.getVisible()) {
+    transparencyGizmo.draw();
+    selectedBrush.setTransparency(transparencyGizmo.getRaduis());
   }
 }
 
 
 void menuAction(ControlEvent theEvent)
 {  
- // println("theEvent = "+theEvent.getController().getName());
- // println("theEvent = "+ theEvent.getController().getId());
- int id=theEvent.getController().getId();
- if(id>=0 && id<brushList.size())
-  changeBrush(brushList.get(id));
+  // println("theEvent = "+theEvent.getController().getName());
+  // println("theEvent = "+ theEvent.getController().getId());
+  int id=theEvent.getController().getId();
+  if (id>=0 && id<brushList.size())
+    changeBrush(brushList.get(id));
 }
 
 ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
   cfFrame = new Frame(theName);
-  ControlFrame p = new ControlFrame(this,brushList, theWidth, theHeight);
+  ControlFrame p = new ControlFrame(this, brushList, theWidth, theHeight);
   cfFrame.add(p);
   p.init();
   cfFrame.setTitle(theName);
-  cfFrame.setSize(200,300);
- 
+  cfFrame.setSize(200, 300);
+
   cfFrame.setResizable(false);
-   // comment this out to turn OS chrome back on
+  // comment this out to turn OS chrome back on
   cfFrame.setUndecorated(true); 
   // comment this out to not have the window "float"
   cfFrame.setAlwaysOnTop(true);
-  
+
   return p;
 }
 
 public void controlEvent(ControlEvent theEvent) {
   //println("lightsaber theEvent = "+theEvent);
-
 }
 
-
+// ------------------ other functions  --------------------
 
 //imageFlip function by nick lally
 //paste function at the bottom of your sketch, and use like this: imageFlip(imageName,x,y,"mode")
 //modes are "v", "v2", "h", "h2"
 //"v" mirrors vertically, "v2" mirrors top half vertically
 //"h" mirrors horizontally, "h2" mirrors left half horizontally
-void imageFlip(PImage imageName, int xPos, int yPos, String mode){
+void imageFlip(PImage imageName, int xPos, int yPos, String mode) {
   //"v2" flips the top half of the image across the x-axis
-  if(mode == "v2"){
+  if (mode == "v2") {
     imageName.loadPixels();
-    for(int i = 0; i < imageName.height; i++){
-      for(int j = 1; j < imageName.width; j++){
+    for (int i = 0; i < imageName.height; i++) {
+      for (int j = 1; j < imageName.width; j++) {
         imageName.pixels[(imageName.height - 1 - i)*(imageName.width) + j] = imageName.pixels[i*(imageName.width) + j];
       }
     }
     imageName.updatePixels();
-    image(imageName,xPos,yPos);
- 
-  //"v" flips the entire image across the x-axis
-  }else if(mode == "v"){
+    image(imageName, xPos, yPos);
+
+    //"v" flips the entire image across the x-axis
+  } else if (mode == "v") {
     imageName.loadPixels();
     int tempImage[] = new int[imageName.width*imageName.height];
-    for(int i = 0; i < imageName.width*imageName.height; i++){
-     tempImage[i] = imageName.pixels[i];
+    for (int i = 0; i < imageName.width*imageName.height; i++) {
+      tempImage[i] = imageName.pixels[i];
     }
- 
-    for(int i = 0; i < imageName.height; i++){
-      for(int j = 1; j < imageName.width; j++){
+
+    for (int i = 0; i < imageName.height; i++) {
+      for (int j = 1; j < imageName.width; j++) {
         imageName.pixels[(imageName.height - 1 - i)*(imageName.width) + j] = tempImage[i*(imageName.width) + j];
       }
     }
     imageName.updatePixels();
-    image(imageName,xPos,yPos);
- 
-  //"h2" flips the left half of the image across the y-axis
-  }else if(mode == "h2"){
+    image(imageName, xPos, yPos);
+
+    //"h2" flips the left half of the image across the y-axis
+  } else if (mode == "h2") {
     imageName.loadPixels();
-    for(int i = 0; i < imageName.height; i++){
-      for(int j = 1; j < imageName.width; j++){
+    for (int i = 0; i < imageName.height; i++) {
+      for (int j = 1; j < imageName.width; j++) {
         imageName.pixels[i*imageName.width + j] = imageName.pixels[(i+1)*(imageName.width) - j];
       }
     }
     imageName.updatePixels();
-    image(imageName,xPos,yPos); 
- 
-  //"h" flips the entire image across the y-axis
-  }else if(mode == "h"){
+    image(imageName, xPos, yPos); 
+
+    //"h" flips the entire image across the y-axis
+  } else if (mode == "h") {
     imageName.loadPixels();
     int tempImage[] = new int[imageName.width*imageName.height];
-    for(int i = 0; i < imageName.width*imageName.height; i++){
-     tempImage[i] = imageName.pixels[i];
+    for (int i = 0; i < imageName.width*imageName.height; i++) {
+      tempImage[i] = imageName.pixels[i];
     }
-    for(int i = 0; i < imageName.height; i++){
-      for(int j = 1; j < imageName.width; j++){
+    for (int i = 0; i < imageName.height; i++) {
+      for (int j = 1; j < imageName.width; j++) {
         imageName.pixels[(i+1)*(imageName.width) - j] = tempImage[i*imageName.width + j];
       }
     }
     imageName.updatePixels();
-    image(imageName,xPos,yPos);
+    image(imageName, xPos, yPos);
   } else {
     println("No mirror direction specified!");
     println("Use v, v2, h, or h2 for the 4th argument");
   }
 } 
+
+// -------------------------- Nested classes --------------------------
+// Simple class to show how the end of a zoom or pan event can be monitored.
+class MyListener implements ZoomPanListener
+{
+  void panEnded()
+  {
+    setBrushIdle(false);
+    println("Panning stopped");
+  }
+  
+  void zoomEnded()
+  {
+    setBrushIdle(false);
+    println("Zooming stopped");
+  }
+}
+

@@ -48,9 +48,11 @@ public class ControlKeys {
  
      if (key == CODED) {
       if (keyCode == ALT) {alt = true;}else{alt = false;}; 
-      if (keyCode == SHIFT) {shift = true;}else{shift = false;}; 
+      if (keyCode == SHIFT) {shift = true; parent.setBrushIdle(true);}else{shift = false;parent.setBrushIdle(false);}; 
       if (keyCode == CONTROL) {ctrl = true;}else{ctrl = false;};
-          println("coded"+key);
+          println("coded "+keyCode);
+     
+     
      
     }
   
@@ -101,6 +103,10 @@ public class ControlKeys {
 
       case 'D': //d
         parent.debugBar();
+        break;
+        
+         case 'B': //d
+        parent.changeIsPaused();
         break;
 
    case 'P': 
@@ -162,6 +168,10 @@ public class ControlKeys {
 
       case 'L':
          parent.loadImage();
+        break; 
+        
+         case 'F':
+         parent.resetZoom();
         break; 
 
   case ' ':
@@ -231,7 +241,7 @@ public class ControlKeys {
     keys[keyCode] = false;
   
     if (keyCode == ALT) alt = false; 
-    if (keyCode == SHIFT) shift = false; 
+    if (keyCode == SHIFT) {shift = false;parent.setBrushIdle(false);} ; 
     if (keyCode == CONTROL) ctrl = false;
    
   //println(  " alt "+alt+" ctrl "+ctrl+" shift "+shift );
