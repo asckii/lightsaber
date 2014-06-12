@@ -158,7 +158,8 @@ void setup() {
   jFileChooser1 = new JFileChooser();
   jColorChooser=new JColorChooser();
 
-open("rundll32 SHELL32.DLL,ShellExec_RunDLL " + sketchPath("")+"getversion.bat");
+open("rundll32 SHELL32.DLL,ShellExec_RunDLL " + sketchPath("")+"getversion.bat "+ sketchPath("")+" "+ sketchPath("")+"version.txt");
+//+sketchPath("")+" "+sketchPath("")+"version.txt");
 
  //String[] params = {sketchPath("")+"getversion.bat"};
  // open(params);
@@ -179,7 +180,10 @@ open("rundll32 SHELL32.DLL,ShellExec_RunDLL " + sketchPath("")+"getversion.bat")
   
   //load the generated text file and put the content in version
   String lines[] = loadStrings("version.txt");
+  if (lines.length>0)
+  {
   version=lines[0];
+  }
   println(sketchPath("")+"getversion.bat");
   String tmpp=sketchPath("")+"\\tmp";
   UtilsFunctions.createFolder(tmpp );
@@ -311,25 +315,10 @@ void grabImage() {
 }
 void stopRecording()
 {
+  saveVideo();
   saveVideo=false;
   frameIncrement=0;
-  println("creating video");
-  //"ffmpeg -r 1/0.1 -i "+FRAMEFOLDER_PATH+"/frame-%03d.png -c:v libx264 -y -r  30 -pix_fmt yuv420p out.mp4"
-    String[] arg={"ffmpeg","-r","1/0.1", "-i", FRAMEFOLDER_PATH,"/frame-%03d.png", "-c:v", "libx264", "-y", "-r",  "30", "-pix_fmt", "yuv420p", "out.mp4"};
-  open(arg);
-  try {
-  // ffmpeg -r 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
-  //FRAMEFOLDER_PATH+'\\'+"frame"+
-    Process p = Runtime.getRuntime().exec(arg);
-    println("video command: "+FRAMEFOLDER_PATH+'\n');
-    
-  }
-  catch(IOException e)
-  {
-
-    println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
-   //println("video command: "+FRAMEFOLDER_PATH+'\n'+arg);
-  }
+ 
   
 }
 
@@ -350,15 +339,12 @@ void pickColor() {
 
 void saveVideo()
 {
-  // FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
-  try {
-    println("enregistrement video");
-    Process p = Runtime.getRuntime().exec("ffmpeg -r 1/0.1 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p"+UtilsFunctions.getDate()+".mp4");
-  }
-  catch(IOException e)
-  {
-    println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
-  }
+   if (saveVideo){
+  println("creating video");
+  String[] arg={"rundll32 SHELL32.DLL,ShellExec_RunDLL ","ffmpeg","-r","1/0.1", "-i", FRAMEFOLDER_PATH,"/frame-%03d.png", "-c:v", "libx264", "-y", "-r",  "30", "-pix_fmt", "yuv420p", "out.mp4"};
+  open("rundll32 SHELL32.DLL,ShellExec_RunDLL "+sketchPath("")+"ffmpeg.exe -r 1/0.1 -i "+FRAMEFOLDER_PATH+"/frame-%03d.png -c:v libx264 -y -r  30 -pix_fmt yuv420p "+FRAMEFOLDER_PATH+"\\out.mp4");
+  
+   }
 }
 
 void loadImage() {
