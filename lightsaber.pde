@@ -1,3 +1,21 @@
+import org.gicentre.utils.colour.*;
+import org.gicentre.utils.io.*;
+import org.gicentre.utils.gui.*;
+import org.gicentre.utils.multisketch.*;
+import org.gicentre.utils.move.*;
+import org.gicentre.utils.stat.*;
+import org.gicentre.utils.*;
+import org.gicentre.utils.network.*;
+import org.gicentre.utils.spatial.*;
+import org.gicentre.utils.geom.*;
+import org.gicentre.utils.network.traer.animation.*;
+import org.gicentre.utils.text.*;
+import org.gicentre.utils.network.traer.physics.*;
+
+import java.awt.AWTException;
+import java.awt.Robot;
+
+
 import javax.swing.JFileChooser;
 import java.io.File;
 import javax.swing.JOptionPane;
@@ -26,6 +44,7 @@ ZoomPan zoomer;    // This should be declared outside any methods.
 PVector mousePos;  // Stores the mouse position.
 // For pretty formatting of mouse coordinates.
 NumberFormat formatter = new DecimalFormat("#.0");
+
 
 Point2dArray pointsArray;
 String version="beta 01";
@@ -100,13 +119,23 @@ int colorWheelX=0;
 int colorWheelY=0;
 boolean flipVertical=false;
 boolean flipHorizontal=false;
-
+Robot robot;
 // --------------------- Initialisation ------------------------
 void setup() {
+  
   size(WIDTH, HEIGHT);
   
+   try { 
+    robot = new Robot();
+  } 
+  catch (AWTException e) {
+    e.printStackTrace();
+  }
+   robot.mouseMove(320, 200);
+  
+  
   frame.setLocation(200, 100);
-  noCursor();
+  //noCursor();
   // --------------------- Zoomer Initialisation ------------------------
   zoomer = new ZoomPan(this);  // Initialise the zoomer.
   zoomer.setMouseMask(SHIFT);  // Only zoom if the shift key is down.
@@ -159,24 +188,9 @@ void setup() {
   jColorChooser=new JColorChooser();
 
 open("rundll32 SHELL32.DLL,ShellExec_RunDLL " + sketchPath("")+"getversion.bat "+ sketchPath("")+" "+ sketchPath("")+"version.txt");
-//+sketchPath("")+" "+sketchPath("")+"version.txt");
 
- //String[] params = {sketchPath("")+"getversion.bat"};
- // open(params);
  
-   println("-----------"+sketchPath("")+"getversion.bat"+"--------------");
-  //get current version from getversion.bat
-/*  try {
-    println(sketchPath("")+"getversion.bat");
-    final Process p = Runtime.getRuntime().exec(new String []{sketchPath("")+"getversion.bat"});
    
-    println("getversion.bat exécuté");
-  }
-  catch(Exception e)//IOException
-  {
-    e.printStackTrace();
-    //println("EXCEPTION --->IOEXCEPTION - exécution à l'exécution de process p = Runtime.getRuntime()");
-  }*/
   
   //load the generated text file and put the content in version
   String lines[] = loadStrings("version.txt");
@@ -184,7 +198,7 @@ open("rundll32 SHELL32.DLL,ShellExec_RunDLL " + sketchPath("")+"getversion.bat "
   {
   version=lines[0];
   }
-  println(sketchPath("")+"getversion.bat");
+
   String tmpp=sketchPath("")+"\\tmp";
   UtilsFunctions.createFolder(tmpp );
   FRAMEFOLDER_PATH=tmpp+ '\\'+UtilsFunctions.getDate();
@@ -503,9 +517,14 @@ void debugInfo()
     pgDebug.fill(0, 102, 153);
     pgDebug.text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+ " "+
       pressedKey + "saveVideo"+
-
       saveVideo+DEBUG_INFO_TEXT, 50, 50);
+        if (selectedBrush.getIsPlaying()) {
+         pgDebug.fill(255, 0, 0); 
+       pgDebug.text("> Playing strokes "+selectedBrush.getIncrementStroke()+"/"+UtilsFunctions.strokeList.size(),10,20);
+   }
+    pgDebug.fill(0, 102, 153);
     pgDebug.text(DEBUG_FRAMECOUNT+frameCount, 50, 63);
+    
     pgDebug.fill(0, 102, 153);
     pgDebug.text(UtilsFunctions.getDate()+" - Lightsaber_"+version, DEBUG_FRAMECOUNT_X, DEBUG_FRAMECOUNT_Y);
       pgDebug.beginDraw();
@@ -520,7 +539,7 @@ void debugInfo()
 
 
 void mousePressed() {
-  saveVideo=false;
+  //saveVideo=false;
   dragimage.clicked();
   if ((mousePressed && mouseButton == RIGHT)  )
   {
@@ -619,6 +638,14 @@ void draw() {
   background(BACKGROUND_FILL);
   pushMatrix();    // Store a copy of the unzoomed screen transformation.
   zoomer.transform(); // début du pan zoom
+// mouse position after zooming
+PVector mousePosition = zoomer.getMouseCoord();
+  int mx =int(mousePosition.x);    // Equivalent to mouseX
+  int my =int(mousePosition.y);    // Equivalent to mouseY
+  //println("Mouse at "+mx+","+my);
+  
+  pgDebug.text("Mouse at "+mx+","+my,60,120);
+
 
   selectedBrush.setMirrored(isMirrored);
   if (isMirrored)
@@ -650,7 +677,10 @@ void draw() {
   // Do some drawing that will not be zoomed or panned.
   popMatrix();   // Restore the unzoomed screen transformation.
   
+  if(showDebugInfo){
   debugInfo();
+  }
+  
   showPause();
   dragimage.display();
   showColorWheel();
@@ -673,6 +703,8 @@ void draw() {
   }
 }
 
+
+
 int  frameIncrement=0;
 
 
@@ -684,7 +716,7 @@ zoomer.reset();
 // ------------------ gizmo pause gui  --------------------
 void showPause()
 {
-  if (selectedBrush.getIsPlaying())
+  if (selectedBrush.getIsPlaying()&&showDebugInfo==true)
   {
     if (isPaused) {
       pgDebug.fill(255, 0, 0);
@@ -693,8 +725,10 @@ void showPause()
       pgDebug.fill(150, 0, 0);
       pgDebug.text ("PAUSE OFF (press B)", 20, 80);
     };
-
-
+    
+  pgDebug.beginDraw();
+  pgDebug.endDraw();
+  image(pgDebug,0,0);
     noFill();
   }
 }
@@ -714,24 +748,31 @@ void drawGizmos()
   }
 }
 
-
+// ----------------------------------------------------menuAction-------------------------------------------------------------------------------------
 void menuAction(ControlEvent theEvent)
 {  
   // println("theEvent = "+theEvent.getController().getName());
   // println("theEvent = "+ theEvent.getController().getId());
   int id=theEvent.getController().getId();
   if (id>=0 && id<brushList.size())
+  {
     changeBrush(brushList.get(id));
+  }
+  if(id==999) exitApplication();
+  if(id==998) appFolderApplication();
+  if(id==997) appFolderTmpApplication();
+  if(id==996) appPlayApplication();
 }
-
+// ----------------------------------------------------ControlFrame-------------------------------------------------------------------------------------
 ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
+  
   cfFrame = new Frame(theName);
   ControlFrame p = new ControlFrame(this, brushList, theWidth, theHeight);
   cfFrame.add(p);
   p.init();
   cfFrame.setTitle(theName);
   cfFrame.setSize(200, 300);
-
+ 
   cfFrame.setResizable(false);
   // comment this out to turn OS chrome back on
   cfFrame.setUndecorated(true); 
@@ -746,6 +787,33 @@ public void controlEvent(ControlEvent theEvent) {
 }
 
 // ------------------ other functions  --------------------
+//app
+void appFolderApplication()
+{
+  open("start "+sketchPath(""));
+
+}
+
+//app
+void appFolderTmpApplication()
+{
+  open("start "+FRAMEFOLDER_PATH);
+println("start "+FRAMEFOLDER_PATH);
+}
+
+//app
+void appPlayApplication()
+{
+  open("start "+FRAMEFOLDER_PATH+'\\'+"out.mp4");
+
+}
+
+//Quit
+void exitApplication()
+{
+  println("exiting gracefully ;)");
+  exit();
+}
 
 //imageFlip function by nick lally
 //paste function at the bottom of your sketch, and use like this: imageFlip(imageName,x,y,"mode")

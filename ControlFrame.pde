@@ -22,6 +22,7 @@ public class ControlFrame extends PApplet {
   }
 
   public void setup() {
+    
     size(h, w);
     frameRate(25);
     cp5 = new ControlP5(this);
@@ -32,7 +33,7 @@ public class ControlFrame extends PApplet {
     int i=0;
     int j=0;
     int id=0;
-
+// brosses
     while (it.hasNext ()) {
 
       BrushBase brush=it.next();
@@ -50,6 +51,53 @@ public class ControlFrame extends PApplet {
         j++;
       };
     }
+    
+     cp5.addButton("quit")
+        .setValue(999)
+          .setId(999)
+            .setPosition(170, 10)
+              .setSize(45, 15)
+                ;
+                  cp5.addButton("app")
+        .setValue(998)
+          .setId(998)
+            .setPosition(170, 30)
+              .setSize(45, 15)
+                ;
+                
+          cp5.addButton("tmp")
+        .setValue(997)
+          .setId(997)
+            .setPosition(170, 50)
+              .setSize(45, 15)
+                ;
+                
+                
+         cp5.addButton("play")
+        .setValue(996)
+          .setId(996)
+            .setPosition(170, 80)
+              .setSize(45, 15)
+                ;         
+    
+   /*  cp5.addButton("play")
+        .setValue(7)
+          .setId(7)
+            .setPosition(10, 200)
+              .setSize(45, 15)
+                ;
+      cp5.addButton("pause")
+        .setValue(8)
+          .setId(8)
+            .setPosition(60, 200)
+              .setSize(45, 15)
+                ;*/
+       // create a toggle
+  cp5.addToggle("video")
+     .setPosition(10,200)
+     .setSize(20,10)
+     ;         
+                
     
    
   }

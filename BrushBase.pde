@@ -211,12 +211,25 @@ class BrushBase
    *
    */
 
+
+int getIncrementStroke()
+{
+  return incrementStroke;
+}
+
+
   void playStrokeSessionFrame() {
     //println("executeStroke stroke arraylist size "+strokeList.size());
     if (!UtilsFunctions.strokeList.isEmpty())
     {
-       pgDebug.fill(255,0, 0);
-      pgDebug.text("> Playing strokes "+incrementStroke+"/"+UtilsFunctions.strokeList.size(),10,20);
+     
+
+    
+
+    
+    noFill();
+    
+    
       isPlaying=true;
       pgDebug.noFill();
       // println("\n playStrokeSessionFrame "+ incrementStroke+"/"+UtilsFunctions.strokeList.size());
