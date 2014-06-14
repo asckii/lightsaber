@@ -78,6 +78,14 @@ public class ControlFrame extends PApplet {
           .setId(996)
             .setPosition(170, 80)
               .setSize(45, 15)
+                ;   
+          
+          
+          cp5.addButton("clear")
+        .setValue(995)
+          .setId(995)
+            .setPosition(170, 100)
+              .setSize(45, 15)
                 ;         
     
    /*  cp5.addButton("play")

@@ -139,6 +139,8 @@ void setup() {
   // --------------------- Zoomer Initialisation ------------------------
   zoomer = new ZoomPan(this);  // Initialise the zoomer.
   zoomer.setMouseMask(SHIFT);  // Only zoom if the shift key is down.
+   zoomer.setMaxZoomScale(500.0);
+zoomer.setMinZoomScale(0.12) ;
 
   // Monitor end of zoom/pan events.
   zoomer.addZoomPanListener(new MyListener());
@@ -643,15 +645,17 @@ PVector mousePosition = zoomer.getMouseCoord();
   int mx =int(mousePosition.x);    // Equivalent to mouseX
   int my =int(mousePosition.y);    // Equivalent to mouseY
   //println("Mouse at "+mx+","+my);
-  
-  pgDebug.text("Mouse at "+mx+","+my,60,120);
 
+ // println("Mouse at "+mx+","+my+" zoom : "+ zoomer.getZoomScale());
+    noFill();
+  rect(mx-10,my-10,20,20);
+  
 
   selectedBrush.setMirrored(isMirrored);
   if (isMirrored)
   {
 
-     drawMirrorMarks();
+    drawMirrorMarks();
     pgMarks.beginDraw();
     pgMarks.endDraw();
     image(pgMarks,0,0);
@@ -762,6 +766,7 @@ void menuAction(ControlEvent theEvent)
   if(id==998) appFolderApplication();
   if(id==997) appFolderTmpApplication();
   if(id==996) appPlayApplication();
+  if(id==995) appClearFolderApplication();
 }
 // ----------------------------------------------------ControlFrame-------------------------------------------------------------------------------------
 ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
@@ -791,21 +796,36 @@ public void controlEvent(ControlEvent theEvent) {
 void appFolderApplication()
 {
   open("start "+sketchPath(""));
-
 }
 
 //app
 void appFolderTmpApplication()
 {
-  open("start "+FRAMEFOLDER_PATH);
+ open("start "+FRAMEFOLDER_PATH);
 println("start "+FRAMEFOLDER_PATH);
 }
 
 //app
 void appPlayApplication()
 {
+  if(UtilsFunctions.verifyFileExist(FRAMEFOLDER_PATH+'\\'+"out.mp4"))
+  {
   open("start "+FRAMEFOLDER_PATH+'\\'+"out.mp4");
+  }
+  else
+  {
+    println(" nothing to play !");
+  }
+}
 
+void appClearFolderApplication()
+{
+ String[] fileList=UtilsFunctions.listFilesInFolder(FRAMEFOLDER_PATH);
+ for(int i=0;i<fileList.length;i++)
+ {
+   println("deleting "+ fileList[i]);
+   UtilsFunctions.deleteFile( FRAMEFOLDER_PATH+'\\'+fileList[i]);
+ }
 }
 
 //Quit
