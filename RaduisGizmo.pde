@@ -75,7 +75,7 @@ class RaduisGizmo
 
 
 void mouseReleased() {
-  println("mousereleased");
+//println("mousereleased");
   if (validate){
      
          validate=false;
@@ -89,11 +89,11 @@ boolean validate=false;
   void draw()
   {
     
-   
+
 
     if (visible)
     {
- float r=(float)dist(storedCenterX, storedCenterY, mouseX, mouseY);
+ float r=(float)dist(storedCenterX, storedCenterY, parent.zMousePosition.x, parent.zMousePosition.y);
       
        if(r*2>maxRaduis)
        {
@@ -103,9 +103,9 @@ boolean validate=false;
       println("r="+r);
       fill(#00ff00, 60);
       stroke(#000000, 70);
-      ellipse(mouseX, mouseY, 10, 10);
+      ellipse(parent.zMousePosition.x, parent.zMousePosition.y, 10, 10);
       ellipse(storedCenterX, storedCenterY, 10, 10);
-      line( storedCenterX, storedCenterY, mouseX, mouseY);
+      line( storedCenterX, storedCenterY, parent.zMousePosition.x, parent.zMousePosition.y);
       fill(#00ff00, 40);
       stroke(#000000, 60);
      

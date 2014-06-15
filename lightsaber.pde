@@ -635,15 +635,16 @@ void drawHorizontalMarks(Point2d rep, int lineLength)
 }
 
 // ------------------ ************************** Processing Draw  ****************************************** --------------------
-
+PVector zMousePosition ;
+PVector zpMousePosition ;
 void draw() {
   background(BACKGROUND_FILL);
   pushMatrix();    // Store a copy of the unzoomed screen transformation.
   zoomer.transform(); // début du pan zoom
 // mouse position after zooming
-PVector mousePosition = zoomer.getMouseCoord();
-  int mx =int(mousePosition.x);    // Equivalent to mouseX
-  int my =int(mousePosition.y);    // Equivalent to mouseY
+zMousePosition = zoomer.getMouseCoord();
+  int mx =int(zMousePosition.x);    // Equivalent to mouseX
+  int my =int(zMousePosition.y);    // Equivalent to mouseY
   //println("Mouse at "+mx+","+my);
 
  // println("Mouse at "+mx+","+my+" zoom : "+ zoomer.getZoomScale());
@@ -701,10 +702,11 @@ PVector mousePosition = zoomer.getMouseCoord();
   {
       formatter = new DecimalFormat("000");
       String number = formatter.format(frameIncrement);
-      System.out.println("frameIncrement : " + number);
+     // System.out.println("frameIncrement : " + number);
     saveFrame(FRAMEFOLDER_PATH+'\\'+"frame"+"-"+number+".png");
     frameIncrement++;
   }
+  zpMousePosition=new PVector(zMousePosition.x,zMousePosition.y);
 }
 
 
@@ -767,6 +769,7 @@ void menuAction(ControlEvent theEvent)
   if(id==997) appFolderTmpApplication();
   if(id==996) appPlayApplication();
   if(id==995) appClearFolderApplication();
+  if(id==994) appRecordApplication();
 }
 // ----------------------------------------------------ControlFrame-------------------------------------------------------------------------------------
 ControlFrame addControlFrame(String theName, int theWidth, int theHeight) {
@@ -817,6 +820,15 @@ void appPlayApplication()
     println(" nothing to play !");
   }
 }
+
+
+//app
+void appRecordApplication()
+{
+saveVideo=true;
+playStrokeSession();
+}
+
 
 void appClearFolderApplication()
 {

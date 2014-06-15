@@ -372,6 +372,15 @@ DRAW
     noFill();
     stroke(#000000, 50);
     ellipse(mouseX, mouseY, rayon, rayon);
+    
+    int mx =int(parent.zMousePosition.x);    // Equivalent to mouseX
+  int my =int(parent.zMousePosition.y);    // Equivalent to mouseY
+  //println("Mouse at "+mx+","+my);
+
+ // println("Mouse at "+mx+","+my+" zoom : "+ zoomer.getZoomScale());
+    noFill();
+  rect(mx-10,my-10,20,20);
+    
 
     showRadiusGizmo();
     pg.beginDraw();
