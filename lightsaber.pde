@@ -347,8 +347,8 @@ void changeSaveVideo()
 
 // --------------------- change boolean values ------------------------
 void pickColor() {
-  println("color = "+ (get( mouseX, mouseY)+ " "+selectedBrush.getBrushColor() ));
-  selectedBrush.setBrushColor(get( mouseX, mouseY) );
+  println("color = "+ (get( (int)zMousePosition.x,(int) zMousePosition.y)+ " "+selectedBrush.getBrushColor() ));
+  selectedBrush.setBrushColor(get( (int)zMousePosition.x, (int)zMousePosition.y) );
   ;
 }
 
@@ -397,7 +397,7 @@ void changeTransparency()
 {
   if (!transparencyGizmo.getVisible()) {
     transparencyGizmo.setVisible(true);
-    transparencyGizmo.setLoc(mouseX, mouseY);
+    transparencyGizmo.setLoc((int)zMousePosition.x,(int) zMousePosition.y);
     selectedBrush.setIdle(true);
   } else
   {
@@ -409,7 +409,7 @@ void changeRaduis()
 {
   if (!raduisGizmo.getVisible()) {
     raduisGizmo.setVisible(true);
-    raduisGizmo.setLoc(mouseX, mouseY);
+    raduisGizmo.setLoc((int)zMousePosition.x,(int) zMousePosition.y);
     selectedBrush.setIdle(true);
   } else
   {
@@ -419,8 +419,8 @@ void changeRaduis()
 void changeColorWheel()
 {
   isColorWheelShowed=!isColorWheelShowed;
-  colorWheelX=mouseX-colorWheel.width/2;
-  colorWheelY=mouseY-colorWheel.height/2;
+  colorWheelX=(int)zMousePosition.x-colorWheel.width/2;
+  colorWheelY=(int)zMousePosition.y-colorWheel.height/2;
 }
 
 void setBrushIdle(boolean b)
@@ -517,7 +517,7 @@ void debugInfo()
     pgDebug.clear();
     pgDebug.noSmooth();
     pgDebug.fill(0, 102, 153);
-    pgDebug.text(DEBUG_X_TEXT+mouseX+DEBUG_Y_TEXT+mouseY+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+ " "+
+    pgDebug.text(DEBUG_X_TEXT+zMousePosition.x+DEBUG_Y_TEXT+zMousePosition.y+DEBUG_TYPE_TEXT+selectedBrush.getName()+DEBUG_RADUIS_TEXT+selectedBrush.getRayon()+DEBUG_SAVETRANSPARENCY_TEXT+saveTransparency+DEBUG_PRESSEDKEY_TEXT+ " "+
       pressedKey + "saveVideo"+
       saveVideo+DEBUG_INFO_TEXT, 50, 50);
         if (selectedBrush.getIsPlaying()) {
@@ -642,14 +642,11 @@ void draw() {
   pushMatrix();    // Store a copy of the unzoomed screen transformation.
   zoomer.transform(); // début du pan zoom
 // mouse position after zooming
-zMousePosition = zoomer.getMouseCoord();
-  int mx =int(zMousePosition.x);    // Equivalent to mouseX
-  int my =int(zMousePosition.y);    // Equivalent to mouseY
-  //println("Mouse at "+mx+","+my);
+  zMousePosition = zoomer.getMouseCoord();
+  
 
- // println("Mouse at "+mx+","+my+" zoom : "+ zoomer.getZoomScale());
-    noFill();
-  rect(mx-10,my-10,20,20);
+
+  
   
 
   selectedBrush.setMirrored(isMirrored);
@@ -918,13 +915,13 @@ class MyListener implements ZoomPanListener
   void panEnded()
   {
     setBrushIdle(false);
-    println("Panning stopped");
+   //println("Panning stopped");
   }
   
   void zoomEnded()
   {
     setBrushIdle(false);
-    println("Zooming stopped");
+   // println("Zooming stopped");
   }
 }
 

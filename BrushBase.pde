@@ -371,7 +371,7 @@ DRAW
     smooth();
     noFill();
     stroke(#000000, 50);
-    ellipse(mouseX, mouseY, rayon, rayon);
+    ellipse(parent.zMousePosition.x, parent.zMousePosition.y, rayon, rayon);
     
     int mx =int(parent.zMousePosition.x);    // Equivalent to mouseX
   int my =int(parent.zMousePosition.y);    // Equivalent to mouseY
@@ -404,7 +404,7 @@ DRAW
     if ((mousePressed && (mouseButton ==LEFT))&&isPlaying==false) {
 
 
-      StrokeStep tmpStroke=new StrokeStep(this, frameCount, mouseX, mouseY, pmouseX, pmouseY, tablet.getPressure(), transparency,rayon,brushColor, isXMirrored, false);
+      StrokeStep tmpStroke=new StrokeStep(this, frameCount, (int)parent.zMousePosition.x, (int)parent.zMousePosition.y,(int)parent.zpMousePosition.x, (int)parent.zpMousePosition.y, tablet.getPressure(), transparency,rayon,brushColor, isXMirrored, false);
       isPostDrawOperation=false;
       drawBrushStroke(tmpStroke);
       recordStroke(tmpStroke);
@@ -430,7 +430,7 @@ DRAW
   {
     fill(#ff0000, 20);
     stroke(#ff0000, 50);
-    ellipse(mouseX, mouseY, rayon, rayon);
+    ellipse(parent.zMousePosition.x, parent.zMousePosition.y, rayon, rayon);
   }
 
   void showRadiusGizmo()
@@ -439,12 +439,12 @@ DRAW
     if (keyCode==38) {
       fill(#ff0000, 20);
       stroke(#ff0000, 20);
-      ellipse(mouseX, mouseY, rayon, rayon);
+      ellipse(parent.zMousePosition.x, parent.zMousePosition.y, rayon, rayon);
     }
     if (keyCode==40) {  
       fill(#ff0000, 20);
       stroke(#ff0000, 50);
-      ellipse(mouseX, mouseY, rayon, rayon);
+      ellipse(parent.zMousePosition.x, parent.zMousePosition.y, rayon, rayon);
     }
   }
 
